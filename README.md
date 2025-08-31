@@ -24,8 +24,6 @@ RhulanyTech oferece:
 ## Tecnologias Utilizadas
 
 - **Frontend:** React, Flutter (interface moderna)  
-- **Backend / Serviços:** Node.js, API Gemini  
-- **Banco de Dados:** SQLite / Firebase (dependendo da implementação)  
 - **Outros:** Netlify para deploy, Git para versionamento  
 
 ## Instalação
