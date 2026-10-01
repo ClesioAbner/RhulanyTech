@@ -26,7 +26,7 @@ export const products: Product[] = [
   // Celulares Premium
   {
     id: '1',
-    name: 'iPhone 15 Pro Max 256GB',
+    name: 'iPhone 16 Pro Max 256GB',
     price: 180000,
     originalPrice: 200000,
     images: [
@@ -36,21 +36,21 @@ export const products: Product[] = [
       'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&angle=135',
       'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&angle=180'
     ],
-    description: 'O mais avançado iPhone com chip A17 Pro, câmera de 48MP e design em titânio',
+    description: 'O iPhone mais avançado, com chip A18 Pro, ecrã de 6,9 polegadas, câmara Fusion de 48MP e design em titânio',
     category: 'celulares',
-    specs: ['Chip A17 Pro', 'Tela 6.7" Super Retina XDR', 'Câmera 48MP', '256GB', 'Titânio Natural'],
+    specs: ['Chip A18 Pro', 'Tela 6.9" Super Retina XDR', 'Câmera Fusion 48MP', '256GB', 'Titânio Deserto'],
     inStock: true,
     stockQuantity: 15,
     discount: 10,
     rating: 4.9,
     reviews: 2847,
     brand: 'Apple',
-    model: 'iPhone 15 Pro Max',
+    model: 'iPhone 16 Pro Max',
     warranty: '1 ano Apple Care',
-    features: ['Face ID', 'Resistente à água IP68', 'MagSafe', 'Lightning para USB-C', '5G'],
-    dimensions: '159.9 x 76.7 x 8.25 mm',
-    weight: '221g',
-    colors: ['Titânio Natural', 'Titânio Azul', 'Titânio Branco', 'Titânio Preto'],
+    features: ['Face ID', 'Resistente à água IP68', 'MagSafe', 'Controlo da Câmara', 'USB-C', '5G'],
+    dimensions: '163 x 77.6 x 8.25 mm',
+    weight: '227g',
+    colors: ['Titânio Deserto', 'Titânio Natural', 'Titânio Branco', 'Titânio Preto'],
     tags: ['premium', 'flagship', 'camera', 'gaming', 'professional']
   },
   {
@@ -86,7 +86,7 @@ export const products: Product[] = [
     name: 'Google Pixel 8 Pro 256GB',
     price: 145000,
     images: [
-      'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800',
+      'https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&angle=45',
       'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&angle=90'
     ],
@@ -135,7 +135,7 @@ export const products: Product[] = [
     name: 'Xiaomi 14 Ultra 512GB',
     price: 115000,
     images: [
-      'https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?auto=format&fit=crop&w=800'
+      'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800'
     ],
     description: 'Câmera profissional Leica em smartphone com zoom periscópico',
     category: 'celulares',
@@ -188,7 +188,7 @@ export const products: Product[] = [
     name: 'Dell XPS 17 Creator Edition',
     price: 320000,
     images: [
-      'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800',
+      'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&angle=45'
     ],
     description: 'Workstation premium com tela 4K OLED e RTX 4080 para criadores',
@@ -212,7 +212,7 @@ export const products: Product[] = [
     name: 'Alienware Aurora R15 Gaming Desktop',
     price: 280000,
     images: [
-      'https://images.unsplash.com/photo-1587831990711-23ca6441447b?auto=format&fit=crop&w=800',
+      'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1587831990711-23ca6441447b?auto=format&fit=crop&w=800&angle=45'
     ],
     description: 'Desktop gaming premium com design futurista e performance extrema',
@@ -289,7 +289,7 @@ export const products: Product[] = [
     name: 'Nintendo Switch OLED 64GB',
     price: 280000,
     images: [
-      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=800',
+      'https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=800&angle=45'
     ],
     description: 'Console híbrido com tela OLED vibrante e exclusivos Nintendo',
@@ -313,7 +313,7 @@ export const products: Product[] = [
     name: 'Steam Deck OLED 1TB',
     price: 380000,
     images: [
-      'https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?auto=format&fit=crop&w=800'
+      'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?auto=format&fit=crop&w=800'
     ],
     description: 'Console portátil PC gaming com tela OLED e acesso à biblioteca Steam',
     category: 'consoles',
@@ -338,7 +338,7 @@ export const products: Product[] = [
     name: 'Logitech MX Master 3S Wireless',
     price: 12000,
     images: [
-      'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=800',
+      'https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=800&angle=45'
     ],
     description: 'Mouse wireless premium para produtividade com scroll MagSpeed',
@@ -386,7 +386,7 @@ export const products: Product[] = [
     name: 'Corsair K100 RGB Mechanical',
     price: 25000,
     images: [
-      'https://images.unsplash.com/photo-1541140532154-b024d705b90a?auto=format&fit=crop&w=800',
+      'https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1541140532154-b024d705b90a?auto=format&fit=crop&w=800&angle=45'
     ],
     description: 'Teclado mecânico premium com switches ópticos e RGB avançado',
@@ -410,7 +410,7 @@ export const products: Product[] = [
     name: 'SteelSeries Arctis Nova Pro Wireless',
     price: 35000,
     images: [
-      'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=800',
+      'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=800&angle=45'
     ],
     description: 'Headset gaming premium com cancelamento de ruído ativo',
@@ -434,7 +434,7 @@ export const products: Product[] = [
     name: 'LG UltraGear 27GP950 4K 144Hz',
     price: 85000,
     images: [
-      'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800',
+      'https://images.unsplash.com/photo-1593640495253-23196b27a87f?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&angle=45'
     ],
     description: 'Monitor gaming 4K 144Hz com HDR600 e G-SYNC Compatible',
@@ -556,7 +556,7 @@ export const products: Product[] = [
     name: 'Corsair Dominator Platinum RGB 64GB DDR5',
     price: 65000,
     images: [
-      'https://images.unsplash.com/photo-1562976540-906c2ab2b2b4?auto=format&fit=crop&w=800'
+      'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=800'
     ],
     description: 'Memória RAM DDR5 premium com RGB e overclock extremo',
     category: 'componentes',
