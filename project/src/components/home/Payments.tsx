@@ -2,8 +2,8 @@ import type { RefObject } from 'react';
 import { AnimatePresence, motion, type MotionValue } from 'framer-motion';
 import { easeOutExpo } from '../../lib/motion';
 import { PAYMENT_METHODS } from '../payments/methods';
-import PhoneScreen from '../payments/PhoneScreen';
-import Phone3D from '../payments/Phone3D';
+import RealisticPhone from '../payments/LazyRealisticPhone';
+import type { ScreenKey } from '../payments/screenTexture';
 import SectionHeading from '../ui/SectionHeading';
 
 const ROW_HEIGHT = 64; // px — height of one entry in the method wheel
@@ -16,11 +16,12 @@ interface PaymentsProps {
   hintOpacity: MotionValue<number>;
   listOpacity: MotionValue<number>;
   listY: MotionValue<number>;
+  /** Only passed on small screens; on desktop the shared falling phone is used instead. */
   mobilePhone: {
     rotateX: MotionValue<number>;
     rotateY: MotionValue<number>;
     rotateZ: MotionValue<number>;
-  };
+  } | null;
 }
 
 const Payments = ({
@@ -61,11 +62,17 @@ const Payments = ({
               ref={phoneTargetRef}
               className="hidden h-[calc(var(--phone-w)*2.1)] w-[var(--phone-w)] [--phone-w:clamp(190px,26vh,250px)] lg:block"
             />
-            <div className="relative [--phone-w:clamp(160px,23vh,250px)] lg:hidden">
-              <Phone3D rotateX={mobilePhone.rotateX} rotateY={mobilePhone.rotateY} rotateZ={mobilePhone.rotateZ}>
-                <PhoneScreen activeIndex={activeIndex} />
-              </Phone3D>
-            </div>
+            {mobilePhone && (
+              <div className="relative [--phone-w:clamp(160px,23vh,250px)] lg:hidden">
+                <RealisticPhone
+                  rotateX={mobilePhone.rotateX}
+                  rotateY={mobilePhone.rotateY}
+                  rotateZ={mobilePhone.rotateZ}
+                  screen={activeIndex >= 0 ? (`method-${activeIndex}` as ScreenKey) : 'checkout'}
+                  lockStage={0}
+                />
+              </div>
+            )}
             <motion.p className="absolute bottom-[4%] text-center text-sm text-ink/50" style={{ opacity: hintOpacity }}>
               Continue a deslizar
             </motion.p>
