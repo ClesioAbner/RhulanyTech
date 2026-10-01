@@ -8,8 +8,9 @@ import {
   useSpring,
   useTransform,
 } from 'framer-motion';
-import Phone3D from '../payments/Phone3D';
-import PhoneScreen from '../payments/PhoneScreen';
+import RealisticPhone from '../payments/LazyRealisticPhone';
+import type { ScreenKey } from '../payments/screenTexture';
+import { useMediaQuery } from '../../lib/useMediaQuery';
 import {
   INTRO_END,
   activeMethodAt,
@@ -60,6 +61,7 @@ const ShopToPayments = () => {
   const phoneTargetRef = useRef<HTMLDivElement>(null);
   const phoneRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const [activeIndex, setActiveIndex] = useState(-1);
   const [showcaseStage, setShowcaseStage] = useState<number | null>(0);
 
@@ -133,6 +135,9 @@ const ShopToPayments = () => {
   const mobileRotateX = useTransform(payments, (p) => still(paymentRotateX(p)));
   const mobileRotateZ = useTransform(payments, (p) => still(paymentRotateZ(p)));
 
+  const screenKey: ScreenKey =
+    activeIndex >= 0 ? (`method-${activeIndex}` as ScreenKey) : showcaseStage !== null ? 'lock' : 'checkout';
+
   const hintOpacity = useTransform(payments, [0, 0.08], [1, 0]);
   const listOpacity = useTransform(payments, [0.06, INTRO_END], [0, 1]);
   const listY = useTransform(payments, [0.06, INTRO_END], [24, 0]);
@@ -195,20 +200,27 @@ const ShopToPayments = () => {
         hintOpacity={hintOpacity}
         listOpacity={listOpacity}
         listY={listY}
-        mobilePhone={{ rotateX: mobileRotateX, rotateY: mobileRotateY, rotateZ: mobileRotateZ }}
+        mobilePhone={isDesktop ? null : { rotateX: mobileRotateX, rotateY: mobileRotateY, rotateZ: mobileRotateZ }}
       />
 
       {/* Shared phone layer (desktop) */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-30 hidden lg:block">
         <div className="sticky top-0 h-[100svh] w-full">
-          <motion.div className="absolute left-0 top-0 h-0 w-0" style={{ x, y, scale, opacity }}>
+          <motion.div className="absolute left-0 top-0 h-0 w-0" style={{ x, y, opacity }}>
             <div
               ref={phoneRef}
-              className="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 [--phone-w:clamp(190px,26vh,250px)] [perspective:1600px]"
+              className="absolute left-0 top-0 h-[calc(var(--phone-w)*2.1)] w-[var(--phone-w)] -translate-x-1/2 -translate-y-1/2 [--phone-w:clamp(190px,26vh,250px)]"
             >
-              <Phone3D rotateX={rotateX} rotateY={rotateY} rotateZ={rotateZ}>
-                <PhoneScreen activeIndex={activeIndex} showcaseStage={showcaseStage} />
-              </Phone3D>
+              {isDesktop && (
+                <RealisticPhone
+                  rotateX={rotateX}
+                  rotateY={rotateY}
+                  rotateZ={rotateZ}
+                  scale={scale}
+                  screen={screenKey}
+                  lockStage={showcaseStage ?? 3}
+                />
+              )}
               <div className="absolute -bottom-12 left-1/2 h-6 w-[80%] -translate-x-1/2 rounded-[100%] bg-ink/20 blur-xl" />
             </div>
           </motion.div>
