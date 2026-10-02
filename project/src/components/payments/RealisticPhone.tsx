@@ -24,7 +24,6 @@ const DISPLAY_CORNER = CORNER - BEZEL;
 // Camera framing: the canvas is CANVAS_SCALE times the phone's CSS box, so the phone can turn without clipping.
 export const CANVAS_SCALE = { x: 2.4, y: 1.35 };
 const FOV = 25;
-const CAMERA_DISTANCE = (HEIGHT * CANVAS_SCALE.y) / (2 * Math.tan(THREE.MathUtils.degToRad(FOV / 2)));
 
 const TITANIUM = '#bba98f';
 const BACK_GLASS = '#cdbca4';
@@ -45,12 +44,12 @@ const roundedRect = (w: number, h: number, r: number) => {
   return shape;
 };
 
-const Lens = ({ position }: { position: [number, number, number] }) => (
+const Lens = ({ position, ring = TITANIUM }: { position: [number, number, number]; ring?: string }) => (
   <group position={position} rotation={[Math.PI / 2, 0, 0]}>
     {/* titanium ring */}
     <mesh>
       <cylinderGeometry args={[0.108, 0.112, 0.045, 48]} />
-      <meshPhysicalMaterial color={TITANIUM} metalness={1} roughness={0.28} />
+      <meshPhysicalMaterial color={ring} metalness={1} roughness={0.28} />
     </mesh>
     {/* glass */}
     <mesh position={[0, 0.019, 0]}>
@@ -71,6 +70,11 @@ interface PhoneModelProps {
   rotateZ?: MotionValue<number>;
   /** Applied inside the scene: scaling the canvas element with CSS would desync the projected screen. */
   scale?: MotionValue<number>;
+  /** Shifts the model inside the frame, in phone widths (used to centre the camera detail). */
+  offsetX?: MotionValue<number>;
+  offsetY?: MotionValue<number>;
+  /** Titanium and back-glass tints for the selected finish. */
+  finish?: { frame: string; back: string };
   screen: ScreenKey;
   lockStage: number;
 }
@@ -86,7 +90,9 @@ const normaliseUVs = (geometry: THREE.BufferGeometry, width: number, height: num
   return geometry;
 };
 
-const PhoneModel = ({ rotateX, rotateY, rotateZ, scale, screen, lockStage }: PhoneModelProps) => {
+const PhoneModel = ({ rotateX, rotateY, rotateZ, scale, offsetX, offsetY, finish, screen, lockStage }: PhoneModelProps) => {
+  const frame = finish?.frame ?? TITANIUM;
+  const backGlass = finish?.back ?? BACK_GLASS;
   const group = useRef<THREE.Group>(null);
   const renderer = useMemo(() => new ScreenRenderer(), []);
 
@@ -132,6 +138,7 @@ const PhoneModel = ({ rotateX, rotateY, rotateZ, scale, screen, lockStage }: Pho
     // CSS rotations (y axis pointing down) mapped to three.js (y axis pointing up).
     group.current.rotation.set(-rx, ry, -rz);
     group.current.scale.setScalar(scale?.get() ?? 1);
+    group.current.position.set(offsetX?.get() ?? 0, offsetY?.get() ?? 0, 0);
     renderer.update(performance.now());
   });
 
@@ -142,7 +149,7 @@ const PhoneModel = ({ rotateX, rotateY, rotateZ, scale, screen, lockStage }: Pho
     <group ref={group}>
       {/* Titanium body */}
       <mesh geometry={geometry.body}>
-        <meshPhysicalMaterial color={TITANIUM} metalness={1} roughness={0.3} clearcoat={0.4} clearcoatRoughness={0.3} />
+        <meshPhysicalMaterial color={frame} metalness={1} roughness={0.3} clearcoat={0.4} clearcoatRoughness={0.3} />
       </mesh>
 
       {/* Front glass */}
@@ -152,17 +159,17 @@ const PhoneModel = ({ rotateX, rotateY, rotateZ, scale, screen, lockStage }: Pho
 
       {/* Back glass, matte */}
       <mesh geometry={geometry.back} position={[0, 0, backZ - 0.0015]} rotation={[0, Math.PI, 0]}>
-        <meshPhysicalMaterial color={BACK_GLASS} metalness={0.15} roughness={0.55} clearcoat={0.5} clearcoatRoughness={0.6} />
+        <meshPhysicalMaterial color={backGlass} metalness={0.15} roughness={0.55} clearcoat={0.5} clearcoatRoughness={0.6} />
       </mesh>
 
       {/* Camera plateau and lenses (back, top-left as seen from behind) */}
       <group position={[0.19, 0.73, backZ - 0.002]} rotation={[0, Math.PI, 0]}>
         <mesh geometry={geometry.plateau} position={[0, 0, 0]}>
-          <meshPhysicalMaterial color={BACK_GLASS} metalness={0.35} roughness={0.25} clearcoat={1} clearcoatRoughness={0.1} />
+          <meshPhysicalMaterial color={backGlass} metalness={0.35} roughness={0.25} clearcoat={1} clearcoatRoughness={0.1} />
         </mesh>
-        <Lens position={[-0.115, 0.115, 0.045]} />
-        <Lens position={[-0.115, -0.115, 0.045]} />
-        <Lens position={[0.12, 0, 0.045]} />
+        <Lens position={[-0.115, 0.115, 0.045]} ring={frame} />
+        <Lens position={[-0.115, -0.115, 0.045]} ring={frame} />
+        <Lens position={[0.12, 0, 0.045]} ring={frame} />
         <mesh position={[0.135, 0.16, 0.036]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.04, 0.04, 0.01, 32]} />
           <meshPhysicalMaterial color="#f6ead2" roughness={0.2} emissive="#3a2f1c" />
@@ -188,7 +195,7 @@ const PhoneModel = ({ rotateX, rotateY, rotateZ, scale, screen, lockStage }: Pho
           smoothness={4}
           position={[(WIDTH / 2 + 0.004) * button.side, button.y, 0]}
         >
-          <meshPhysicalMaterial color={TITANIUM} metalness={1} roughness={0.35} />
+          <meshPhysicalMaterial color={frame} metalness={1} roughness={0.35} />
         </RoundedBox>
       ))}
 
@@ -222,6 +229,27 @@ const StudioLights = () => (
   </Environment>
 );
 
+const Scene = ({ fit, ...model }: PhoneModelProps & { fit: number }) => (
+  <Canvas
+    dpr={[1, 2]}
+    gl={{ antialias: true, alpha: true, toneMapping: THREE.ACESFilmicToneMapping }}
+    camera={{ fov: FOV, position: [0, 0, HEIGHT / fit / (2 * Math.tan(THREE.MathUtils.degToRad(FOV / 2)))], near: 0.1, far: 50 }}
+    style={{ pointerEvents: 'none' }}
+  >
+    <ambientLight intensity={0.25} />
+    <directionalLight position={[3, 5, 6]} intensity={1.1} />
+    <StudioLights />
+    <PhoneModel {...model} />
+  </Canvas>
+);
+
+/** Fills its (positioned) parent; `fit` is the share of the canvas height the phone occupies. */
+export const PhoneScene = ({ fit = 0.72, ...model }: PhoneModelProps & { fit?: number }) => (
+  <div className="absolute inset-0">
+    <Scene fit={fit} {...model} />
+  </div>
+);
+
 interface RealisticPhoneProps extends PhoneModelProps {
   className?: string;
 }
@@ -233,17 +261,7 @@ const RealisticPhone = ({ className, ...model }: RealisticPhoneProps) => (
       className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
       style={{ width: `${CANVAS_SCALE.x * 100}%`, height: `${CANVAS_SCALE.y * 100}%` }}
     >
-      <Canvas
-        dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true, toneMapping: THREE.ACESFilmicToneMapping }}
-        camera={{ fov: FOV, position: [0, 0, CAMERA_DISTANCE], near: 0.1, far: 50 }}
-        style={{ pointerEvents: 'none' }}
-      >
-        <ambientLight intensity={0.25} />
-        <directionalLight position={[3, 5, 6]} intensity={1.1} />
-        <StudioLights />
-        <PhoneModel {...model} />
-      </Canvas>
+      <Scene fit={1 / CANVAS_SCALE.y} {...model} />
     </div>
   </div>
 );

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { products, type Product } from '../../data/products';
+import type { Product } from '../../data/products';
+import { LEGACY_CATEGORY_PATHS, productsIn } from '../../lib/catalog';
 import { unsplash, unsplashSrcSet } from '../../lib/images';
 import { inViewOnce, riseIn3d, stagger } from '../../lib/motion';
 import SectionHeading from '../ui/SectionHeading';
@@ -57,10 +58,11 @@ const CATEGORIES: CategoryTile[] = [
   },
 ];
 
-const countByCategory = products.reduce<Record<string, number>>((acc, product) => {
-  acc[product.category] = (acc[product.category] ?? 0) + 1;
-  return acc;
-}, {});
+// Counts follow the shop shelves these tiles link to.
+const countFor = (id: Product['category']) => {
+  const [, , category, subcategory] = (LEGACY_CATEGORY_PATHS[id] ?? '').split('/');
+  return category ? productsIn(category, subcategory).length : 0;
+};
 
 const CategoryGrid = () => (
   <section id="categorias" className="container-site scroll-mt-24 py-28 lg:py-40" aria-labelledby="categorias-titulo">
@@ -70,7 +72,7 @@ const CategoryGrid = () => (
       eyebrow="Categorias"
       title="Encontre o que procura"
       action={
-        <Link to="/products" className="link-underline text-sm">
+        <Link to="/loja" className="link-underline text-sm">
           Ver todos os produtos
         </Link>
       }
@@ -90,7 +92,7 @@ const CategoryGrid = () => (
           className={`${category.span} [transform-origin:50%_100%]`}
         >
           <Link
-            to={`/products?category=${category.id}`}
+            to={LEGACY_CATEGORY_PATHS[category.id] ?? '/loja'}
             className={`group relative block aspect-[4/5] overflow-hidden rounded-sm bg-ink sm:aspect-[4/3] ${category.shape}`}
           >
             <img
@@ -105,7 +107,7 @@ const CategoryGrid = () => (
             <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 text-paper lg:p-8">
               <h3 className="font-display text-2xl font-medium tracking-tight lg:text-3xl">{category.label}</h3>
               <span className="text-sm tabular-nums text-paper/70">
-                {countByCategory[category.id] ?? 0} produtos
+                {countFor(category.id)} produtos
               </span>
             </div>
           </Link>

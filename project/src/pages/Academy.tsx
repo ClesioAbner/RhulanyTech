@@ -730,7 +730,7 @@ const Academy = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                to="/products"
+                to="/loja"
                 className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-xl hover:shadow-lg transition-all font-bold text-lg"
               >
                 🛍️ Ver Equipamentos

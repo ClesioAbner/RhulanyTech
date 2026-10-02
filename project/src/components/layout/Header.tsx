@@ -6,7 +6,7 @@ import { useUserStore } from '../../stores/userStore';
 import { easeOutExpo } from '../../lib/motion';
 
 const NAV_ITEMS = [
-  { to: '/products', label: 'Loja' },
+  { to: '/loja', label: 'Loja' },
   { to: '/#pagamentos', label: 'Pagamentos' },
   { to: '/blog', label: 'Blog' },
   { to: '/about', label: 'Sobre' },
@@ -14,7 +14,8 @@ const NAV_ITEMS = [
 ];
 
 // Hash links point at homepage sections, so they never claim the active route.
-const isNavItemActive = (to: string, pathname: string) => !to.includes('#') && pathname.startsWith(to);
+const isNavItemActive = (to: string, pathname: string) =>
+  !to.includes('#') && (pathname.startsWith(to) || (to === '/loja' && pathname.startsWith('/produto/')));
 
 const COMPACT_AFTER = 48; // px scrolled before the bar contracts
 // Minimal contraction on scroll: the bar stays full-featured, it just tightens and lifts.

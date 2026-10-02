@@ -1,7 +1,8 @@
 import { useMemo, useState, type RefObject } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { products, type Product } from '../../data/products';
+import type { Product } from '../../data/products';
+import { CATALOG, LEGACY_CATEGORY_PATHS, getProductById, type CatalogProduct } from '../../lib/catalog';
 import { easeOutExpo } from '../../lib/motion';
 import ProductCard from '../product/ProductCard';
 import SectionHeading from '../ui/SectionHeading';
@@ -33,14 +34,12 @@ const ShopSection = ({ sectionRef, phoneSlotRef }: ShopSectionProps) => {
 
   const visibleProducts = useMemo(() => {
     if (activeFilter === 'todos') {
-      return CURATED_IDS.map((id) => products.find((product) => product.id === id)).filter(
-        (product): product is Product => Boolean(product),
-      );
+      return CURATED_IDS.map((id) => getProductById(id)).filter((product): product is CatalogProduct => Boolean(product));
     }
-    return products.filter((product) => product.category === activeFilter).slice(0, MAX_ITEMS);
+    return CATALOG.filter((product) => product.category === activeFilter).slice(0, MAX_ITEMS);
   }, [activeFilter]);
 
-  const catalogueLink = activeFilter === 'todos' ? '/products' : `/products?category=${activeFilter}`;
+  const catalogueLink = activeFilter === 'todos' ? '/loja' : (LEGACY_CATEGORY_PATHS[activeFilter] ?? '/loja');
 
   return (
     <section ref={sectionRef} id="loja" className="relative scroll-mt-24 border-t border-ink/10" aria-labelledby="loja-titulo">

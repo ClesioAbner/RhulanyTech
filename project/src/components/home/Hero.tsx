@@ -69,7 +69,7 @@ const Hero = () => {
 
             <div className="flex items-center gap-3">
               <Link
-                to="/products"
+                to="/loja"
                 className="inline-flex h-12 items-center rounded-full bg-paper px-7 text-sm font-medium text-ink transition-colors duration-300 hover:bg-mist"
               >
                 Entrar na loja
