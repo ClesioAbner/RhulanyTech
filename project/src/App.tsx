@@ -5,6 +5,7 @@ import { useUserStore } from './stores/userStore';
 import Home from './pages/Home';
 import Footer from './components/Footer';
 import Header from './components/layout/Header';
+import CartDrawer from './components/cart/CartDrawer';
 import { LEGACY_CATEGORY_PATHS, getProductById, productPath } from './lib/catalog';
 
 // Route-level code splitting: only the homepage ships in the first bundle.
@@ -12,7 +13,7 @@ const ShopLayout = lazy(() => import('./components/shop/ShopLayout'));
 const Shop = lazy(() => import('./pages/Shop'));
 const ShopCategory = lazy(() => import('./pages/ShopCategory'));
 const ProductPage = lazy(() => import('./pages/ProductPage'));
-const Cart = lazy(() => import('./components/Cart'));
+const CartPage = lazy(() => import('./pages/CartPage'));
 const Checkout = lazy(() => import('./pages/Checkout'));
 const About = lazy(() => import('./components/About'));
 const Academy = lazy(() => import('./pages/Academy'));
@@ -92,7 +93,7 @@ function App() {
               </Route>
               <Route path="/products" element={<LegacyProducts />} />
               <Route path="/products/:id" element={<LegacyProduct />} />
-              <Route path="/cart" element={<Cart />} />
+              <Route path="/cart" element={<CartPage />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/about" element={<About />} />
               <Route path="/academy" element={<Academy />} />
@@ -115,6 +116,7 @@ function App() {
 
         <Footer />
       </div>
+      <CartDrawer />
     </MotionConfig>
   );
 }

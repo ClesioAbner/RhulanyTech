@@ -37,6 +37,8 @@ export interface Highlight {
 
 export interface Merchandising {
   summary?: string;
+  /** Longer description shown on the product page. */
+  overview?: string;
   finishes?: Finish[];
   option?: { name: string; choices: OptionChoice[] };
   gallery?: GalleryView[];
@@ -106,7 +108,7 @@ export const MERCHANDISING: Record<string, Merchandising> = {
       { angle: 'lateral', alt: 'Lateral em titânio com os botões' },
       { angle: 'tres-quartos', alt: 'iPhone 16 Pro Max em perspectiva de três quartos' },
       { angle: 'camara', alt: 'Detalhe do sistema de câmaras' },
-      { angle: 'ambiente', src: '1695048133142-1a20484d2569', alt: 'iPhone pousado sobre uma superfície escura' },
+      { angle: 'ambiente', src: '1726587912121-ea21fcc57ff8', alt: 'iPhone 16 Pro em Titânio Deserto, frente e traseira' },
     ],
     highlights: [
       { title: 'Chip A18 Pro', body: 'Mais rápido e mais eficiente, para jogos exigentes, edição de vídeo e o dia inteiro de bateria.' },

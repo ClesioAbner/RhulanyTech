@@ -3,11 +3,11 @@ import { Link, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { useCartStore } from '../../stores/cartStore';
 import { useUserStore } from '../../stores/userStore';
+import { useCartUi } from '../../stores/cartUi';
 import { easeOutExpo } from '../../lib/motion';
 
 const NAV_ITEMS = [
   { to: '/loja', label: 'Loja' },
-  { to: '/#pagamentos', label: 'Pagamentos' },
   { to: '/blog', label: 'Blog' },
   { to: '/about', label: 'Sobre' },
   { to: '/academy', label: 'Academia' },
@@ -29,6 +29,7 @@ interface HeaderProps {
 const Header = ({ onSignIn, onOpenProfile }: HeaderProps) => {
   const { currentUser, logout } = useUserStore();
   const itemCount = useCartStore((state) => state.items.reduce((sum, item) => sum + item.quantity, 0));
+  const openCart = useCartUi((state) => state.open);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCompact, setIsCompact] = useState(false);
   const { pathname, hash } = useLocation();
@@ -99,10 +100,12 @@ const Header = ({ onSignIn, onOpenProfile }: HeaderProps) => {
             {currentUser ? currentUser.name.split(' ')[0] : 'Entrar'}
           </button>
 
-          <Link
-            to="/cart"
+          <button
+            type="button"
+            onClick={() => openCart()}
+            aria-haspopup="dialog"
             className="inline-flex h-10 items-center gap-2.5 rounded-full bg-ink pl-4 pr-2 text-paper transition-colors duration-300 hover:bg-ink-soft"
-            aria-label={`Carrinho, ${itemCount} artigos`}
+            aria-label={`Carrinho, ${itemCount} ${itemCount === 1 ? 'artigo' : 'artigos'}`}
           >
             Carrinho
             <span className="grid h-6 min-w-[1.5rem] place-items-center overflow-hidden rounded-full bg-paper/15 px-1.5 text-xs tabular-nums">
@@ -118,7 +121,7 @@ const Header = ({ onSignIn, onOpenProfile }: HeaderProps) => {
                 </motion.span>
               </AnimatePresence>
             </span>
-          </Link>
+          </button>
 
           <button
             type="button"

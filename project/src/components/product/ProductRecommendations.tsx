@@ -1,34 +1,43 @@
-import { Link } from 'react-router-dom';
-import { categoryPath, primaryPlacement, relatedProducts, type CatalogProduct } from '../../lib/catalog';
-import ProductGrid from '../shop/ProductGrid';
-import SectionHeading from '../ui/SectionHeading';
+import {
+  categoryPath,
+  complementaryProducts,
+  getCategory,
+  primaryPlacement,
+  relatedProducts,
+  type CatalogProduct,
+} from '../../lib/catalog';
+import Shelf from '../shop/Shelf';
+import ProductCard from './ProductCard';
 
+/** Two shelves after the specs: accessories that pair with the product, then similar products. */
 const ProductRecommendations = ({ product }: { product: CatalogProduct }) => {
-  const related = relatedProducts(product, 4);
-  if (!related.length) return null;
-  const placement = primaryPlacement(product);
+  const complements = complementaryProducts([product]);
+  const related = relatedProducts(product, 10);
+  const category = getCategory(primaryPlacement(product)?.category);
+  if (!complements.length && !related.length) return null;
 
   return (
-    <section className="border-t border-ink/10" aria-labelledby="recomendacoes">
-      <div className="container-site py-24 lg:py-32">
-        <SectionHeading
+    <div className="border-t border-ink/10 pb-12 pt-4 lg:pb-20">
+      {complements.length > 0 && (
+        <Shelf id="combina-com" title="Combina bem com" lead="Acessórios pensados para acompanhar este produto">
+          {complements.map((item) => (
+            <ProductCard key={item.id} product={item} />
+          ))}
+        </Shelf>
+      )}
+      {related.length > 0 && (
+        <Shelf
           id="recomendacoes"
-          index="03"
-          eyebrow="Continue a explorar"
           title="Também lhe pode interessar"
-          action={
-            placement && (
-              <Link to={categoryPath(placement.category)} className="link-underline text-sm">
-                Ver a categoria
-              </Link>
-            )
-          }
-        />
-        <div className="mt-12 lg:mt-16">
-          <ProductGrid products={related} columns={4} />
-        </div>
-      </div>
-    </section>
+          lead={category ? `Mais em ${category.name}` : undefined}
+          link={category && { to: categoryPath(category.slug), label: `Ver tudo em ${category.name}` }}
+        >
+          {related.map((item) => (
+            <ProductCard key={item.id} product={item} />
+          ))}
+        </Shelf>
+      )}
+    </div>
   );
 };
 

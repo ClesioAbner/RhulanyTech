@@ -1,3 +1,5 @@
+import { INVENTORY_PRODUCTS } from './catalog/inventory';
+
 export interface Product {
   id: string;
   name: string;
@@ -30,7 +32,7 @@ export interface Product {
   tags: string[];
 }
 
-export const products: Product[] = [
+const LEGACY_PRODUCTS: Product[] = [
   // Celulares Premium
   {
     id: '1',
@@ -143,7 +145,7 @@ export const products: Product[] = [
     name: 'Xiaomi 14 Ultra 512GB',
     price: 115000,
     images: [
-      'https://images.unsplash.com/photo-1655356392708-c675781f1748?auto=format&fit=crop&w=800'
+      'https://images.unsplash.com/photo-1770274813875-346bfaf0ee11?auto=format&fit=crop&w=800'
     ],
     description: 'Câmera profissional Leica em smartphone com zoom periscópico',
     category: 'celulares',
@@ -244,8 +246,8 @@ export const products: Product[] = [
   {
     id: '10',
     name: 'PlayStation 5 Pro 2TB',
-    price: 450000,
-    originalPrice: 480000,
+    price: 105000,
+    originalPrice: 115000,
     images: [
       'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&w=800&angle=45',
@@ -271,7 +273,7 @@ export const products: Product[] = [
   {
     id: '11',
     name: 'Xbox Series X 1TB',
-    price: 420000,
+    price: 90000,
     images: [
       'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?auto=format&fit=crop&w=800&angle=45'
@@ -295,7 +297,7 @@ export const products: Product[] = [
   {
     id: '12',
     name: 'Nintendo Switch OLED 64GB',
-    price: 280000,
+    price: 52000,
     images: [
       'https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=800&angle=45'
@@ -319,7 +321,7 @@ export const products: Product[] = [
   {
     id: '13',
     name: 'Steam Deck OLED 1TB',
-    price: 380000,
+    price: 97000,
     images: [
       'https://images.unsplash.com/photo-1656662962127-d8344d924d74?auto=format&fit=crop&w=800'
     ],
@@ -867,3 +869,6 @@ export const products: Product[] = [
     tags: ['capa', 'iphone', 'magsafe', 'proteccao'],
   },
 ];
+
+// Everything the store sells: the original catalogue plus the additions in data/catalog/inventory.ts.
+export const products: Product[] = [...LEGACY_PRODUCTS, ...INVENTORY_PRODUCTS];

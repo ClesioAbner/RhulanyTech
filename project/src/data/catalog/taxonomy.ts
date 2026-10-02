@@ -30,7 +30,7 @@ export const CATEGORIES: Category[] = [
     description: 'Os topos de gama das marcas que importam, com garantia oficial e configuração na loja.',
     image: '1695048133142-1a20484d2569',
     subcategories: [
-      { slug: 'iphone', name: 'iPhone', tagline: 'A geração mais recente, em titânio' },
+      { slug: 'iphone', name: 'iPhone', tagline: 'Do iPhone 13 ao novo iPhone 17 Pro' },
       { slug: 'samsung', name: 'Samsung', tagline: 'Galaxy, com inteligência no ecrã e na câmara' },
       { slug: 'xiaomi', name: 'Xiaomi', tagline: 'Fotografia de topo, preço sensato' },
       { slug: 'google-pixel', name: 'Google Pixel', tagline: 'O Android como a Google o pensou' },
@@ -103,6 +103,7 @@ export const CATEGORIES: Category[] = [
       { slug: 'auscultadores', name: 'Auscultadores', tagline: 'Som sem distracções' },
       { slug: 'teclados', name: 'Teclados', tagline: 'Escrever e jogar com precisão' },
       { slug: 'ratos', name: 'Ratos', tagline: 'Ergonomia e velocidade' },
+      { slug: 'comandos', name: 'Comandos', tagline: 'Para consola, PC e telemóvel' },
       { slug: 'webcams', name: 'Webcams', tagline: 'Imagem nítida nas videochamadas' },
       { slug: 'carregadores', name: 'Carregadores', tagline: 'Mais potência, menos cabos' },
       { slug: 'hubs', name: 'Hubs', tagline: 'Todas as portas de que precisa' },

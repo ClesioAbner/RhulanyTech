@@ -6,7 +6,7 @@ import { easeOutExpo, inViewOnce } from '../../lib/motion';
 import SectionHeading from '../ui/SectionHeading';
 
 const MAIN_IMAGE = '1593305841991-05c297ba4575';
-const DETAIL_IMAGE = '1552820728-8b83bb6b773f';
+const DETAIL_IMAGE = '1670535787435-63a39a5b8d32';
 
 const HIGHLIGHTS = [
   { label: 'Consoles', detail: 'PlayStation, Xbox e Nintendo' },
@@ -98,7 +98,7 @@ const GamingFeature = () => {
           >
             <img
               src={unsplash(DETAIL_IMAGE, 700)}
-              alt="Comando de consola sobre superfície escura"
+              alt="Comando DualSense branco sobre madeira"
               loading="lazy"
               className="aspect-[4/5] w-full object-cover"
             />

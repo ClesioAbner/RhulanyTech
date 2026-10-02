@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -14,14 +14,34 @@ import {
 } from '../lib/catalog';
 import { STORE } from '../data/store';
 import { easeOutExpo } from '../lib/motion';
-import CategoryHero from '../components/shop/CategoryHero';
-import CategoryTabs from '../components/shop/CategoryTabs';
+import CategoryStrip from '../components/shop/CategoryStrip';
 import ProductGrid from '../components/shop/ProductGrid';
+import ProductCard from '../components/product/ProductCard';
+import Shelf from '../components/shop/Shelf';
+import SortMenu from '../components/shop/SortMenu';
 
-const LINEUP_ID = 'gama';
 const isSort = (value: string | null): value is SortId => SORT_OPTIONS.some((option) => option.id === value);
+const countLabel = (count: number) => `${count} ${count === 1 ? 'produto' : 'produtos'}`;
+const HEADER_CLEARANCE = 90; // px under the floating header where the toolbar sticks
 
-/** /loja/:category and /loja/:category/:subcategory share this page so tabs and hero animate in place. */
+/** True once the element has scrolled up under the floating header. */
+const useStuck = (key?: string) => {
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const [stuck, setStuck] = useState(false);
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setStuck(!entry.isIntersecting && entry.boundingClientRect.top < HEADER_CLEARANCE),
+      { rootMargin: `-${HEADER_CLEARANCE}px 0px 0px 0px` },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [key]);
+  return [sentinelRef, stuck] as const;
+};
+
+/** /loja/:category and /loja/:category/:subcategory share this page so the strip animates in place. */
 const ShopCategory = () => {
   const { category: categorySlug, subcategory: subcategorySlug } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -29,9 +49,21 @@ const ShopCategory = () => {
   const subcategory = getSubcategory(category, subcategorySlug);
   const sortParam = searchParams.get('ordem');
   const sort: SortId = isSort(sortParam) ? sortParam : 'destaque';
+  const [toolbarSentinel, toolbarStuck] = useStuck(category?.slug);
 
   const products = useMemo(
     () => (category ? sortProducts(productsIn(category.slug, subcategory?.slug), sort) : []),
+    [category, subcategory, sort],
+  );
+
+  // "Tudo" in the default order reads best as one shelf per range; any explicit sort becomes one list.
+  const ranges = useMemo(
+    () =>
+      category && !subcategory && sort === 'destaque'
+        ? category.subcategories
+            .map((sub) => ({ sub, products: sortProducts(productsIn(category.slug, sub.slug), 'destaque') }))
+            .filter((range) => range.products.length > 0)
+        : null,
     [category, subcategory, sort],
   );
 
@@ -48,9 +80,6 @@ const ShopCategory = () => {
     );
   }
 
-  const heroImage = subcategory ? subcategoryCover(category.slug, subcategory, 2000) : resolveImage(category.image, 2000);
-  const lineupTitle = subcategory ? `Gama ${subcategory.name}` : `Tudo em ${category.name}`;
-
   const setSort = (next: SortId) => {
     const params = new URLSearchParams(searchParams);
     if (next === 'destaque') params.delete('ordem');
@@ -58,90 +87,143 @@ const ShopCategory = () => {
     setSearchParams(params, { replace: true });
   };
 
-  return (
-    <div className="pb-28 lg:pb-40">
-      <CategoryHero category={category} subcategory={subcategory} image={heroImage} lineupId={LINEUP_ID} />
+  // Keep the chosen order when moving between ranges.
+  const withSort = (path: string) => (sort === 'destaque' ? path : `${path}?ordem=${sort}`);
 
-      <div className="mt-16 lg:mt-24">
-        <CategoryTabs category={category} activeSubcategory={subcategory?.slug} />
+  const stripItems = [
+    {
+      key: 'tudo',
+      to: withSort(categoryPath(category.slug)),
+      label: 'Tudo',
+      image: resolveImage(category.image, 360),
+      meta: countLabel(productsIn(category.slug).length),
+    },
+    ...category.subcategories.map((sub) => {
+      const count = productsIn(category.slug, sub.slug).length;
+      return {
+        key: sub.slug,
+        to: withSort(categoryPath(category.slug, sub.slug)),
+        label: sub.name,
+        image: subcategoryCover(category.slug, sub, 360),
+        meta: count > 0 ? countLabel(count) : 'Brevemente',
+      };
+    }),
+  ];
+
+  const title = subcategory?.name ?? category.name;
+  const lead = subcategory?.tagline ?? category.tagline;
+
+  return (
+    <div className="pb-28 lg:pb-36">
+      <header className="container-site pt-10 lg:pt-14">
+        <nav aria-label="Caminho" className="text-xs text-ink/45">
+          <Link to="/loja" className="link-underline">
+            Loja
+          </Link>
+          {subcategory && (
+            <>
+              <span className="mx-2">/</span>
+              <Link to={categoryPath(category.slug)} className="link-underline">
+                {category.name}
+              </Link>
+            </>
+          )}
+        </nav>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.h1
+            key={title}
+            className="mt-4 max-w-4xl font-display text-[2.5rem] font-medium leading-[1.04] tracking-tightest [text-wrap:balance] sm:text-5xl lg:text-6xl"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8, transition: { duration: 0.15 } }}
+            transition={{ duration: 0.6, ease: easeOutExpo }}
+          >
+            {title} <span className="text-ink/40">{lead}</span>
+          </motion.h1>
+        </AnimatePresence>
+      </header>
+
+      <div className="mt-8 lg:mt-10">
+        <CategoryStrip
+          label={`Gamas de ${category.name}`}
+          items={stripItems}
+          activeKey={subcategory?.slug ?? 'tudo'}
+          markerId={`strip-${category.slug}`}
+        />
       </div>
 
-      <section id={LINEUP_ID} className="container-site scroll-mt-40 pt-12 lg:pt-16" aria-labelledby="gama-titulo">
-        <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between lg:mb-14">
-          <div>
-            <h2 id="gama-titulo" className="font-display text-3xl font-medium tracking-tight lg:text-4xl">
-              {lineupTitle}
-            </h2>
-            <p className="mt-2 text-sm text-ink/55" aria-live="polite">
-              <span className="tabular-nums text-ink">{products.length}</span> {products.length === 1 ? 'produto' : 'produtos'}
-            </p>
-          </div>
-          {products.length > 1 && (
-            <label className="relative self-start sm:self-auto">
-              <span className="sr-only">Ordenar por</span>
-              <select
-                value={sort}
-                onChange={(event) => setSort(event.target.value as SortId)}
-                className="h-11 cursor-pointer appearance-none rounded-full border border-ink/15 bg-transparent pl-5 pr-10 text-sm outline-none transition-colors hover:border-ink/40 focus:border-ink/60"
-              >
-                {SORT_OPTIONS.map((option) => (
-                  <option key={option.id} value={option.id}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute right-5 top-1/2 h-1.5 w-1.5 -translate-y-[70%] rotate-45 border-b border-r border-ink/60"
-              />
-            </label>
-          )}
+      <div ref={toolbarSentinel} aria-hidden="true" className="mt-6 h-px" />
+      {/* Once stuck, a frosted band also fills the strip behind the floating header so nothing peeks through. */}
+      <div
+        className={`sticky top-[76px] z-20 -mt-px border-y border-ink/[0.07] bg-paper/85 backdrop-blur-xl before:pointer-events-none before:absolute before:inset-x-0 before:bottom-full before:h-[84px] before:bg-paper/85 before:backdrop-blur-xl before:transition-opacity before:duration-300 sm:top-[84px] ${
+          toolbarStuck ? 'before:opacity-100' : 'before:opacity-0'
+        }`}
+      >
+        <div className="container-site flex h-16 items-center justify-between gap-4">
+          <p className="text-sm text-ink/55" aria-live="polite">
+            <span className="font-medium text-ink">{title}</span>
+            <span className="mx-2 max-sm:hidden">·</span>
+            <span className="tabular-nums max-sm:hidden">{countLabel(products.length)}</span>
+          </p>
+          {products.length > 1 && <SortMenu value={sort} onChange={setSort} />}
         </div>
+      </div>
 
-        <AnimatePresence mode="wait" initial={false}>
-          {products.length > 0 ? (
-            <motion.div
-              key={subcategory?.slug ?? 'tudo'}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, transition: { duration: 0.15 } }}
-              transition={{ duration: 0.4 }}
-            >
-              <ProductGrid products={products} columns={products.length <= 2 ? 2 : 3} />
-            </motion.div>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={`${subcategory?.slug ?? 'tudo'}-${sort}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0, transition: { duration: 0.15 } }}
+          transition={{ duration: 0.4 }}
+        >
+          {ranges ? (
+            ranges.map(({ sub, products: rangeProducts }, index) => (
+              <Shelf
+                key={sub.slug}
+                id={`gama-${sub.slug}`}
+                title={sub.name}
+                lead={sub.tagline}
+                className={index === 0 ? 'mt-10 lg:mt-12' : 'mt-14 lg:mt-16'}
+                link={{ to: categoryPath(category.slug, sub.slug), label: `Ver todos (${rangeProducts.length})` }}
+              >
+                {rangeProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </Shelf>
+            ))
+          ) : products.length > 0 ? (
+            <div className="container-site mt-10 lg:mt-12">
+              <ProductGrid products={products} />
+            </div>
           ) : (
-            <motion.div
-              key="vazio"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: easeOutExpo }}
-              className="rounded-[24px] border border-ink/10 px-6 py-20 text-center"
-            >
-              <h3 className="font-display text-3xl font-medium tracking-tight">Brevemente nesta gama</h3>
-              <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink/60">
-                Estamos a preparar o stock de {subcategory?.name ?? category.name}. Se procura um modelo específico,
-                encomendamos para si.
-              </p>
-              <div className="mt-8 flex flex-wrap justify-center gap-3">
-                <a
-                  href={STORE.whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper"
-                >
-                  Pedir pelo WhatsApp
-                </a>
-                <Link
-                  to={categoryPath(category.slug)}
-                  className="inline-flex h-11 items-center rounded-full border border-ink/15 px-6 text-sm font-medium"
-                >
-                  Ver tudo em {category.name}
-                </Link>
+            <div className="container-site mt-10">
+              <div className="rounded-[24px] bg-white px-6 py-20 text-center">
+                <h2 className="font-display text-3xl font-medium tracking-tight">Brevemente nesta gama</h2>
+                <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink/60">
+                  Estamos a preparar o stock de {title}. Se procura um modelo específico, encomendamos para si.
+                </p>
+                <div className="mt-8 flex flex-wrap justify-center gap-3">
+                  <a
+                    href={STORE.whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper"
+                  >
+                    Pedir pelo WhatsApp
+                  </a>
+                  <Link
+                    to={categoryPath(category.slug)}
+                    className="inline-flex h-11 items-center rounded-full border border-ink/15 px-6 text-sm font-medium"
+                  >
+                    Ver tudo em {category.name}
+                  </Link>
+                </div>
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
-      </section>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 };

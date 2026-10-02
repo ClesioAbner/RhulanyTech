@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion, useInView } from 'framer-motion';
-import toast from 'react-hot-toast';
 import {
   categoryPath,
   getCategory,
@@ -12,9 +11,10 @@ import {
 } from '../lib/catalog';
 import { formatPrice } from '../lib/format';
 import { easeOutExpo } from '../lib/motion';
-import { useCartStore } from '../stores/cartStore';
+import { useAddToCart } from '../lib/useAddToCart';
 import ProductGallery from '../components/product/ProductGallery';
 import ProductVariants from '../components/product/ProductVariants';
+import ProductOverview, { OVERVIEW_ID } from '../components/product/ProductOverview';
 import ProductHighlights from '../components/product/ProductHighlights';
 import ProductSpecifications from '../components/product/ProductSpecifications';
 import ProductRecommendations from '../components/product/ProductRecommendations';
@@ -55,7 +55,7 @@ const Breadcrumb = ({ product }: { product: CatalogProduct }) => {
 
 const ProductView = ({ product }: { product: CatalogProduct }) => {
   const navigate = useNavigate();
-  const addToCart = useCartStore((state) => state.addToCart);
+  const addToCart = useAddToCart();
   const [finishIndex, setFinishIndex] = useState(0);
   const [optionIndex, setOptionIndex] = useState(0);
   const ctaRef = useRef<HTMLDivElement>(null);
@@ -65,25 +65,10 @@ const ProductView = ({ product }: { product: CatalogProduct }) => {
   const option = product.option?.choices[optionIndex];
   const price = product.price + (option?.priceDelta ?? 0);
 
-  const addSelection = () => {
-    addToCart({
-      id: [product.id, finish?.name, option?.label].filter(Boolean).join(':'),
-      name: [product.title, option?.label, finish?.name].filter(Boolean).join(' · '),
-      price,
-      image: product.primaryImage,
-      brand: product.brand,
-      model: product.model,
-      maxQuantity: product.stockQuantity,
-    });
-  };
-
-  const handleAdd = () => {
-    addSelection();
-    toast(`${product.title} adicionado ao carrinho`);
-  };
+  const handleAdd = () => addToCart(product, finish, option);
 
   const handleBuyNow = () => {
-    addSelection();
+    addToCart(product, finish, option, { openDrawer: false });
     navigate('/checkout');
   };
 
@@ -111,6 +96,13 @@ const ProductView = ({ product }: { product: CatalogProduct }) => {
               {product.title}
             </h1>
             <p className="mt-4 max-w-md text-base leading-relaxed text-ink/60">{product.summary}</p>
+            <button
+              type="button"
+              onClick={() => document.getElementById(OVERVIEW_ID)?.scrollIntoView({ behavior: 'smooth' })}
+              className="link-underline mt-3 text-sm font-medium"
+            >
+              Ler a visão geral
+            </button>
             <p className="mt-4 text-sm text-ink/55">
               <span className="font-medium text-ink">{ratingFormatter.format(product.rating)} de 5</span>
               <span className="mx-2">·</span>
@@ -189,6 +181,7 @@ const ProductView = ({ product }: { product: CatalogProduct }) => {
       </div>
 
       <div className="mt-24 lg:mt-32">
+        <ProductOverview product={product} />
         <ProductHighlights product={product} />
         <ProductSpecifications product={product} />
         <ProductRecommendations product={product} />
