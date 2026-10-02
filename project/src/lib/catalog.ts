@@ -1,15 +1,20 @@
 import { products, type Product } from '../data/products';
 import { CATEGORIES, type Category, type Subcategory } from '../data/catalog/taxonomy';
-import { PLACEMENTS } from '../data/catalog/placements';
+import { PLACEMENTS as LEGACY_PLACEMENTS } from '../data/catalog/placements';
+import { INVENTORY_MERCHANDISING, INVENTORY_PLACEMENTS } from '../data/catalog/inventory';
+import { OVERVIEWS } from '../data/catalog/overviews';
 import {
   COLOR_SWATCHES,
-  MERCHANDISING,
+  MERCHANDISING as LEGACY_MERCHANDISING,
   type Finish,
   type GalleryView,
   type Highlight,
   type Merchandising,
 } from '../data/catalog/merchandising';
 import { unsplash } from './images';
+
+const PLACEMENTS: Record<string, string[]> = { ...LEGACY_PLACEMENTS, ...INVENTORY_PLACEMENTS };
+const MERCHANDISING: Record<string, Merchandising> = { ...LEGACY_MERCHANDISING, ...INVENTORY_MERCHANDISING };
 
 export type { Category, Subcategory } from '../data/catalog/taxonomy';
 export type { Finish, GalleryView, Highlight, OptionChoice } from '../data/catalog/merchandising';
@@ -29,6 +34,8 @@ export interface CatalogProduct extends Product {
   /** Name without a storage suffix when storage is a selectable option. */
   title: string;
   summary: string;
+  /** Longer description for the product page. */
+  overview: string;
   placements: Placement[];
   finishes: Finish[];
   option?: Merchandising['option'];
@@ -84,6 +91,7 @@ const toCatalogProduct = (product: Product): CatalogProduct => {
     slug: slugify(title),
     title,
     summary: merch.summary ?? product.description,
+    overview: merch.overview ?? OVERVIEWS[product.id] ?? product.description,
     placements: (PLACEMENTS[product.id] ?? []).map((path) => {
       const [category, subcategory] = path.split('/');
       return { category, subcategory };
@@ -138,16 +146,44 @@ export const relatedProducts = (product: CatalogProduct, limit = 4) => {
   return [...sameShelf, ...sameCategory].filter((p) => !seen.has(p.id) && seen.add(p.id)).slice(0, limit);
 };
 
+// Accessory shelves that pair with each category, for "Combina bem com" suggestions.
+const COMPLEMENTS: Record<string, string[]> = {
+  celulares: ['capas', 'carregadores', 'auscultadores'],
+  computadores: ['ratos', 'teclados', 'hubs', 'webcams'],
+  gaming: ['comandos', 'auscultadores'],
+  cameras: ['carregadores'],
+  acessorios: ['carregadores', 'auscultadores', 'ratos'],
+};
+
+/** Accessories that suit the given products, best rated first, excluding the products themselves. */
+export const complementaryProducts = (items: CatalogProduct[], limit = 8) => {
+  const exclude = new Set(items.map((item) => item.id));
+  const shelves = [...new Set(items.flatMap((item) => COMPLEMENTS[primaryPlacement(item)?.category ?? ''] ?? []))];
+  const candidates = shelves.flatMap((shelf) => productsIn('acessorios', shelf));
+  return sortProducts(
+    candidates.filter((p) => !exclude.has(p.id) && exclude.add(p.id) && p.inStock),
+    'destaque',
+  ).slice(0, limit);
+};
+
 export const productPath = (product: CatalogProduct) => `/produto/${product.slug}`;
 export const categoryPath = (categorySlug: string, subcategorySlug?: string) =>
   subcategorySlug ? `/loja/${categorySlug}/${subcategorySlug}` : `/loja/${categorySlug}`;
+
+// ---------- Merchandising lists ----------
+
+/** Latest launches, newest first; drives the "Novo" label and the shop's new-arrivals shelf. */
+export const NEW_ARRIVAL_IDS = ['38', '39', '40', '41', '46', '71', '54', '55', '56', '57', '51', '53'];
+export const isNewArrival = (product: Pick<CatalogProduct, 'id'>) => NEW_ARRIVAL_IDS.includes(product.id);
+export const newArrivals = () => NEW_ARRIVAL_IDS.map((id) => getProductById(id)).filter((p): p is CatalogProduct => Boolean(p));
 
 // ---------- Sorting ----------
 
 export const SORT_OPTIONS = [
   { id: 'destaque', label: 'Em destaque' },
-  { id: 'preco-asc', label: 'Preço, do mais baixo' },
-  { id: 'preco-desc', label: 'Preço, do mais alto' },
+  { id: 'novidades', label: 'Novidades' },
+  { id: 'preco-asc', label: 'Preço: do mais baixo ao mais alto' },
+  { id: 'preco-desc', label: 'Preço: do mais alto ao mais baixo' },
   { id: 'avaliacao', label: 'Melhor avaliados' },
 ] as const;
 
@@ -164,6 +200,8 @@ export const sortProducts = (list: CatalogProduct[], sort: SortId) => {
       return copy.sort((a, b) => priceFrom(b) - priceFrom(a));
     case 'avaliacao':
       return copy.sort((a, b) => b.rating - a.rating || b.reviews - a.reviews);
+    case 'novidades':
+      return copy.sort((a, b) => Number(isNewArrival(b)) - Number(isNewArrival(a)) || Number(b.id) - Number(a.id));
     default:
       return copy.sort((a, b) => popularity(b) - popularity(a));
   }

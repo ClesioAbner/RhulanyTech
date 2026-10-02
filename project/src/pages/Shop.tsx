@@ -1,108 +1,210 @@
+import type { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { CATALOG, CATEGORIES, productsIn, sortProducts } from '../lib/catalog';
-import { unsplash, unsplashSrcSet } from '../lib/images';
-import { easeOutExpo, inViewOnce } from '../lib/motion';
-import { useShopMenu } from '../components/shop/ShopMenu';
-import ProductGrid from '../components/shop/ProductGrid';
-import SectionHeading from '../components/ui/SectionHeading';
+import {
+  CATALOG,
+  CATEGORIES,
+  categoryPath,
+  newArrivals,
+  priceFrom,
+  productPath,
+  productsIn,
+  resolveImage,
+  sortProducts,
+  type CatalogProduct,
+} from '../lib/catalog';
+import { formatPrice } from '../lib/format';
+import { easeOutExpo } from '../lib/motion';
+import { STORE } from '../data/store';
+import CategoryStrip from '../components/shop/CategoryStrip';
+import Shelf from '../components/shop/Shelf';
+import ProductCard from '../components/product/ProductCard';
 
-// Editorial rhythm for the six category tiles: two wide, then four.
-const TILE_LAYOUT = ['lg:col-span-7', 'lg:col-span-5', 'lg:col-span-3', 'lg:col-span-3', 'lg:col-span-3', 'lg:col-span-3'];
-const TILE_SHAPE = ['lg:aspect-[16/10]', 'lg:aspect-[5/4]', 'lg:aspect-[3/4]', 'lg:aspect-[3/4]', 'lg:aspect-[3/4]', 'lg:aspect-[3/4]'];
+const NEW = newArrivals();
+const POPULAR = sortProducts(CATALOG, 'destaque')
+  .filter((product) => !NEW.includes(product))
+  .slice(0, 10);
+const GAMING = sortProducts(productsIn('gaming'), 'destaque').slice(0, 10);
+const ACCESSORIES = sortProducts(productsIn('acessorios'), 'destaque').slice(0, 12);
 
-const FEATURED = sortProducts(CATALOG, 'destaque').slice(0, 6);
+const REASONS = [
+  {
+    title: 'Garantia oficial',
+    body: 'Produtos originais, selados de fábrica, com a garantia do fabricante e assistência especializada.',
+  },
+  {
+    title: 'Entrega em todo o país',
+    body: 'Entregamos em Maputo e em todas as províncias, com acompanhamento até à sua porta.',
+  },
+  {
+    title: 'Pague como preferir',
+    body: 'M-Pesa, e-Mola, cartão ou PayPal. Escolha no checkout o método que lhe der mais jeito.',
+    link: { to: '/#pagamentos', label: 'Ver métodos de pagamento' },
+  },
+  {
+    title: 'Aconselhamento real',
+    body: 'Uma equipa que usa o que vende e o ajuda a escolher a configuração certa.',
+  },
+];
 
-/** /loja: the shop's front door. Categories are explored visually; each opens its subcategory menu. */
-const Shop = () => {
-  const { toggle, openCategory } = useShopMenu();
+const HELP = [
+  {
+    title: 'Fale connosco no WhatsApp',
+    body: 'Tire dúvidas sobre um produto, peça um modelo que não encontra ou acompanhe a sua encomenda.',
+    href: STORE.whatsappUrl,
+    action: 'Abrir conversa',
+  },
+  {
+    title: 'Prefere ligar',
+    body: `${STORE.hours}. Do outro lado está alguém que conhece os produtos.`,
+    href: STORE.phoneHref,
+    action: STORE.phone,
+  },
+];
 
-  return (
-    <div className="pb-28 lg:pb-40">
-      <header className="container-site pt-12 lg:pt-16">
-        <p className="text-xs font-medium uppercase tracking-[0.18em] text-ink/45">Loja</p>
-        <h1 className="mt-4 max-w-4xl overflow-hidden pb-[0.08em] font-display text-5xl font-medium leading-[1] tracking-tightest [text-wrap:balance] sm:text-6xl lg:text-[5.5rem]">
-          <motion.span
-            className="block"
-            initial={{ y: '100%' }}
-            animate={{ y: 0 }}
-            transition={{ duration: 1, ease: easeOutExpo }}
-          >
-            Escolha por onde começar
-          </motion.span>
-        </h1>
-        <p className="mt-6 max-w-lg text-base leading-relaxed text-ink/60">
-          Tecnologia original de {CATEGORIES.length} mundos diferentes. Toque numa categoria para ver as marcas e as
-          gamas disponíveis.
-        </p>
-      </header>
-
-      <section aria-label="Categorias" className="container-site mt-14 lg:mt-20">
-        <motion.ul
-          className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-12 lg:gap-5"
-          initial="hidden"
-          animate="visible"
-          variants={{ visible: { transition: { staggerChildren: 0.06, delayChildren: 0.2 } } }}
-        >
-          {CATEGORIES.map((category, index) => {
-            const count = productsIn(category.slug).length;
-            const isOpen = openCategory === category.slug;
-            return (
-              <motion.li
-                key={category.slug}
-                className={`${index < 2 ? 'col-span-2' : 'col-span-1'} ${TILE_LAYOUT[index] ?? 'lg:col-span-3'}`}
-                variants={{
-                  hidden: { opacity: 0, y: 28 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: easeOutExpo } },
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={() => {
-                    // Desktop opens the menu under the category bar, so bring it into view; mobile uses a sheet.
-                    if (window.matchMedia('(min-width: 1024px)').matches) window.scrollTo({ top: 0, behavior: 'smooth' });
-                    toggle(category.slug);
-                  }}
-                  aria-expanded={isOpen}
-                  className={`group relative block w-full overflow-hidden rounded-2xl bg-ink text-left text-paper ${
-                    index < 2 ? 'aspect-[4/3]' : 'aspect-[3/4]'
-                  } ${TILE_SHAPE[index] ?? ''}`}
-                >
-                  <img
-                    src={unsplash(category.image, 1400)}
-                    srcSet={unsplashSrcSet(category.image)}
-                    sizes={index < 2 ? '(min-width: 1024px) 55vw, 100vw' : '(min-width: 1024px) 25vw, 50vw'}
-                    alt=""
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out-expo group-hover:scale-[1.04]"
-                  />
-                  <span className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent" />
-                  <span className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-5 lg:p-7">
-                    <span className="font-display text-2xl font-medium tracking-tight lg:text-3xl">{category.name}</span>
-                    <span className="text-sm text-paper/70">
-                      <span className="max-sm:hidden">{category.tagline} · </span>
-                      {count} produtos
-                    </span>
-                  </span>
-                </button>
-              </motion.li>
-            );
-          })}
-        </motion.ul>
-      </section>
-
-      <section className="container-site mt-28 lg:mt-40" aria-labelledby="destaques-loja">
-        <SectionHeading id="destaques-loja" index="01" eyebrow="Em destaque" title="Os mais procurados" />
-        <motion.div
-          className="mt-12 lg:mt-16"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={inViewOnce}
-          transition={{ duration: 0.6 }}
-        >
-          <ProductGrid products={FEATURED} />
-        </motion.div>
-      </section>
+/** Larger card for launches: copy on top, contained photo below. */
+const FeatureCard = ({ product }: { product: CatalogProduct }) => (
+  <Link
+    to={productPath(product)}
+    className="group flex h-full flex-col overflow-hidden rounded-[24px] bg-white transition-[transform,box-shadow] duration-500 ease-out-expo hover:-translate-y-1 hover:shadow-[0_30px_60px_-36px_rgba(12,12,13,0.4)]"
+  >
+    <div className="px-6 pt-6 sm:px-7 sm:pt-7">
+      <p className="text-xs font-medium text-[#b34700]">Novo</p>
+      <h3 className="mt-2 font-display text-[1.6rem] font-medium leading-[1.05] tracking-tight">{product.title}</h3>
+      <p className="mt-2 line-clamp-2 text-sm leading-snug text-ink/60">{product.summary}</p>
+      <p className="mt-3 text-sm tabular-nums">
+        {product.option && <span className="text-ink/50">Desde </span>}
+        {formatPrice(priceFrom(product))}
+      </p>
     </div>
-  );
-};
+    <div className="mt-auto p-3 pt-6">
+      <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-mist">
+        <img
+          src={resolveImage(product.primaryImage, 800)}
+          alt=""
+          loading="lazy"
+          className="h-full w-full object-cover transition-transform duration-700 ease-out-expo group-hover:scale-[1.04]"
+        />
+      </div>
+    </div>
+  </Link>
+);
+
+const TextCard = ({ title, body, children }: { title: string; body: string; children?: ReactNode }) => (
+  <div className="flex h-full flex-col rounded-[24px] bg-white p-6 sm:p-7">
+    <h3 className="font-display text-xl font-medium leading-snug tracking-tight">{title}</h3>
+    <p className="mt-3 text-sm leading-relaxed text-ink/60">{body}</p>
+    {children && <div className="mt-auto pt-6">{children}</div>}
+  </div>
+);
+
+/** /loja: the shop's front door, organised as a visual index and a sequence of shelves. */
+const Shop = () => (
+  <div className="pb-28 lg:pb-36">
+    <header className="container-site flex flex-col gap-6 pt-12 lg:flex-row lg:items-end lg:justify-between lg:pt-16">
+      <h1 className="max-w-4xl overflow-hidden pb-[0.08em] font-display text-[2.5rem] font-medium leading-[1.04] tracking-tightest [text-wrap:balance] sm:text-5xl lg:text-[3.5rem]">
+        <motion.span
+          className="block"
+          initial={{ y: '100%' }}
+          animate={{ y: 0 }}
+          transition={{ duration: 1, ease: easeOutExpo }}
+        >
+          Loja <span className="text-ink/40">A forma mais simples de comprar tecnologia original</span>
+        </motion.span>
+      </h1>
+      <motion.p
+        className="max-w-[17rem] text-sm leading-relaxed text-ink/60 lg:pb-3 lg:text-right"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+      >
+        Precisa de ajuda para escolher?{' '}
+        <a href={STORE.whatsappUrl} target="_blank" rel="noopener noreferrer" className="link-underline text-ink">
+          Fale com um especialista
+        </a>
+      </motion.p>
+    </header>
+
+    <div className="mt-10 lg:mt-14">
+      <CategoryStrip
+        label="Categorias"
+        items={CATEGORIES.map((category) => ({
+          key: category.slug,
+          to: categoryPath(category.slug),
+          label: category.name,
+          image: resolveImage(category.image, 360),
+          meta: `${productsIn(category.slug).length} produtos`,
+        }))}
+      />
+    </div>
+
+    <Shelf
+      id="novidades"
+      className="mt-14 lg:mt-16"
+      title="As novidades"
+      lead="Os lançamentos mais recentes, já disponíveis na loja"
+      itemClassName="w-[78vw] sm:w-[340px]"
+    >
+      {NEW.map((product) => (
+        <FeatureCard key={product.id} product={product} />
+      ))}
+    </Shelf>
+
+    <Shelf id="mais-procurados" title="Os mais procurados" lead="Os favoritos de quem já comprou connosco">
+      {POPULAR.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </Shelf>
+
+    <Shelf id="diferenca" title="A diferença Rhulany Tech" lead="Mais razões para comprar connosco" itemClassName="w-[78vw] sm:w-[320px]">
+      {REASONS.map((reason) => (
+        <TextCard key={reason.title} title={reason.title} body={reason.body}>
+          {reason.link && (
+            <Link to={reason.link.to} className="link-underline text-sm font-medium">
+              {reason.link.label}
+            </Link>
+          )}
+        </TextCard>
+      ))}
+    </Shelf>
+
+    <Shelf
+      id="gaming"
+      title="Gaming"
+      lead="Consolas, comandos e monitores para jogar sem compromissos"
+      link={{ to: categoryPath('gaming'), label: 'Ver tudo em Gaming' }}
+    >
+      {GAMING.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </Shelf>
+
+    <Shelf
+      id="acessorios"
+      title="Acessórios essenciais"
+      lead="Os detalhes que completam o setup"
+      link={{ to: categoryPath('acessorios'), label: 'Ver todos os acessórios' }}
+    >
+      {ACCESSORIES.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </Shelf>
+
+    <Shelf id="ajuda" title="Ajuda na compra" lead="Fale com quem percebe do assunto" itemClassName="w-[78vw] sm:w-[380px]">
+      {HELP.map((item) => (
+        <TextCard key={item.title} title={item.title} body={item.body}>
+          <a
+            href={item.href}
+            target={item.href.startsWith('http') ? '_blank' : undefined}
+            rel="noopener noreferrer"
+            className="inline-flex h-10 items-center rounded-full bg-ink px-5 text-sm font-medium text-paper transition-colors hover:bg-ink-soft"
+          >
+            {item.action}
+          </a>
+        </TextCard>
+      ))}
+    </Shelf>
+  </div>
+);
 
 export default Shop;

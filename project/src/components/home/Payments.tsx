@@ -52,7 +52,7 @@ const Payments = ({
 
       <div ref={stickyRef} className="sticky top-0 flex h-[100svh] flex-col overflow-hidden pt-24 lg:pt-28">
         <motion.div className="container-site" style={{ opacity: headingOpacity }}>
-          <SectionHeading id="pagamentos-titulo" index="03" eyebrow="Pagamentos" title="Pague como já paga todos os dias" />
+          <SectionHeading id="pagamentos-titulo" index="03" eyebrow="Pagamentos" title="Pague de forma fácil" />
         </motion.div>
 
         <div
