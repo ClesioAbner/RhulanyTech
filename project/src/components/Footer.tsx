@@ -5,11 +5,12 @@ const COLUMNS = [
   {
     title: 'Loja',
     links: [
-      { label: 'Celulares', to: '/products?category=celulares' },
-      { label: 'Computadores', to: '/products?category=computadores' },
-      { label: 'Consoles', to: '/products?category=consoles' },
-      { label: 'Periféricos', to: '/products?category=perifericos' },
-      { label: 'Componentes', to: '/products?category=componentes' },
+      { label: 'Celulares', to: '/loja/celulares' },
+      { label: 'Computadores', to: '/loja/computadores' },
+      { label: 'Gaming', to: '/loja/gaming' },
+      { label: 'Câmaras', to: '/loja/cameras' },
+      { label: 'Casa Inteligente', to: '/loja/casa-inteligente' },
+      { label: 'Acessórios', to: '/loja/acessorios' },
     ],
   },
   {

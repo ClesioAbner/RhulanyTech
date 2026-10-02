@@ -4,6 +4,7 @@ import { supportsWebGL } from '../../lib/webgl';
 
 // three.js is heavy: load the 3D phone in its own chunk so it never delays the first paint.
 const RealisticPhone = lazy(() => import('./RealisticPhone'));
+const PhoneScene = lazy(() => import('./RealisticPhone').then((module) => ({ default: module.PhoneScene })));
 
 const showcase = products.find((product) => product.id === '1');
 
@@ -16,7 +17,7 @@ const PhonePhoto = () => (
   </div>
 );
 
-class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+class SceneBoundary extends Component<{ children: ReactNode; fallback?: ReactNode }, { failed: boolean }> {
   state = { failed: false };
 
   static getDerivedStateFromError() {
@@ -24,7 +25,8 @@ class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean
   }
 
   render() {
-    return this.state.failed ? <PhonePhoto /> : this.props.children;
+    if (!this.state.failed) return this.props.children;
+    return this.props.fallback ?? <PhonePhoto />;
   }
 }
 
@@ -35,6 +37,21 @@ const LazyRealisticPhone = (props: ComponentProps<typeof RealisticPhone>) => {
     <SceneBoundary>
       <Suspense fallback={<div className={box} />}>
         <RealisticPhone {...props} />
+      </Suspense>
+    </SceneBoundary>
+  );
+};
+
+/** Fill-mode 3D phone for galleries; falls back to `fallback` (e.g. a photo) without WebGL or on failure. */
+export const LazyPhoneScene = ({
+  fallback,
+  ...props
+}: ComponentProps<typeof PhoneScene> & { fallback: ReactNode }) => {
+  if (!supportsWebGL()) return <>{fallback}</>;
+  return (
+    <SceneBoundary fallback={fallback}>
+      <Suspense fallback={null}>
+        <PhoneScene {...props} />
       </Suspense>
     </SceneBoundary>
   );

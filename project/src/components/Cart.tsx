@@ -65,7 +65,7 @@ const Cart = () => {
             whileTap={{ scale: 0.95 }}
           >
             <Link 
-              to="/products" 
+              to="/loja" 
               className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl hover:shadow-2xl transition-all font-semibold text-lg"
             >
               🛍️ Explorar Produtos
@@ -271,7 +271,7 @@ const Cart = () => {
                     whileTap={{ scale: 0.98 }}
                   >
                     <Link
-                      to="/products"
+                      to="/loja"
                       className="block w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center px-6 py-3 rounded-xl hover:shadow-lg transition-all font-medium"
                     >
                       🛍️ Continuar Comprando

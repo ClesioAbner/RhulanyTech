@@ -65,13 +65,13 @@ const GamingFeature = () => {
 
           <div className="mt-10 flex flex-wrap gap-3">
             <Link
-              to="/products?category=consoles"
+              to="/loja/gaming"
               className="inline-flex h-12 items-center rounded-full bg-ink px-7 text-sm font-medium text-paper transition-colors duration-300 hover:bg-ink-soft"
             >
               Ver consoles
             </Link>
             <Link
-              to="/products?category=perifericos"
+              to="/loja/acessorios"
               className="inline-flex h-12 items-center rounded-full border border-ink/20 px-7 text-sm font-medium transition-colors duration-300 hover:border-ink"
             >
               Ver periféricos

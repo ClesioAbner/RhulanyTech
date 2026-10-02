@@ -549,7 +549,7 @@ const EnhancedReceipt: React.FC<EnhancedReceiptProps> = ({ orderData, onClose })
                   whileTap={{ scale: 0.95 }}
                 >
                   <Link
-                    to="/products"
+                    to="/loja"
                     className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-4 rounded-xl hover:shadow-2xl transition-all duration-200 flex items-center justify-center gap-3 font-bold text-lg"
                   >
                     <span>🛍️</span> Continuar Comprando
