@@ -75,7 +75,7 @@ const ProductCard = ({ product, mediaSlotRef }: ProductCardProps) => {
           {mediaSlotRef && (
             <div
               ref={mediaSlotRef}
-              className="absolute inset-0 hidden bg-[radial-gradient(ellipse_at_50%_85%,rgba(12,12,13,0.12),transparent_55%)] lg:block"
+              className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(ellipse_at_50%_85%,rgba(12,12,13,0.12),transparent_55%)] lg:block"
             />
           )}
           <motion.div

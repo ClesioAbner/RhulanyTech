@@ -14,6 +14,8 @@ interface PaymentsProps {
   phoneTargetRef: RefObject<HTMLDivElement>;
   activeIndex: number;
   hintOpacity: MotionValue<number>;
+  /** Desktop: the heading waits for the falling phone to land, so they never cross. */
+  headingOpacity?: MotionValue<number>;
   listOpacity: MotionValue<number>;
   listY: MotionValue<number>;
   /** Only passed on small screens; on desktop the shared falling phone is used instead. */
@@ -30,6 +32,7 @@ const Payments = ({
   phoneTargetRef,
   activeIndex,
   hintOpacity,
+  headingOpacity,
   listOpacity,
   listY,
   mobilePhone,
@@ -48,9 +51,9 @@ const Payments = ({
       </ul>
 
       <div ref={stickyRef} className="sticky top-0 flex h-[100svh] flex-col overflow-hidden pt-24 lg:pt-28">
-        <div className="container-site">
+        <motion.div className="container-site" style={{ opacity: headingOpacity }}>
           <SectionHeading id="pagamentos-titulo" index="03" eyebrow="Pagamentos" title="Pague como já paga todos os dias" />
-        </div>
+        </motion.div>
 
         <div
           aria-hidden="true"
