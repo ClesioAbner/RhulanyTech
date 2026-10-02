@@ -104,10 +104,28 @@ const Header = ({ onSignIn, onOpenProfile }: HeaderProps) => {
             type="button"
             onClick={() => openCart()}
             aria-haspopup="dialog"
-            className="inline-flex h-10 items-center gap-2.5 rounded-full bg-ink pl-4 pr-2 text-paper transition-colors duration-300 hover:bg-ink-soft"
+            className="inline-flex h-10 items-center gap-2 rounded-full bg-ink pl-3.5 pr-2 text-paper transition-colors duration-300 hover:bg-ink-soft"
             aria-label={`Carrinho, ${itemCount} ${itemCount === 1 ? 'artigo' : 'artigos'}`}
           >
-            Carrinho
+            {/* Re-keyed on every change so the cart gives a small nudge when something is added */}
+            <motion.svg
+              key={itemCount}
+              viewBox="0 0 24 24"
+              className="h-[19px] w-[19px]"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.6}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+              initial={{ scale: 0.82, rotate: -8 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: 'spring', stiffness: 520, damping: 14 }}
+            >
+              <path d="M2.75 3.75h2.1l2.4 10.6a1.6 1.6 0 0 0 1.56 1.25h7.86a1.6 1.6 0 0 0 1.55-1.2L20.25 7.5H5.7" />
+              <circle cx="9.5" cy="19.5" r="1.25" />
+              <circle cx="17" cy="19.5" r="1.25" />
+            </motion.svg>
             <span className="grid h-6 min-w-[1.5rem] place-items-center overflow-hidden rounded-full bg-paper/15 px-1.5 text-xs tabular-nums">
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.span

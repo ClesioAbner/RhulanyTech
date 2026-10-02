@@ -16,8 +16,8 @@ interface TileArt {
 // Two tall tiles open the grid, then four portrait tiles.
 const ART: Record<string, TileArt> = {
   celulares: {
-    image: '1759203302534-c6e71c93e886',
-    alt: 'iPhone 17 Pro Max laranja-cósmico na mão',
+    image: '1726587912121-ea21fcc57ff8',
+    alt: 'iPhone 16 Pro em titânio natural, frente e verso, sobre fundo branco',
     span: 'lg:col-span-5',
     shape: 'lg:aspect-auto lg:h-[620px]',
   },
