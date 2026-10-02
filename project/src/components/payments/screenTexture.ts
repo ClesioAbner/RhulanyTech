@@ -17,7 +17,7 @@ const NOTIFICATION_MS = 600;
 const SANS = 'Inter, ui-sans-serif, system-ui, sans-serif';
 const DISPLAY = '"Inter Tight", Inter, ui-sans-serif, system-ui, sans-serif';
 const INK = '#0C0C0D';
-const PAPER = '#F5F4F1';
+const PAPER = '#F5F5F7';
 
 const showcase = products.find((product) => product.id === '1');
 const PRODUCT_NAME = showcase?.model ?? 'iPhone 16 Pro Max';

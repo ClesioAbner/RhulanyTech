@@ -11,8 +11,8 @@ export default {
           DEFAULT: '#0C0C0D',
           soft: '#1C1C1E',
         },
-        paper: '#F5F4F1',
-        mist: '#EAE8E3',
+        paper: '#F5F5F7',
+        mist: '#E8E8ED',
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
