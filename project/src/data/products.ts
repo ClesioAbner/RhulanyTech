@@ -111,7 +111,7 @@ export const products: Product[] = [
     name: 'OnePlus 12 256GB',
     price: 125000,
     images: [
-      'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=800',
+      'https://images.unsplash.com/photo-1655384851782-89b0e119ab55?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=800&angle=45'
     ],
     description: 'Performance flagship com carregamento ultra-rápido 100W',
@@ -135,7 +135,7 @@ export const products: Product[] = [
     name: 'Xiaomi 14 Ultra 512GB',
     price: 115000,
     images: [
-      'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800'
+      'https://images.unsplash.com/photo-1655356392708-c675781f1748?auto=format&fit=crop&w=800'
     ],
     description: 'Câmera profissional Leica em smartphone com zoom periscópico',
     category: 'celulares',
@@ -313,7 +313,7 @@ export const products: Product[] = [
     name: 'Steam Deck OLED 1TB',
     price: 380000,
     images: [
-      'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?auto=format&fit=crop&w=800'
+      'https://images.unsplash.com/photo-1656662962127-d8344d924d74?auto=format&fit=crop&w=800'
     ],
     description: 'Console portátil PC gaming com tela OLED e acesso à biblioteca Steam',
     category: 'consoles',
@@ -458,7 +458,7 @@ export const products: Product[] = [
     name: 'Logitech BRIO 4K Ultra HD',
     price: 35000,
     images: [
-      'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=800'
+      'https://images.unsplash.com/photo-1629429407756-446d66f5b24e?auto=format&fit=crop&w=800'
     ],
     description: 'Webcam 4K para streaming profissional e videoconferência',
     category: 'perifericos',
