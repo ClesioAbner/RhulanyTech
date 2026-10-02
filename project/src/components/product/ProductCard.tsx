@@ -52,7 +52,7 @@ const ProductCard = ({ product, mediaSlotRef }: ProductCardProps) => {
       model: product.model,
       maxQuantity: product.stockQuantity,
     });
-    toast.success(`${product.name} adicionado ao carrinho`);
+    toast(`${product.name} adicionado ao carrinho`);
   };
 
   return (
