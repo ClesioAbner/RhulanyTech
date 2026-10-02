@@ -45,7 +45,7 @@ export interface CatalogProduct extends Product {
   primaryImage: string;
 }
 
-const slugify = (text: string) =>
+export const slugify = (text: string) =>
   text
     .toLowerCase()
     .normalize('NFD')
@@ -78,13 +78,26 @@ const buildGallery = (product: Product, merch: Merchandising): ResolvedView[] =>
   }));
 };
 
+// Colour-driven products show the selected colour's photos; colours without photos are left out
+// so every swatch really changes the picture.
+const pictured = (finishes: Finish[]) =>
+  finishes.some((finish) => finish.images?.length) ? finishes.filter((finish) => finish.images?.length) : finishes;
+
+const finishViews = (title: string, finish: Finish): ResolvedView[] =>
+  (finish.images ?? []).map((src, index) => ({
+    angle: index === 0 ? 'frente' : 'detalhe',
+    src,
+    url: resolveImage(src),
+    alt: index === 0 ? `${title} em ${finish.name}` : `${title} em ${finish.name}, outra vista`,
+  }));
+
 const toCatalogProduct = (product: Product): CatalogProduct => {
   const merch = MERCHANDISING[product.id] ?? {};
-  const finishes =
-    merch.finishes ??
-    (product.colors ?? []).map((name) => ({ name, hex: COLOR_SWATCHES[name] ?? '#c9c9c9' }));
+  const finishes = pictured(
+    merch.finishes ?? (product.colors ?? []).map((name) => ({ name, hex: COLOR_SWATCHES[name] ?? '#c9c9c9' })),
+  );
   const title = merch.option ? product.name.replace(STORAGE_SUFFIX, '') : product.name;
-  const gallery = buildGallery(product, merch);
+  const gallery = finishes[0]?.images?.length ? finishViews(title, finishes[0]) : buildGallery(product, merch);
 
   return {
     ...product,
@@ -124,6 +137,14 @@ export const productsIn = (categorySlug: string, subcategorySlug?: string) =>
 
 export const getProductBySlug = (slug?: string) => CATALOG.find((product) => product.slug === slug);
 export const getProductById = (id?: string) => CATALOG.find((product) => product.id === id);
+
+/** The gallery for a chosen colour: that colour's photos when it has them, otherwise the product gallery. */
+export const galleryFor = (product: CatalogProduct, finish?: Finish) =>
+  finish?.images?.length ? finishViews(product.title, finish) : product.gallery;
+
+/** The photo that represents a product in a given colour (cards, cart lines). */
+export const imageFor = (product: CatalogProduct, finish?: Finish, width = 1200) =>
+  resolveImage(finish?.images?.[0] ?? product.primaryImage, width);
 
 /** The product's main shelf, used for breadcrumbs and "more like this". */
 export const primaryPlacement = (product: CatalogProduct) => product.placements[0];
@@ -166,7 +187,11 @@ export const complementaryProducts = (items: CatalogProduct[], limit = 8) => {
   ).slice(0, limit);
 };
 
-export const productPath = (product: CatalogProduct) => `/produto/${product.slug}`;
+/** Product URL; with a finish, the page opens in that colour (?cor=). */
+export const productPath = (product: CatalogProduct, finish?: Finish) =>
+  finish && product.finishes.length > 1 && finish !== product.finishes[0]
+    ? `/produto/${product.slug}?cor=${slugify(finish.name)}`
+    : `/produto/${product.slug}`;
 export const categoryPath = (categorySlug: string, subcategorySlug?: string) =>
   subcategorySlug ? `/loja/${categorySlug}/${subcategorySlug}` : `/loja/${categorySlug}`;
 

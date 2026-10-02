@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useCartStore } from '../stores/cartStore';
 import { useCartUi } from '../stores/cartUi';
-import type { CatalogProduct, Finish, OptionChoice } from './catalog';
+import { imageFor, type CatalogProduct, type Finish, type OptionChoice } from './catalog';
 
 // Cart lines are keyed by product + finish + option, e.g. "1:Titânio Deserto:256GB".
 export const cartLineId = (product: CatalogProduct, finish?: Finish, option?: OptionChoice) =>
@@ -19,7 +19,7 @@ export const useAddToCart = () => {
         id,
         name: [product.title, option?.label, finish?.name].filter(Boolean).join(' · '),
         price: product.price + (option?.priceDelta ?? 0),
-        image: product.primaryImage,
+        image: imageFor(product, finish),
         brand: product.brand,
         model: product.model,
         maxQuantity: product.stockQuantity,

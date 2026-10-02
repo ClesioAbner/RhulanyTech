@@ -1,12 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion, useInView } from 'framer-motion';
 import {
   categoryPath,
   getCategory,
   getProductBySlug,
   getSubcategory,
+  galleryFor,
   primaryPlacement,
+  slugify,
   type CatalogProduct,
 } from '../lib/catalog';
 import { formatPrice } from '../lib/format';
@@ -56,12 +58,17 @@ const Breadcrumb = ({ product }: { product: CatalogProduct }) => {
 const ProductView = ({ product }: { product: CatalogProduct }) => {
   const navigate = useNavigate();
   const addToCart = useAddToCart();
-  const [finishIndex, setFinishIndex] = useState(0);
+  const [searchParams] = useSearchParams();
+  // A card can link straight to a colour (?cor=azul-profundo).
+  const [finishIndex, setFinishIndex] = useState(() =>
+    Math.max(0, product.finishes.findIndex((item) => slugify(item.name) === searchParams.get('cor'))),
+  );
   const [optionIndex, setOptionIndex] = useState(0);
   const ctaRef = useRef<HTMLDivElement>(null);
   const ctaVisible = useInView(ctaRef, { margin: '0px 0px -10% 0px' });
 
   const finish = product.finishes[finishIndex];
+  const views = useMemo(() => galleryFor(product, finish), [product, finish]);
   const option = product.option?.choices[optionIndex];
   const price = product.price + (option?.priceDelta ?? 0);
 
@@ -86,7 +93,7 @@ const ProductView = ({ product }: { product: CatalogProduct }) => {
         <div className="mt-8 grid gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="lg:col-span-7">
             <div className="lg:sticky lg:top-28">
-              <ProductGallery product={product} finish={finish} />
+              <ProductGallery product={product} views={views} finish={finish} />
             </div>
           </div>
 

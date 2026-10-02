@@ -96,9 +96,9 @@ const LEGACY_PRODUCTS: Product[] = [
     name: 'Google Pixel 8 Pro 256GB',
     price: 145000,
     images: [
-      'https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?auto=format&fit=crop&w=800',
-      'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&angle=45',
-      'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&angle=90'
+      'https://images.unsplash.com/photo-1697355360151-2866de32ad4d?auto=format&fit=crop&w=800',
+      'https://images.unsplash.com/photo-1706412703794-d944cd3625b3?auto=format&fit=crop&w=800&angle=45',
+      'https://images.unsplash.com/photo-1706412703794-d944cd3625b3?auto=format&fit=crop&w=800&angle=90'
     ],
     description: 'IA avançada do Google, fotografia computacional de última geração',
     category: 'celulares',
@@ -122,7 +122,7 @@ const LEGACY_PRODUCTS: Product[] = [
     price: 125000,
     images: [
       'https://images.unsplash.com/photo-1655384851782-89b0e119ab55?auto=format&fit=crop&w=800',
-      'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=800&angle=45'
+      'https://images.unsplash.com/photo-1655384851782-89b0e119ab55?auto=format&fit=crop&w=800&angle=45'
     ],
     description: 'Performance flagship com carregamento ultra-rápido 100W',
     category: 'celulares',
@@ -199,7 +199,7 @@ const LEGACY_PRODUCTS: Product[] = [
     price: 320000,
     images: [
       'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=800',
-      'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&angle=45'
+      'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=800&angle=45'
     ],
     description: 'Workstation premium com tela 4K OLED e RTX 4080 para criadores',
     category: 'computadores',
@@ -348,8 +348,8 @@ const LEGACY_PRODUCTS: Product[] = [
     name: 'Logitech MX Master 3S Wireless',
     price: 12000,
     images: [
-      'https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=800',
-      'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=800&angle=45'
+      'https://images.unsplash.com/photo-1647755814392-fd071a3fcb4b?auto=format&fit=crop&w=800',
+      'https://images.unsplash.com/photo-1586349906319-48d20e9d17e5?auto=format&fit=crop&w=800&angle=45'
     ],
     description: 'Mouse wireless premium para produtividade com scroll MagSpeed',
     category: 'perifericos',
@@ -420,8 +420,8 @@ const LEGACY_PRODUCTS: Product[] = [
     name: 'SteelSeries Arctis Nova Pro Wireless',
     price: 35000,
     images: [
-      'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&w=800',
-      'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=800&angle=45'
+      'https://images.unsplash.com/photo-1679533662345-b321cf2d8792?auto=format&fit=crop&w=800',
+      'https://images.unsplash.com/photo-1548030415-e1eb1c684c9b?auto=format&fit=crop&w=800&angle=45'
     ],
     description: 'Headset gaming premium com cancelamento de ruído ativo',
     category: 'perifericos',
