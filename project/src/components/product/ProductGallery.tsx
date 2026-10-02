@@ -28,13 +28,22 @@ const tween = { duration: 0.9, ease: [...easeOutExpo] as [number, number, number
 
 interface ProductGalleryProps {
   product: CatalogProduct;
+  /** Views for the selected colour (see galleryFor); defaults to the product gallery. */
+  views?: ResolvedView[];
   finish?: Finish;
 }
 
-const ProductGallery = ({ product, finish }: ProductGalleryProps) => {
-  const views = product.gallery;
+const ProductGallery = ({ product, views = product.gallery, finish }: ProductGalleryProps) => {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
+
+  // A new colour brings its own photos: start again from its hero shot with a straight crossfade.
+  const [shownViews, setShownViews] = useState(views);
+  if (shownViews !== views) {
+    setShownViews(views);
+    setIndex(0);
+    setDirection(0);
+  }
   const view = views[index];
   const uses3d = Boolean(product.scene3d);
   const is3dView = uses3d && !view?.url;

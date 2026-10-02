@@ -7,7 +7,8 @@ import type { Merchandising } from './merchandising';
  * Images are Unsplash ids of the actual model. Prices are indicative and should be confirmed.
  */
 
-type Colour = [name: string, hex: string];
+// Name, swatch and the photos of that colour (hero first).
+type Colour = [name: string, hex: string, ...images: string[]];
 
 interface Entry {
   id: string;
@@ -51,7 +52,11 @@ const ENTRIES: Entry[] = [
     overview:
       'O iPhone 17 Pro Max estreia um corpo unibody em alumínio com câmara de vapor para dissipar calor, o que lhe permite manter o desempenho do chip A19 Pro em jogos e edição de vídeo longos. O sistema de três câmaras de 48MP inclui uma teleobjectiva com zoom óptico de 4x, e o ecrã de 6,9 polegadas com ProMotion chega aos 120 Hz.',
     specs: ['Chip A19 Pro', 'Ecrã Super Retina XDR de 6,9" com ProMotion', 'Três câmaras Fusion de 48MP', 'Teleobjectiva com zoom óptico de 4x', 'Câmara frontal Center Stage de 18MP', 'Corpo unibody em alumínio'],
-    colours: [['Laranja cósmico', '#d9772f'], ['Azul profundo', '#2b3a55'], ['Prateado', '#d9d9db']],
+    colours: [
+      ['Laranja cósmico', '#d9772f', '1758327059164-396c3602b8f5', '1759203302534-c6e71c93e886'],
+      ['Azul profundo', '#2b3a55', '1758578938566-c986f710feb6'],
+      ['Prateado', '#d9d9db', '1759588071781-2c3ba9128497', '1759588073186-1d4ac7e33623'],
+    ],
     storage: storage(['256GB', 0], ['512GB', 25000], ['1TB', 50000], ['2TB', 100000]),
     highlights: [
       { title: 'Chip A19 Pro', body: 'Desempenho sustentado graças à câmara de vapor, mesmo em sessões longas.' },
@@ -79,7 +84,11 @@ const ENTRIES: Entry[] = [
     overview:
       'Tudo o que define a gama Pro, num tamanho que cabe confortavelmente na mão. O iPhone 17 Pro partilha o chip A19 Pro, o sistema de três câmaras de 48MP e a teleobjectiva de 4x com o modelo Max, com um ecrã ProMotion de 6,3 polegadas.',
     specs: ['Chip A19 Pro', 'Ecrã Super Retina XDR de 6,3" com ProMotion', 'Três câmaras Fusion de 48MP', 'Teleobjectiva com zoom óptico de 4x', 'Câmara frontal Center Stage de 18MP'],
-    colours: [['Prateado', '#d9d9db'], ['Laranja cósmico', '#d9772f'], ['Azul profundo', '#2b3a55']],
+    colours: [
+      ['Prateado', '#d9d9db', '1759588071781-2c3ba9128497', '1759588073186-1d4ac7e33623', '1759588071838-d560be56b2a2'],
+      ['Laranja cósmico', '#d9772f', '1757709608566-4b9fd41a7af5', '1764746049934-69d8beed54b9'],
+      ['Azul profundo', '#2b3a55', '1758578938566-c986f710feb6'],
+    ],
     storage: storage(['256GB', 0], ['512GB', 25000], ['1TB', 50000]),
     rating: 4.9,
     reviews: 1520,
@@ -101,7 +110,10 @@ const ENTRIES: Entry[] = [
     overview:
       'Com apenas 5,6 mm de espessura e uma estrutura em titânio, o iPhone Air é o iPhone mais fino alguma vez feito. Por dentro tem o chip A19 Pro e um ecrã ProMotion de 6,5 polegadas, e atrás uma câmara Fusion de 48MP que faz o trabalho de várias lentes.',
     specs: ['Chip A19 Pro', 'Ecrã Super Retina XDR de 6,5" com ProMotion', 'Câmara Fusion de 48MP', 'Estrutura em titânio', '5,6 mm de espessura'],
-    colours: [['Azul-céu', '#b8cde0'], ['Dourado-claro', '#e7d7b8'], ['Branco-nuvem', '#f1f0ec'], ['Preto-espacial', '#2a2a2c']],
+    colours: [
+      ['Preto-espacial', '#2a2a2c', '1758682663464-69d0d62fa2be', '1758682663454-8cc7515c5e21'],
+      ['Dourado-claro', '#e7d7b8', '1758348844327-b70d25c7589c'],
+    ],
     storage: storage(['256GB', 0], ['512GB', 25000], ['1TB', 50000]),
     rating: 4.7,
     reviews: 690,
@@ -123,7 +135,7 @@ const ENTRIES: Entry[] = [
     overview:
       'O iPhone 17 traz ao modelo de entrada funcionalidades antes reservadas à gama Pro: ecrã ProMotion de 6,3 polegadas até 120 Hz e sempre ligado, duas câmaras traseiras de 48MP e uma câmara frontal Center Stage que se ajusta automaticamente às selfies de grupo.',
     specs: ['Chip A19', 'Ecrã Super Retina XDR de 6,3" com ProMotion', 'Câmara Fusion de 48MP', 'Ultra grande angular de 48MP', 'Câmara frontal Center Stage de 18MP'],
-    colours: [['Lavanda', '#cdbfe0'], ['Azul-névoa', '#a9bfd4'], ['Sálvia', '#b6c3a8'], ['Branco', '#f2f2f0'], ['Preto', '#1d1d1f']],
+    colours: [['Lavanda', '#cdbfe0', '1758467700578-7491a5c7eedd']],
     storage: storage(['256GB', 0], ['512GB', 25000]),
     rating: 4.8,
     reviews: 2210,
@@ -145,7 +157,10 @@ const ENTRIES: Entry[] = [
     overview:
       'O iPhone 16 junta o chip A18 a uma câmara Fusion de 48MP e ao novo Controlo da Câmara, que abre a câmara e ajusta o zoom com um gesto. O botão de Acção personalizável e as cores intensas completam um iPhone pensado para durar muitos anos.',
     specs: ['Chip A18', 'Ecrã Super Retina XDR de 6,1"', 'Câmara Fusion de 48MP', 'Controlo da Câmara', 'Botão de Acção'],
-    colours: [['Ultramarino', '#5f7fd9'], ['Verde-azulado', '#7fb5b0'], ['Rosa', '#e8b6c9'], ['Branco', '#f2f2f0'], ['Preto', '#1d1d1f']],
+    colours: [
+      ['Ultramarino', '#5f7fd9', '1726828537956-61ae115d7d7a', '1726732946451-98690db97aae'],
+      ['Preto', '#1d1d1f', '1739617148480-f7bb4eb33c2d'],
+    ],
     storage: storage(['128GB', 0], ['256GB', 15000], ['512GB', 40000]),
     rating: 4.8,
     reviews: 3100,
@@ -167,7 +182,12 @@ const ENTRIES: Entry[] = [
     overview:
       'O primeiro iPhone em titânio continua a ser uma excelente escolha Pro: chip A17 Pro com desempenho de consola em jogos, câmara principal de 48MP com teleobjectiva de 3x e porta USB-C com velocidades USB 3.',
     specs: ['Chip A17 Pro', 'Ecrã Super Retina XDR de 6,1" com ProMotion', 'Câmara principal de 48MP', 'Teleobjectiva de 3x', 'USB-C (USB 3)'],
-    colours: [['Titânio Azul', '#4a5568'], ['Titânio Natural', '#b8b3aa'], ['Titânio Branco', '#e6e4df'], ['Titânio Preto', '#3a3a3c']],
+    colours: [
+      ['Titânio Azul', '#4a5568', '1710023038502-ba80a70a9f53', '1697284959152-32ef13855932', '1704380895316-caa2e4d68a7e'],
+      ['Titânio Natural', '#b8b3aa', '1718223483120-8131e57f948b', '1695048132832-b41495f12eb4'],
+      ['Titânio Branco', '#e6e4df', '1737190892130-fc90e4040877', '1737190892098-784bdd31b862'],
+      ['Titânio Preto', '#3a3a3c', '1695639509828-d4260075e370'],
+    ],
     storage: storage(['128GB', 0], ['256GB', 15000], ['512GB', 40000]),
     rating: 4.8,
     reviews: 4020,
@@ -189,7 +209,7 @@ const ENTRIES: Entry[] = [
     overview:
       'O iPhone 15 trouxe a Dynamic Island e a câmara principal de 48MP ao modelo base, com um acabamento em vidro mate colorido na traseira e porta USB-C. Uma escolha equilibrada para quem quer um iPhone actual a um preço mais acessível.',
     specs: ['Chip A16 Bionic', 'Ecrã Super Retina XDR de 6,1"', 'Câmara principal de 48MP', 'Dynamic Island', 'USB-C'],
-    colours: [['Azul', '#cfdde6'], ['Rosa', '#f0d3d8'], ['Amarelo', '#f1e7b6'], ['Verde', '#d3e0cf'], ['Preto', '#2b2c2e']],
+    colours: [['Preto', '#2b2c2e', '1702184117235-56002cb13663']],
     storage: storage(['128GB', 0], ['256GB', 15000]),
     rating: 4.7,
     reviews: 5100,
@@ -211,7 +231,11 @@ const ENTRIES: Entry[] = [
     overview:
       'Com o chip A15 Bionic, câmaras duplas de 12MP com modo Cinematográfico e uma bateria que aguenta o dia, o iPhone 13 continua a ser uma escolha fiável e acessível para quem chega ao iPhone pela primeira vez.',
     specs: ['Chip A15 Bionic', 'Ecrã Super Retina XDR de 6,1"', 'Câmaras duplas de 12MP', 'Modo Cinematográfico', 'Face ID'],
-    colours: [['Meia-noite', '#2b2d33'], ['Estelar', '#f2ede4'], ['Azul', '#3d5a80'], ['Rosa', '#f3d7d9'], ['Vermelho', '#c8102e']],
+    colours: [
+      ['Estelar', '#f2ede4', '1726574778294-adfb9ee2e5ca'],
+      ['Azul', '#3d5a80', '1635425730507-26c324aadbc5', '1674854263676-c5a7acd2406d'],
+      ['Meia-noite', '#2b2d33', '1647503380147-e075b24f4cbe'],
+    ],
     storage: storage(['128GB', 0], ['256GB', 12000]),
     rating: 4.7,
     reviews: 8200,
@@ -235,7 +259,7 @@ const ENTRIES: Entry[] = [
     overview:
       'O Galaxy S25 Ultra combina uma estrutura em titânio, o processador Snapdragon 8 Elite for Galaxy e uma câmara principal de 200MP. A S Pen integrada e as funções Galaxy AI, como a tradução em tempo real e a edição generativa de fotografias, fazem dele uma ferramenta de trabalho completa.',
     specs: ['Snapdragon 8 Elite for Galaxy', 'Ecrã Dynamic AMOLED 2X de 6,9" a 120 Hz', 'Câmara principal de 200MP', 'Teleobjectivas de 3x e 5x', 'S Pen integrada', 'Estrutura em titânio'],
-    colours: [['Titanium Silverblue', '#a9b8c9'], ['Titanium Black', '#2a2b2e'], ['Titanium Gray', '#8e8f93'], ['Titanium Whitesilver', '#e4e4e2']],
+    colours: [['Titanium Jadegreen', '#a7b8a8', '1738830251513-a7bfef4b53c6', '1738830228067-ede76105594a', '1738830234395-a351829a1c7b']],
     storage: storage(['256GB', 0], ['512GB', 20000], ['1TB', 45000]),
     rating: 4.8,
     reviews: 1960,
@@ -257,7 +281,7 @@ const ENTRIES: Entry[] = [
     overview:
       'Todo o desempenho do Snapdragon 8 Elite for Galaxy num formato de 6,2 polegadas fácil de usar com uma mão. O Galaxy S25 tem câmara tripla com teleobjectiva de 3x e recebe sete anos de actualizações do sistema.',
     specs: ['Snapdragon 8 Elite for Galaxy', 'Ecrã Dynamic AMOLED 2X de 6,2" a 120 Hz', 'Câmara principal de 50MP', 'Teleobjectiva de 3x', '7 anos de actualizações'],
-    colours: [['Navy', '#2d3b5c'], ['Icyblue', '#c9dcea'], ['Mint', '#cfe3d6'], ['Silver Shadow', '#bfc1c4']],
+    colours: [['Navy', '#2d3b5c', '1744399335781-528757813604']],
     storage: storage(['128GB', 0], ['256GB', 12000]),
     rating: 4.7,
     reviews: 1240,
@@ -279,7 +303,7 @@ const ENTRIES: Entry[] = [
     overview:
       'Fechado, o Galaxy Z Fold6 é um telemóvel com ecrã de 6,3 polegadas; aberto, transforma-se num ecrã de 7,6 polegadas para trabalhar com várias aplicações lado a lado, ler documentos ou ver vídeo. Mais leve e mais fino do que a geração anterior.',
     specs: ['Snapdragon 8 Gen 3 for Galaxy', 'Ecrã interior de 7,6" e exterior de 6,3"', 'Câmara principal de 50MP', 'Multitarefa com três aplicações', 'Resistência IP48'],
-    colours: [['Silver Shadow', '#bfc1c4'], ['Navy', '#2d3b5c'], ['Pink', '#e9c8cf']],
+    colours: [['Silver Shadow', '#bfc1c4', '1722155961274-30d30d68ca51', '1724323224408-e24e732e56af']],
     storage: storage(['256GB', 0], ['512GB', 25000], ['1TB', 55000]),
     rating: 4.6,
     reviews: 720,
@@ -301,7 +325,10 @@ const ENTRIES: Entry[] = [
     overview:
       'O Galaxy Z Flip6 dobra-se para metade e cabe em qualquer bolso. O ecrã exterior FlexWindow de 3,4 polegadas mostra notificações, controla a música e serve de visor para selfies com a câmara principal de 50MP.',
     specs: ['Snapdragon 8 Gen 3 for Galaxy', 'Ecrã interior de 6,7" e FlexWindow de 3,4"', 'Câmara principal de 50MP', 'Modo FlexCam', 'Resistência IP48'],
-    colours: [['Blue', '#a9c4e0'], ['Mint', '#cfe3d6'], ['Silver Shadow', '#bfc1c4'], ['Yellow', '#f0e2a0']],
+    colours: [
+      ['Blue', '#a9c4e0', '1721864428848-503a2a27bded'],
+      ['Yellow', '#f0e2a0', '1721864428881-dbabb9ea0017'],
+    ],
     storage: storage(['256GB', 0], ['512GB', 25000]),
     rating: 4.6,
     reviews: 980,
@@ -325,7 +352,7 @@ const ENTRIES: Entry[] = [
     overview:
       'O Xiaomi 14T Pro traz o sistema de câmaras co-desenvolvido com a Leica a um preço mais acessível, com sensor principal de 50MP e teleobjectiva de 2,6x. O carregamento HyperCharge de 120W enche a bateria em cerca de 20 minutos.',
     specs: ['MediaTek Dimensity 9300+', 'Ecrã AMOLED de 6,67" a 144 Hz', 'Câmaras Leica de 50MP', 'Teleobjectiva de 2,6x', 'Carregamento de 120W'],
-    colours: [['Titan Gray', '#b1aea6'], ['Titan Black', '#2a2b2e'], ['Titan Blue', '#6d8bb0']],
+    colours: [['Titan Gray', '#b1aea6', '1701696255815-14a98bc1afcd']],
     storage: storage(['512GB', 0], ['1TB', 15000]),
     rating: 4.6,
     reviews: 540,
@@ -349,7 +376,11 @@ const ENTRIES: Entry[] = [
     overview:
       'O Pixel 9 Pro reúne o chip Tensor G4, três câmaras traseiras com teleobjectiva de 5x e as ferramentas de IA da Google, como o Magic Editor e o Melhor Fotografia. Recebe sete anos de actualizações do sistema e de segurança.',
     specs: ['Google Tensor G4', 'Ecrã Super Actua de 6,3" a 120 Hz', 'Câmara principal de 50MP', 'Teleobjectiva de 48MP a 5x', '7 anos de actualizações'],
-    colours: [['Porcelain', '#ece6dc'], ['Rose Quartz', '#e9cfcd'], ['Hazel', '#9a9d8d'], ['Obsidian', '#2b2c2e']],
+    colours: [
+      ['Porcelain', '#ece6dc', '1756517313520-c6c25364ce65', '1727132527836-a392cf3f07aa'],
+      ['Hazel', '#9a9d8d', '1724322535079-11b08f7f5c88', '1724438192699-89f587b04c24'],
+      ['Obsidian', '#2b2c2e', '1724322637761-1fef6ca8c8b3', '1727132528094-117c9dceb047'],
+    ],
     storage: storage(['128GB', 0], ['256GB', 12000], ['512GB', 30000]),
     rating: 4.7,
     reviews: 870,
@@ -371,7 +402,7 @@ const ENTRIES: Entry[] = [
     overview:
       'O Pixel 9 traz o mesmo chip Tensor G4 do modelo Pro, um ecrã Actua de 6,3 polegadas e câmaras de 50MP e 48MP ultra grande angular. Simples, rápido e com as melhores funcionalidades de fotografia da Google.',
     specs: ['Google Tensor G4', 'Ecrã Actua de 6,3" a 120 Hz', 'Câmara principal de 50MP', 'Ultra grande angular de 48MP', '7 anos de actualizações'],
-    colours: [['Obsidian', '#2b2c2e'], ['Porcelain', '#ece6dc'], ['Wintergreen', '#c6dccb'], ['Peony', '#ea9fbb']],
+    colours: [['Obsidian', '#2b2c2e', '1729302784412-c36bbab2a6ef']],
     storage: storage(['128GB', 0], ['256GB', 12000]),
     rating: 4.6,
     reviews: 1020,
@@ -395,7 +426,10 @@ const ENTRIES: Entry[] = [
     overview:
       'O OnePlus 13 junta o Snapdragon 8 Elite a três câmaras de 50MP afinadas pela Hasselblad e a uma bateria de 6000 mAh que carrega a 100W. O ecrã de 6,82 polegadas em resolução 2K é dos mais brilhantes da sua categoria.',
     specs: ['Snapdragon 8 Elite', 'Ecrã AMOLED 2K de 6,82" a 120 Hz', 'Três câmaras Hasselblad de 50MP', 'Bateria de 6000 mAh', 'Carregamento de 100W'],
-    colours: [['Black Eclipse', '#1f2023'], ['Arctic Dawn', '#e5e4e9'], ['Midnight Ocean', '#283a5c']],
+    colours: [
+      ['Black Eclipse', '#1f2023', '1757847505239-ce2fb51da67d', '1757847505222-cfe856c93be0'],
+      ['Arctic Dawn', '#e5e4e9', '1773293915418-fb03a80120a7'],
+    ],
     storage: storage(['256GB', 0], ['512GB', 15000]),
     rating: 4.7,
     reviews: 610,
@@ -419,7 +453,10 @@ const ENTRIES: Entry[] = [
     overview:
       'O MacBook Air com chip M4 é o portátil mais equilibrado da Apple: sem ventoinha, totalmente silencioso, com 16GB de memória unificada de base e autonomia para um dia inteiro de trabalho. O ecrã Liquid Retina de 13,6 polegadas e a câmara Center Stage de 12MP completam o conjunto.',
     specs: ['Chip Apple M4', '16GB de memória unificada', 'Ecrã Liquid Retina de 13,6"', 'Até 18 horas de bateria', 'Câmara Center Stage de 12MP', 'Design sem ventoinha'],
-    colours: [['Azul-céu', '#b8cde0'], ['Prateado', '#d9d9db'], ['Estelar', '#f0e6d6'], ['Meia-noite', '#2b2d33']],
+    colours: [
+      ['Azul-céu', '#b8cde0', '1717865499857-ec35ce6e65fa'],
+      ['Meia-noite', '#2b2d33', '1660833638050-41f95d8b94e6', '1659135890064-d57187f0946c'],
+    ],
     storage: storage(['256GB', 0], ['512GB', 30000], ['1TB', 60000]),
     rating: 4.9,
     reviews: 1330,
@@ -441,7 +478,7 @@ const ENTRIES: Entry[] = [
     overview:
       'O MacBook Pro de 14 polegadas com chip M4 foi feito para trabalho criativo exigente: ecrã Liquid Retina XDR com brilho até 1600 nits em HDR, três portas Thunderbolt, HDMI e leitor de cartões SD, e uma autonomia que chega às 24 horas.',
     specs: ['Chip Apple M4', '16GB de memória unificada', 'Ecrã Liquid Retina XDR de 14,2"', 'Até 24 horas de bateria', 'Thunderbolt, HDMI e SDXC'],
-    colours: [['Preto sideral', '#2e2e30'], ['Prateado', '#d9d9db']],
+    colours: [['Prateado', '#d9d9db', '1569770218135-bea267ed7e84']],
     storage: storage(['512GB', 0], ['1TB', 30000]),
     rating: 4.9,
     reviews: 880,
@@ -463,7 +500,12 @@ const ENTRIES: Entry[] = [
     overview:
       'O iMac junta computador, ecrã 4,5K Retina de 24 polegadas, colunas e câmara num só objecto com apenas 11,5 mm de espessura. Com o chip M4 e a câmara Center Stage de 12MP, é ideal para casa, para o escritório ou para quem cria conteúdo.',
     specs: ['Chip Apple M4', 'Ecrã Retina 4,5K de 24"', 'Câmara Center Stage de 12MP', 'Seis colunas com áudio espacial', 'Teclado e rato incluídos'],
-    colours: [['Azul', '#a9c2dc'], ['Verde', '#bcd3b8'], ['Rosa', '#eec3c6'], ['Prateado', '#d9d9db'], ['Amarelo', '#f2d98b'], ['Laranja', '#f0b38a'], ['Roxo', '#c3b6dc']],
+    colours: [
+      ['Amarelo', '#f2d98b', '1622774161048-863b17ed0d8e'],
+      ['Azul', '#a9c2dc', '1622437553759-451cc114babb'],
+      ['Verde', '#bcd3b8', '1678081630066-607d5b8502ea'],
+      ['Laranja', '#f0b38a', '1698422454401-010f8c5bd18a'],
+    ],
     storage: storage(['256GB', 0], ['512GB', 30000]),
     rating: 4.8,
     reviews: 640,
@@ -509,7 +551,7 @@ const ENTRIES: Entry[] = [
     overview:
       'O Dell XPS 13 é compacto, leve e construído num bloco de alumínio. O ecrã InfinityEdge quase sem margens, o teclado de ponta a ponta e o processador Intel Core Ultra com NPU fazem dele um companheiro de viagem para o trabalho.',
     specs: ['Intel Core Ultra 7', '16GB LPDDR5x', 'Ecrã InfinityEdge de 13,4"', 'SSD de 512GB', 'Wi-Fi 7'],
-    colours: [['Platinum', '#d4d5d7'], ['Graphite', '#4a4b4f']],
+    colours: [['Platinum', '#d4d5d7', '1593642632823-8f785ba67e45']],
     rating: 4.6,
     reviews: 410,
     stock: 4,
@@ -551,7 +593,10 @@ const ENTRIES: Entry[] = [
     overview:
       'O Surface Laptop de 7.ª edição é um Copilot+ PC com processador Snapdragon X, autonomia longa e funcionalidades de IA integradas no Windows. O ecrã táctil PixelSense de 13,8 polegadas e o acabamento em alumínio completam um portátil elegante e silencioso.',
     specs: ['Snapdragon X Elite', '16GB LPDDR5x', 'Ecrã táctil PixelSense de 13,8"', 'SSD de 512GB', 'Copilot+ PC'],
-    colours: [['Platina', '#d6d6d4'], ['Duna', '#d9c7ad'], ['Safira', '#3d4f75'], ['Preto', '#2a2b2e']],
+    colours: [
+      ['Duna', '#d9c7ad', '1587613842560-0816bd27a096'],
+      ['Platina', '#d6d6d4', '1648197395199-e7f8d3dd0a3c'],
+    ],
     rating: 4.5,
     reviews: 360,
     stock: 5,
@@ -572,7 +617,7 @@ const ENTRIES: Entry[] = [
     overview:
       'O Zenbook 14 OLED oferece um ecrã OLED 3K a 120 Hz com cores de nível profissional num portátil fino e leve. O processador Intel Core Ultra e a bateria de 75 Wh garantem um dia de trabalho longe da tomada.',
     specs: ['Intel Core Ultra 7', '16GB LPDDR5x', 'Ecrã OLED 3K de 14" a 120 Hz', 'SSD de 1TB', 'Bateria de 75 Wh'],
-    colours: [['Ponder Blue', '#3b4a63'], ['Jade Black', '#1f2023']],
+    colours: [['Jade Black', '#1f2023', '1636211990414-8edec17ba047']],
     rating: 4.5,
     reviews: 270,
     stock: 6,
@@ -717,7 +762,11 @@ const ENTRIES: Entry[] = [
     overview:
       'O DualSense faz sentir cada passo, cada disparo e cada travagem através da resposta háptica e dos gatilhos adaptativos. Tem microfone integrado, bateria recarregável por USB-C e funciona também no PC.',
     specs: ['Resposta háptica', 'Gatilhos adaptativos', 'Microfone integrado', 'Bateria recarregável por USB-C'],
-    colours: [['Branco', '#f2f2f0'], ['Nova Pink', '#e8509a'], ['Midnight Black', '#1f2023']],
+    colours: [
+      ['Branco', '#f2f2f0', '1670535787435-63a39a5b8d32', '1606171687424-429b65889052'],
+      ['Nova Pink', '#e8509a', '1670535788272-ce692ddb7727'],
+      ['Midnight Black', '#1f2023', '1774103249143-493bd0271e1d', '1774103249221-06ce5fd619db'],
+    ],
     rating: 4.7,
     reviews: 2900,
     stock: 25,
@@ -758,7 +807,7 @@ const ENTRIES: Entry[] = [
     overview:
       'Ergonómico, com superfícies texturadas e botão de partilha, o comando Xbox funciona na consola, no PC e em telemóveis por Bluetooth. Usa pilhas AA ou o kit de bateria recarregável.',
     specs: ['Bluetooth e Xbox Wireless', 'Botão de partilha', 'Superfícies texturadas', 'Compatível com PC e telemóvel'],
-    colours: [['Branco robot', '#f2f2f0'], ['Preto carbono', '#1f2023']],
+    colours: [['Branco robot', '#f2f2f0', '1615556626922-68da0c9f4350']],
     rating: 4.7,
     reviews: 3800,
     stock: 30,
@@ -840,7 +889,10 @@ const ENTRIES: Entry[] = [
     overview:
       'A X100VI combina uma objectiva fixa de 23 mm f/2, sensor de 40MP e, pela primeira vez na série, estabilização no corpo. Os comandos físicos e as simulações de filme Fujifilm tornam cada saída para fotografar uma experiência.',
     specs: ['Sensor APS-C de 40MP', 'Objectiva fixa 23 mm f/2', 'Estabilização no corpo', 'Visor híbrido', 'Simulações de filme'],
-    colours: [['Prateado', '#cfd0d2'], ['Preto', '#1d1d1f']],
+    colours: [
+      ['Prateado', '#cfd0d2', '1709200732045-69942455f9df', '1756334324139-b1e23f33cc03'],
+      ['Preto', '#1d1d1f', '1703354521518-8fa7fa7c432f'],
+    ],
     rating: 4.9,
     reviews: 640,
     stock: 2,
@@ -968,7 +1020,11 @@ const ENTRIES: Entry[] = [
     overview:
       'Os AirPods Max combinam conchas em alumínio, almofadas em espuma de memória e áudio computacional para um som rico e detalhado. O cancelamento activo de ruído e o modo transparência adaptam-se ao ambiente.',
     specs: ['Cancelamento activo de ruído', 'Áudio espacial personalizado', 'Conchas em alumínio', 'Até 20 horas de autonomia', 'USB-C'],
-    colours: [['Luz das estrelas', '#ece6dc'], ['Meia-noite', '#2b2d33'], ['Azul', '#a9c2dc']],
+    colours: [
+      ['Luz das estrelas', '#ece6dc', '1609081219090-a6d81d3085bf', '1612116454817-2b0841e30eaf'],
+      ['Meia-noite', '#2b2d33', '1638803782506-d975a6809f43', '1628329567705-f8f7150c3cff'],
+      ['Azul', '#a9c2dc', '1613093691025-8a07cf2d1e4b'],
+    ],
     rating: 4.7,
     reviews: 1500,
     stock: 6,
@@ -989,7 +1045,7 @@ const ENTRIES: Entry[] = [
     overview:
       'Os WH-1000XM5 usam oito microfones e dois processadores para um dos melhores cancelamentos de ruído do mercado. Leves, confortáveis durante horas e com 30 horas de autonomia, são ideais para viagens e escritório.',
     specs: ['Cancelamento de ruído com 8 microfones', 'Até 30 horas de autonomia', 'Carregamento rápido', 'Multiponto Bluetooth', 'LDAC'],
-    colours: [['Preto', '#1d1d1f'], ['Prateado', '#cfd0d2']],
+    colours: [['Preto', '#1d1d1f', '1755719401938-35c1b24f6d15']],
     rating: 4.8,
     reviews: 6100,
     stock: 9,
@@ -1010,7 +1066,7 @@ const ENTRIES: Entry[] = [
     overview:
       'Os QuietComfort 45 são conhecidos pelo conforto: leves, com almofadas suaves e um aperto equilibrado. O cancelamento de ruído e o modo Aware alternam com um botão, e a bateria dura até 24 horas.',
     specs: ['Cancelamento activo de ruído', 'Modo Aware', 'Até 24 horas de autonomia', 'USB-C', 'Dobráveis'],
-    colours: [['Preto', '#1d1d1f'], ['Branco', '#f2f2f0']],
+    colours: [['Preto', '#1d1d1f', '1674658556545-f18d4080ab6c', '1570132251442-d38a55360c44']],
     rating: 4.6,
     reviews: 3300,
     stock: 7,
@@ -1031,7 +1087,7 @@ const ENTRIES: Entry[] = [
     overview:
       'Teclas côncavas que acompanham a ponta dos dedos, retroiluminação inteligente que se acende quando as mãos se aproximam e ligação a três dispositivos com um toque. O MX Keys S é o teclado de quem escreve muito.',
     specs: ['Teclas côncavas de baixo perfil', 'Retroiluminação inteligente', 'Até 3 dispositivos', 'USB-C recarregável', 'Windows e macOS'],
-    colours: [['Grafite', '#4a4b4f'], ['Cinzento-claro', '#c9cacd']],
+    colours: [['Grafite', '#4a4b4f', '1623371748986-9a829391f7c9', '1605640194493-44894a08b57d']],
     rating: 4.7,
     reviews: 2800,
     stock: 14,
@@ -1071,7 +1127,7 @@ const ENTRIES: Entry[] = [
     overview:
       'O Magic Mouse tem uma superfície Multi-Touch que permite deslizar entre páginas e percorrer documentos com gestos. Liga-se automaticamente ao Mac e carrega por USB-C.',
     specs: ['Superfície Multi-Touch', 'Ligação Bluetooth', 'USB-C recarregável', 'Emparelhamento automático com Mac'],
-    colours: [['Branco', '#f2f2f0'], ['Preto', '#1d1d1f']],
+    colours: [['Branco', '#f2f2f0', '1748878946939-0ad1380940a0', '1496878632226-93afc36151ab']],
     rating: 4.3,
     reviews: 2400,
     stock: 12,
@@ -1091,7 +1147,7 @@ const ENTRIES: Entry[] = [
     overview:
       'Com apenas 60 gramas, sensor HERO 2 e ligação LIGHTSPEED sem fios, o G Pro X Superlight 2 é escolhido por jogadores profissionais. Switches híbridos ópticos e até 95 horas de bateria.',
     specs: ['60 gramas', 'Sensor HERO 2 até 32 000 DPI', 'LIGHTSPEED sem fios', 'Até 95 horas de bateria', 'Switches híbridos'],
-    colours: [['Preto', '#1d1d1f'], ['Branco', '#f2f2f0'], ['Magenta', '#d6417c']],
+    colours: [['Preto', '#1d1d1f', '1616071358409-ef30a44a90bb', '1616071358846-9f34f471815d']],
     rating: 4.8,
     reviews: 1700,
     stock: 11,
@@ -1216,7 +1272,7 @@ export const INVENTORY_MERCHANDISING: Record<string, Merchandising> = Object.fro
     {
       summary: entry.summary,
       overview: entry.overview,
-      finishes: entry.colours?.map(([name, hex]) => ({ name, hex })),
+      finishes: entry.colours?.map(([name, hex, ...images]) => ({ name, hex, images: images.length ? images : undefined })),
       option: entry.storage
         ? {
             name: entry.optionName ?? 'Armazenamento',
