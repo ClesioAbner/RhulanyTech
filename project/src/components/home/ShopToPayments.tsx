@@ -14,12 +14,16 @@ import { useMediaQuery } from '../../lib/useMediaQuery';
 import {
   INTRO_END,
   activeMethodAt,
+  fallLiftScale,
   fallRotateX,
   fallRotateY,
   fallRotateZ,
+  fallTravel,
+  mobileRotateX,
+  mobileRotateY,
+  mobileRotateZ,
   paymentRotateX,
   paymentRotateY,
-  paymentRotateZ,
 } from '../payments/phoneTimeline';
 import Payments from './Payments';
 import ShopSection from './ShopSection';
@@ -46,9 +50,10 @@ const offsetWithin = (el: HTMLElement, ancestor: HTMLElement) => {
  * The shop and payments sections share one 3D phone (desktop only).
  *
  * 1. On display: it sits inside the iPhone product card and scrolls with the page like any product.
- * 2. Release: when the card reaches the middle of the viewport, it lifts out and falls, tumbling.
- * 3. Landing: it arrives in the payments stage exactly as that section pins, then turns to show
- *    each payment method.
+ * 2. Release: when the card reaches the middle of the viewport it is lifted out, makes one smooth
+ *    full turn while it drops straight down its column.
+ * 3. Landing: it arrives facing forward in the payments stage exactly as that section pins, then
+ *    sways gently as each payment method takes over.
  *
  * A sticky layer spanning both sections hosts the phone; positions are in that layer's coordinates,
  * which match the viewport whenever the layer is pinned.
@@ -92,15 +97,20 @@ const ShopToPayments = () => {
   const y = useTransform([fall, pastShopTop, releaseAt, startY, endY], ([f, past, release, from, to]: number[]) => {
     if (f <= 0) return from - past; // riding along with its card
     const releasedAt = from - release;
-    const lift = Math.sin(Math.min(f / 0.3, 1) * Math.PI) * 70; // a small rise before the drop
-    return releasedAt + (to - releasedAt) * easeInOutCubic(f) - lift;
+    const { drop, rise } = fallTravel(f);
+    return releasedAt + (to - releasedAt) * drop - rise * 48;
   });
-  const scale = useTransform([fall, startScale], ([f, from]: number[]) => from + (1 - from) * easeInOutCubic(f));
+  const scale = useTransform(
+    [fall, startScale],
+    ([f, from]: number[]) => (from + (1 - from) * easeInOutCubic(f)) * fallLiftScale(f),
+  );
   const opacity = useTransform([fall, hasSlot], ([f, slotted]: number[]) => (slotted ? 1 : Math.min(f / 0.2, 1)));
 
   // Payments: progress through the pinned section.
   const { scrollYProgress: paymentsRaw } = useScroll({ target: paymentsRef, offset: ['start start', 'end end'] });
   const payments = useSpring(paymentsRaw, springConfig);
+  // Rotations follow a softly sprung copy of the fall, so the turn never feels glued to the scroll wheel.
+  const fallSmooth = useSpring(fall, { stiffness: 140, damping: 30, mass: 0.5 });
 
   // Lock-screen notifications appear one by one as the phone falls; the checkout takes over once payments pins.
   const updateShowcase = () => {
@@ -119,26 +129,25 @@ const ShopToPayments = () => {
   const still = (value: number) => (prefersReducedMotion ? 0 : value);
   const inPayments = (p: number) => p > 0.0001;
 
-  // Desktop phone: fall rotations first, payment rotations once the section pins.
-  const rotateY = useTransform([fall, payments], ([f, p]: number[]) =>
+  // Desktop phone: the fall's full turn ends at -360° (facing forward), so payments can pick up from 0°.
+  const rotateY = useTransform([fallSmooth, payments], ([f, p]: number[]) =>
     still(inPayments(p) ? paymentRotateY(p) : fallRotateY(f)),
   );
-  const rotateX = useTransform([fall, payments], ([f, p]: number[]) =>
+  const rotateX = useTransform([fallSmooth, payments], ([f, p]: number[]) =>
     still(inPayments(p) ? paymentRotateX(p) : fallRotateX(f)),
   );
-  const rotateZ = useTransform([fall, payments], ([f, p]: number[]) =>
-    still(inPayments(p) ? paymentRotateZ(p) : fallRotateZ(f)),
-  );
+  const rotateZ = useTransform([fallSmooth, payments], ([f, p]: number[]) => still(inPayments(p) ? 0 : fallRotateZ(f)));
 
   // Mobile phone: payments only.
-  const mobileRotateY = useTransform(payments, (p) => still(paymentRotateY(p)));
-  const mobileRotateX = useTransform(payments, (p) => still(paymentRotateX(p)));
-  const mobileRotateZ = useTransform(payments, (p) => still(paymentRotateZ(p)));
+  const phoneRotateYMobile = useTransform(payments, (p) => still(mobileRotateY(p)));
+  const phoneRotateXMobile = useTransform(payments, (p) => still(mobileRotateX(p)));
+  const phoneRotateZMobile = useTransform(payments, (p) => still(mobileRotateZ(p)));
 
   const screenKey: ScreenKey =
     activeIndex >= 0 ? (`method-${activeIndex}` as ScreenKey) : showcaseStage !== null ? 'lock' : 'checkout';
 
   const hintOpacity = useTransform(payments, [0, 0.08], [1, 0]);
+  const headingOpacity = useTransform(paymentsRaw, [0, 0.05], [0, 1]);
   const listOpacity = useTransform(payments, [0.06, INTRO_END], [0, 1]);
   const listY = useTransform(payments, [0.06, INTRO_END], [24, 0]);
 
@@ -198,9 +207,12 @@ const ShopToPayments = () => {
         phoneTargetRef={phoneTargetRef}
         activeIndex={activeIndex}
         hintOpacity={hintOpacity}
+        headingOpacity={isDesktop ? headingOpacity : undefined}
         listOpacity={listOpacity}
         listY={listY}
-        mobilePhone={isDesktop ? null : { rotateX: mobileRotateX, rotateY: mobileRotateY, rotateZ: mobileRotateZ }}
+        mobilePhone={
+          isDesktop ? null : { rotateX: phoneRotateXMobile, rotateY: phoneRotateYMobile, rotateZ: phoneRotateZMobile }
+        }
       />
 
       {/* Shared phone layer (desktop) */}
