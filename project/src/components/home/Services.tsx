@@ -48,7 +48,7 @@ const Services = () => (
               {String(index + 1).padStart(2, '0')}
             </span>
             <div>
-              <h3 className="font-display text-2xl font-medium tracking-tight sm:text-[1.75rem]">{reason.title}</h3>
+              <h3 className="type-heading">{reason.title}</h3>
               <p className="mt-3 max-w-md text-base leading-relaxed text-ink/60">{reason.body}</p>
             </div>
           </motion.li>

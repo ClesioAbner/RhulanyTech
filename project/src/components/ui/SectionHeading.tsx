@@ -35,7 +35,7 @@ const SectionHeading = ({ id, index, eyebrow, title, action, tone = 'light', ali
         </motion.p>
         <h2
           id={id}
-          className="mt-5 max-w-3xl overflow-hidden pb-[0.1em] font-display [text-wrap:balance] text-[2.5rem] font-medium leading-[1.02] tracking-tightest sm:text-5xl lg:text-[4rem]"
+          className="type-display mt-5 max-w-3xl overflow-hidden pb-[0.1em]"
         >
           <motion.span
             className="block"

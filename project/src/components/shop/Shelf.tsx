@@ -62,7 +62,7 @@ const Shelf = ({
   return (
     <section aria-labelledby={id} className={className}>
       <div className="container-site flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
-        <h2 id={id} className="max-w-3xl font-display text-2xl font-medium leading-tight tracking-tight [text-wrap:balance] sm:text-[1.75rem]">
+        <h2 id={id} className="type-title max-w-3xl">
           {title}
           {lead && <span className="text-ink/45"> {lead}</span>}
         </h2>

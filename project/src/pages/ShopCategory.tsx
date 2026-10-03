@@ -71,7 +71,7 @@ const ShopCategory = () => {
     return (
       <div className="container-site py-32 text-center">
         <p className="text-xs font-medium uppercase tracking-[0.18em] text-ink/45">Loja</p>
-        <h1 className="mt-4 font-display text-4xl font-medium tracking-tight">Esta secção não existe</h1>
+        <h1 className="type-display mt-4">Esta secção não existe</h1>
         <p className="mx-auto mt-3 max-w-sm text-sm text-ink/60">O endereço pode estar incompleto ou a gama já não estar disponível.</p>
         <Link to="/loja" className="mt-8 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper">
           Voltar à loja
@@ -132,7 +132,7 @@ const ShopCategory = () => {
         <AnimatePresence mode="wait" initial={false}>
           <motion.h1
             key={title}
-            className="mt-4 max-w-4xl font-display text-[2.5rem] font-medium leading-[1.04] tracking-tightest [text-wrap:balance] sm:text-5xl lg:text-6xl"
+            className="type-display mt-4 max-w-4xl"
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8, transition: { duration: 0.15 } }}
@@ -199,7 +199,7 @@ const ShopCategory = () => {
           ) : (
             <div className="container-site mt-10">
               <div className="rounded-[24px] bg-white px-6 py-20 text-center">
-                <h2 className="font-display text-3xl font-medium tracking-tight">Brevemente nesta gama</h2>
+                <h2 className="type-title">Brevemente nesta gama</h2>
                 <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink/60">
                   Estamos a preparar o stock de {title}. Se procura um modelo específico, encomendamos para si.
                 </p>
