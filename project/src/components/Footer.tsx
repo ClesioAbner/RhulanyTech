@@ -1,5 +1,9 @@
 import { Link } from 'react-router-dom';
 import { STORE } from '../data/store';
+import { ClockIcon, MailIcon, PhoneIcon, StoreIcon } from './ui/Icons';
+import SocialLinks from './ui/SocialLinks';
+
+const iconClass = 'mt-0.5 h-4 w-4 shrink-0 text-ink/40';
 
 const COLUMNS = [
   {
@@ -16,18 +20,12 @@ const COLUMNS = [
   {
     title: 'Empresa',
     links: [
-      { label: 'Sobre nós', to: '/about' },
-      { label: 'Academia', to: '/academy' },
+      { label: 'Sobre nós', to: '/sobre' },
       { label: 'Blog', to: '/blog' },
+      { label: 'Contacto', to: '/contacto' },
       { label: 'Pagamentos', to: '/#pagamentos' },
     ],
   },
-];
-
-const SOCIAL = [
-  { label: 'WhatsApp', href: STORE.whatsappUrl },
-  { label: 'Facebook', href: 'https://facebook.com/RhulanyTech' },
-  { label: 'Instagram', href: 'https://instagram.com/RhulanyTech' },
 ];
 
 const Footer = () => (
@@ -40,15 +38,6 @@ const Footer = () => (
         <p className="mt-5 max-w-sm text-sm leading-relaxed text-ink/60">
           Tecnologia original para trabalhar, criar e jogar. Loja física em Maputo, entregas em todo o país.
         </p>
-        <ul className="mt-8 flex gap-6 text-sm">
-          {SOCIAL.map((item) => (
-            <li key={item.label}>
-              <a href={item.href} target="_blank" rel="noopener noreferrer" className="link-underline">
-                {item.label}
-              </a>
-            </li>
-          ))}
-        </ul>
       </div>
 
       {COLUMNS.map((column) => (
@@ -69,14 +58,28 @@ const Footer = () => (
       <div className="md:col-span-3">
         <h2 className="eyebrow text-ink/45">Contacto</h2>
         <ul className="mt-5 space-y-3 text-sm">
-          <li>
+          <li className="flex gap-3">
+            <PhoneIcon className={iconClass} />
             <a href={STORE.phoneHref} className="link-underline tabular-nums">
               {STORE.phone}
             </a>
           </li>
-          <li className="text-ink/60">{STORE.address}</li>
-          <li className="text-ink/60">{STORE.hours}</li>
+          <li className="flex gap-3">
+            <MailIcon className={iconClass} />
+            <a href={`mailto:${STORE.email}`} className="link-underline">
+              {STORE.email}
+            </a>
+          </li>
+          <li className="flex gap-3 text-ink/60">
+            <StoreIcon className={iconClass} />
+            {STORE.address}
+          </li>
+          <li className="flex gap-3 text-ink/60">
+            <ClockIcon className={iconClass} />
+            {STORE.hours}
+          </li>
         </ul>
+        <SocialLinks className="mt-6" />
       </div>
     </div>
 

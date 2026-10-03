@@ -15,12 +15,16 @@ const ShopCategory = lazy(() => import('./pages/ShopCategory'));
 const ProductPage = lazy(() => import('./pages/ProductPage'));
 const CartPage = lazy(() => import('./pages/CartPage'));
 const Checkout = lazy(() => import('./pages/Checkout'));
-const About = lazy(() => import('./components/About'));
-const Academy = lazy(() => import('./pages/Academy'));
+const About = lazy(() => import('./pages/About'));
+const Contact = lazy(() => import('./pages/Contact'));
 const Blog = lazy(() => import('./pages/Blog'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
 const AIRecommendation = lazy(() => import('./components/AIRecommendation'));
 const UserRegistration = lazy(() => import('./components/UserRegistration'));
 const UserProfile = lazy(() => import('./components/UserProfile'));
+
+// Pages that open with a full-screen banner under the floating header.
+const FULL_BLEED_PATHS = ['/', '/blog', '/sobre', '/contacto'];
 
 const isShopPath = (pathname: string) => pathname.startsWith('/loja') || pathname.startsWith('/produto/');
 
@@ -32,10 +36,15 @@ const ScrollToTop = () => {
     const from = previous.current;
     previous.current = pathname;
     if (hash) {
-      // Wait a frame so the target section exists when arriving from another route.
-      const frame = requestAnimationFrame(() => {
-        document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
+      // The target can live in a lazily loaded page: keep looking for it for a moment.
+      let frame = 0;
+      const started = performance.now();
+      const find = () => {
+        const target = document.getElementById(hash.slice(1));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        else if (performance.now() - started < 2000) frame = requestAnimationFrame(find);
+      };
+      frame = requestAnimationFrame(find);
       return () => cancelAnimationFrame(frame);
     }
     // Inside the shop, ShopLayout scrolls once the outgoing page has faded, so the jump isn't visible.
@@ -65,7 +74,7 @@ function App() {
   const { currentUser } = useUserStore();
   const { pathname } = useLocation();
   // The homepage hero sits under the floating header; every other page starts below it.
-  const isHome = pathname === '/';
+  const fullBleed = FULL_BLEED_PATHS.includes(pathname);
   const [showRegistration, setShowRegistration] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
 
@@ -82,7 +91,7 @@ function App() {
 
         <Header onSignIn={() => setShowRegistration(true)} onOpenProfile={() => setShowProfile(true)} />
 
-        <main id="conteudo" className={`flex-grow ${isHome ? '' : 'pt-24'}`}>
+        <main id="conteudo" className={`flex-grow ${fullBleed ? '' : 'pt-24'}`}>
           <Suspense fallback={<PageFallback />}>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -95,10 +104,12 @@ function App() {
               <Route path="/products/:id" element={<LegacyProduct />} />
               <Route path="/cart" element={<CartPage />} />
               <Route path="/checkout" element={<Checkout />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/academy" element={<Academy />} />
+              <Route path="/sobre" element={<About />} />
+              <Route path="/contacto" element={<Contact />} />
               <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:postId" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/about" element={<Navigate to="/sobre" replace />} />
+              <Route path="/academy" element={<Navigate to="/blog" replace />} />
               <Route path="/ai-recommendation" element={<AIRecommendation />} />
             </Routes>
           </Suspense>

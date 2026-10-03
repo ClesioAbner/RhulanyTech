@@ -102,7 +102,7 @@ const TextCard = ({ title, body, children }: { title: string; body: string; chil
 const Shop = () => (
   <div className="pb-28 lg:pb-36">
     <header className="container-site flex flex-col gap-6 pt-12 lg:flex-row lg:items-end lg:justify-between lg:pt-16">
-      <h1 className="max-w-4xl overflow-hidden pb-[0.08em] font-display text-[2.5rem] font-medium leading-[1.04] tracking-tightest [text-wrap:balance] sm:text-5xl lg:text-[3.5rem]">
+      <h1 className="type-display max-w-4xl overflow-hidden pb-[0.08em]">
         <motion.span
           className="block"
           initial={{ y: '100%' }}

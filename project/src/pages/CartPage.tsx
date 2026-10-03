@@ -39,7 +39,7 @@ const CartPage = () => {
       <div className="pb-28 lg:pb-36">
         <div className="container-site pt-16 text-center lg:pt-24">
           <motion.h1
-            className="font-display text-[2.5rem] font-medium leading-[1.04] tracking-tightest sm:text-6xl"
+            className="type-display"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: easeOutExpo }}
@@ -69,7 +69,7 @@ const CartPage = () => {
     <div className="pb-28 lg:pb-36">
       <header className="container-site pt-12 lg:pt-16">
         <p className="text-sm text-ink/50">Carrinho, {itemCountLabel(count)}</p>
-        <h1 className="mt-3 max-w-3xl font-display text-[2.5rem] font-medium leading-[1.04] tracking-tightest [text-wrap:balance] sm:text-6xl">
+        <h1 className="type-display mt-3 max-w-3xl">
           O total do seu carrinho é <RollingPrice value={total} className="align-bottom" />
         </h1>
       </header>
@@ -94,7 +94,7 @@ const CartPage = () => {
 
         <aside className="lg:col-span-5" aria-label="Resumo da encomenda">
           <div className="rounded-[28px] bg-white p-6 sm:p-8 lg:sticky lg:top-28">
-            <h2 className="font-display text-2xl font-medium tracking-tight">Resumo</h2>
+            <h2 className="type-heading">Resumo</h2>
             <dl className="mt-6 space-y-3 text-sm">
               <div className="flex justify-between gap-4">
                 <dt className="text-ink/60">Subtotal, {itemCountLabel(count)}</dt>

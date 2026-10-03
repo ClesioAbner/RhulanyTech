@@ -5,17 +5,19 @@ import { useCartStore } from '../../stores/cartStore';
 import { useUserStore } from '../../stores/userStore';
 import { useCartUi } from '../../stores/cartUi';
 import { easeOutExpo } from '../../lib/motion';
+import { CartIcon } from '../ui/Icons';
 
 const NAV_ITEMS = [
+  { to: '/', label: 'Início' },
   { to: '/loja', label: 'Loja' },
   { to: '/blog', label: 'Blog' },
-  { to: '/about', label: 'Sobre' },
-  { to: '/academy', label: 'Academia' },
+  { to: '/sobre', label: 'Sobre' },
+  { to: '/contacto', label: 'Contacto' },
 ];
 
-// Hash links point at homepage sections, so they never claim the active route.
+// "Início" is only active on the homepage; product pages belong to the shop.
 const isNavItemActive = (to: string, pathname: string) =>
-  !to.includes('#') && (pathname.startsWith(to) || (to === '/loja' && pathname.startsWith('/produto/')));
+  to === '/' ? pathname === '/' : pathname.startsWith(to) || (to === '/loja' && pathname.startsWith('/produto/'));
 
 const COMPACT_AFTER = 48; // px scrolled before the bar contracts
 // Minimal contraction on scroll: the bar stays full-featured, it just tightens and lifts.
@@ -108,24 +110,15 @@ const Header = ({ onSignIn, onOpenProfile }: HeaderProps) => {
             aria-label={`Carrinho, ${itemCount} ${itemCount === 1 ? 'artigo' : 'artigos'}`}
           >
             {/* Re-keyed on every change so the cart gives a small nudge when something is added */}
-            <motion.svg
+            <motion.span
               key={itemCount}
-              viewBox="0 0 24 24"
-              className="h-[19px] w-[19px]"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.6}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
+              className="block"
               initial={{ scale: 0.82, rotate: -8 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: 'spring', stiffness: 520, damping: 14 }}
             >
-              <path d="M2.75 3.75h2.1l2.4 10.6a1.6 1.6 0 0 0 1.56 1.25h7.86a1.6 1.6 0 0 0 1.55-1.2L20.25 7.5H5.7" />
-              <circle cx="9.5" cy="19.5" r="1.25" />
-              <circle cx="17" cy="19.5" r="1.25" />
-            </motion.svg>
+              <CartIcon className="h-[19px] w-[19px]" />
+            </motion.span>
             <span className="grid h-6 min-w-[1.5rem] place-items-center overflow-hidden rounded-full bg-paper/15 px-1.5 text-xs tabular-nums">
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.span

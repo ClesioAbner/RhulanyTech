@@ -99,7 +99,7 @@ const ProductView = ({ product }: { product: CatalogProduct }) => {
 
           <div className="lg:col-span-5 lg:pt-4">
             <p className="text-xs font-medium uppercase tracking-[0.18em] text-ink/45">{product.brand}</p>
-            <h1 className="mt-3 font-display text-4xl font-medium leading-[1.02] tracking-tightest [text-wrap:balance] lg:text-[3.25rem]">
+            <h1 className="type-display mt-3">
               {product.title}
             </h1>
             <p className="mt-4 max-w-md text-base leading-relaxed text-ink/60">{product.summary}</p>
@@ -234,7 +234,7 @@ const ProductPage = () => {
     return (
       <div className="container-site py-32 text-center">
         <p className="text-xs font-medium uppercase tracking-[0.18em] text-ink/45">Produto</p>
-        <h1 className="mt-4 font-display text-4xl font-medium tracking-tight">Não encontrámos este produto</h1>
+        <h1 className="type-display mt-4">Não encontrámos este produto</h1>
         <p className="mx-auto mt-3 max-w-sm text-sm text-ink/60">Pode ter mudado de nome ou já não estar disponível.</p>
         <Link to="/loja" className="mt-8 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper">
           Ir para a loja

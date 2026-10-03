@@ -53,7 +53,7 @@ const StoreVisit = () => {
           </p>
           <h2
             id="visitar-titulo"
-            className="mt-5 max-w-2xl font-display text-[2.5rem] font-medium leading-[1.02] tracking-tightest [text-wrap:balance] sm:text-5xl lg:text-[4rem]"
+            className="type-display mt-5 max-w-2xl"
           >
             Experimente antes de comprar
           </h2>
