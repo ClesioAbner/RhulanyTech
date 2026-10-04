@@ -48,6 +48,7 @@ const Picks = () => {
               <img
                 src={unsplash(lead.cover.src, 1400)}
                 alt={lead.cover.alt}
+                style={{ objectPosition: lead.cover.position }}
                 loading="lazy"
                 className="h-full w-full object-cover transition-transform duration-[1400ms] ease-out-expo group-hover:scale-[1.04]"
               />
@@ -131,7 +132,7 @@ const Blog = () => {
           </h2>
         </motion.div>
         <motion.ul
-          className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:mt-12 lg:grid-cols-6 lg:gap-4"
+          className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:mt-12 lg:grid-cols-7 lg:gap-4"
           initial="hidden"
           whileInView="visible"
           viewport={inViewOnce}
@@ -154,6 +155,7 @@ const Blog = () => {
                   <img
                     src={unsplash(item.cover.src, 500)}
                     alt=""
+                    style={{ objectPosition: item.cover.position }}
                     loading="lazy"
                     className="absolute inset-0 h-full w-full object-cover opacity-90 transition-transform duration-[1200ms] ease-out-expo group-hover:scale-[1.07]"
                   />

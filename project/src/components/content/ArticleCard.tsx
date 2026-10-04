@@ -43,6 +43,7 @@ const ArticleCard = ({ article, layout = 'stack' }: ArticleCardProps) => {
           <img
             src={unsplash(article.cover.src, 600)}
             alt={article.cover.alt}
+            style={{ objectPosition: article.cover.position }}
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out-expo group-hover:scale-[1.06]"
           />
@@ -58,6 +59,7 @@ const ArticleCard = ({ article, layout = 'stack' }: ArticleCardProps) => {
         <img
           src={unsplash(article.cover.src, row ? 400 : 900)}
           alt={article.cover.alt}
+          style={{ objectPosition: article.cover.position }}
           loading="lazy"
           className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out-expo group-hover:scale-[1.05]"
         />

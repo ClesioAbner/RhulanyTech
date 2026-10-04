@@ -165,6 +165,7 @@ const NextGuide = ({ article }: { article: Article }) => (
       src={unsplash(article.cover.src, 1800)}
       alt={article.cover.alt}
       loading="lazy"
+      style={{ objectPosition: article.cover.position }}
       className="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-[1400ms] ease-out-expo group-hover:scale-[1.04]"
     />
     <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/30 to-transparent" />
@@ -248,7 +249,7 @@ const ArticleView = ({ article }: { article: Article }) => {
             sizes="(min-width: 1360px) 1264px, 100vw"
             alt={article.cover.alt}
             className="h-full w-full object-cover"
-            style={{ scale: coverScale }}
+            style={{ scale: coverScale, objectPosition: article.cover.position }}
           />
         </div>
       </div>

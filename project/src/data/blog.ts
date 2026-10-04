@@ -4,7 +4,7 @@
  * `cover` and image `src` are Unsplash ids; `products` are catalogue ids shown under the article.
  */
 
-export type BlogTopic = 'telemoveis' | 'computadores' | 'gaming' | 'camaras' | 'audio' | 'energia';
+export type BlogTopic = 'telemoveis' | 'computadores' | 'gaming' | 'camaras' | 'audio' | 'energia' | 'seguranca';
 
 export const BLOG_TOPICS: { id: BlogTopic; label: string }[] = [
   { id: 'telemoveis', label: 'Telemóveis' },
@@ -13,6 +13,7 @@ export const BLOG_TOPICS: { id: BlogTopic; label: string }[] = [
   { id: 'camaras', label: 'Câmaras' },
   { id: 'audio', label: 'Áudio' },
   { id: 'energia', label: 'Energia' },
+  { id: 'seguranca', label: 'Segurança' },
 ];
 
 export type ArticleBlock =
@@ -29,7 +30,8 @@ export interface Article {
   topic: BlogTopic;
   /** ISO date of publication. */
   date: string;
-  cover: { src: string; alt: string };
+  /** `position` is the CSS object-position that keeps the subject in frame when cropped. */
+  cover: { src: string; alt: string; position?: string };
   /** Key points, shown as the article's summary. */
   summary: string[];
   body: ArticleBlock[];
@@ -37,6 +39,74 @@ export interface Article {
 }
 
 export const ARTICLES: Article[] = [
+  {
+    slug: 'como-reconhecer-burlas-por-sms-e-whatsapp',
+    title: 'Como reconhecer burlas por SMS, WhatsApp e chamadas',
+    excerpt: 'Falso dinheiro enviado por engano, códigos de verificação e falsos técnicos, e o que fazer se cair numa',
+    topic: 'seguranca',
+    date: '2026-10-04',
+    cover: { src: '/images/blog/seguranca', alt: 'Homem a analisar documentos e fotografias num quadro de investigação, ao lado de um portátil', position: '50% 38%' },
+    summary: [
+      'Nenhuma empresa séria pede o seu PIN, a palavra-passe ou o código que recebeu por SMS.',
+      'Confirme sempre o saldo no próprio M-Pesa ou e-Mola antes de devolver dinheiro.',
+      'Active a verificação em dois passos no WhatsApp.',
+      'Se cair numa burla, contacte de imediato a operadora e mude os seus códigos.',
+    ],
+    body: [
+      {
+        type: 'p',
+        text: 'As burlas por telemóvel estão cada vez mais convincentes. Usam o nome de bancos, operadoras e lojas, e contam com a pressa de quem as recebe. Conhecer os truques mais comuns é a melhor forma de não cair neles.',
+      },
+      { type: 'h2', id: 'dinheiro', text: 'O falso dinheiro enviado por engano' },
+      {
+        type: 'p',
+        text: 'Chega uma mensagem a dizer que recebeu dinheiro no M-Pesa ou no e-Mola e, logo a seguir, uma chamada de alguém aflito a pedir que devolva o valor porque se enganou no número. A mensagem é falsa e o dinheiro nunca entrou na sua conta.',
+      },
+      {
+        type: 'tip',
+        title: 'Confirme no próprio serviço',
+        text: 'Abra o menu do M-Pesa ou do e-Mola e veja o saldo e os últimos movimentos. Uma SMS com aspecto oficial não prova que recebeu dinheiro.',
+      },
+      { type: 'h2', id: 'codigos', text: 'Códigos de verificação' },
+      {
+        type: 'p',
+        text: 'Ninguém precisa do código de seis dígitos que o WhatsApp, o banco ou uma loja lhe enviam por SMS. Quem o pede, mesmo que pareça um amigo ou um familiar, está a tentar entrar na sua conta.',
+      },
+      {
+        type: 'list',
+        items: [
+          'Nunca partilhe códigos recebidos por SMS, com ninguém.',
+          'Active a verificação em dois passos no WhatsApp, em Definições, Conta.',
+          'Desconfie de mensagens de amigos a pedir dinheiro com urgência e confirme com uma chamada.',
+        ],
+      },
+      { type: 'h2', id: 'links', text: 'Links, prémios e promoções' },
+      {
+        type: 'p',
+        text: 'Mensagens com prémios, sorteios ou descontos bons demais levam a páginas que imitam lojas e bancos para roubar dados. Antes de tocar num link, veja o endereço com atenção e, na dúvida, procure o site oficial em vez de abrir o link.',
+      },
+      { type: 'h2', id: 'tecnicos', text: 'Falsos técnicos e falsas lojas' },
+      {
+        type: 'p',
+        text: 'Há quem ligue em nome de uma operadora ou de uma marca a dizer que o telemóvel tem um problema e peça para instalar uma aplicação. Essas aplicações dão a quem ligou o controlo do aparelho. Desligue e contacte a empresa pelos canais oficiais.',
+      },
+      {
+        type: 'p',
+        text: 'Na Rhulany Tech nunca pedimos o seu PIN nem códigos recebidos por SMS. Os nossos contactos oficiais estão na página de contacto.',
+      },
+      { type: 'h2', id: 'se-cair', text: 'Se cair numa burla' },
+      {
+        type: 'list',
+        ordered: true,
+        items: [
+          'Contacte de imediato o apoio ao cliente da sua operadora ou do seu banco.',
+          'Mude o PIN do M-Pesa ou do e-Mola e as palavras-passe que possa ter partilhado.',
+          'Avise os seus contactos se a sua conta de WhatsApp foi usada por outra pessoa.',
+          'Apresente queixa às autoridades com as mensagens e os números envolvidos.',
+        ],
+      },
+    ],
+  },
   {
     slug: 'como-limpar-o-telemovel',
     title: 'Como limpar o telemóvel sem estragar o ecrã',
@@ -225,7 +295,7 @@ export const ARTICLES: Article[] = [
     excerpt: 'Ecrã, teclado e entradas de ar, com os produtos certos e os que nunca deve usar',
     topic: 'computadores',
     date: '2026-09-17',
-    cover: { src: '1692645214212-ea7fdb37ca6d', alt: 'Mão a limpar o ecrã de um portátil com um pano de microfibra' },
+    cover: { src: '/images/blog/limpar-portatil', alt: 'Mãos com luvas a limpar o teclado de um portátil com um toalhete', position: '50% 62%' },
     summary: [
       'Desligue o portátil por completo e retire o carregador antes de limpar.',
       'Ecrã: pano de microfibra seco ou ligeiramente humedecido, nunca produto directamente no vidro.',
@@ -286,7 +356,7 @@ export const ARTICLES: Article[] = [
     excerpt: 'Onde a colocar, como a limpar e os sinais de que algo não está bem',
     topic: 'gaming',
     date: '2026-09-09',
-    cover: { src: '1731405858377-6de0070d8d65', alt: 'PlayStation 5 Slim com comando DualSense numa mesa de madeira' },
+    cover: { src: '1709587797077-7a2c94411514', alt: 'PlayStation 5 e comando DualSense ao lado de um candeeiro com os símbolos PlayStation em néon' },
     summary: [
       'Deixe pelo menos 10 cm livres à volta da consola e evite móveis fechados.',
       'Uma vez por mês, aspire ou escove as entradas de ar com a consola desligada.',
@@ -388,7 +458,7 @@ export const ARTICLES: Article[] = [
     excerpt: 'Os passos certos, pela ordem certa, e como evitar fungos com a humidade',
     topic: 'camaras',
     date: '2026-08-14',
-    cover: { src: '1759647516042-7ab902682d9c', alt: 'Mãos a limpar a lente de uma câmara com um pano' },
+    cover: { src: '/images/blog/camara', alt: 'Fotógrafo a segurar uma câmara Fujifilm com uma objectiva grande angular', position: '50% 55%' },
     summary: [
       'Comece sempre pela pêra de ar, depois o pincel, e só no fim o pano.',
       'A limpeza manual do sensor é delicada; se as manchas persistirem, prefira um técnico.',
