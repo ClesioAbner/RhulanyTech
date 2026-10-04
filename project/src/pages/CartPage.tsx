@@ -9,6 +9,7 @@ import CartLineItem from '../components/cart/CartLineItem';
 import RollingPrice from '../components/cart/RollingPrice';
 import ProductCard from '../components/product/ProductCard';
 import Shelf from '../components/shop/Shelf';
+import CheckoutProgress from '../components/checkout/CheckoutProgress';
 
 const ASSURANCES = [
   { title: 'Garantia oficial', body: 'Produtos originais, selados, com a garantia do fabricante.' },
@@ -47,7 +48,7 @@ const CartPage = () => {
             O seu carrinho está vazio
           </motion.h1>
           <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-ink/60">
-            Os produtos que juntar ficam guardados aqui, neste dispositivo, até decidir.
+            Os produtos que juntar ficam guardados aqui, neste dispositivo, até decidir
           </p>
           <Link
             to="/loja"
@@ -67,24 +68,27 @@ const CartPage = () => {
 
   return (
     <div className="pb-28 lg:pb-36">
-      <header className="container-site pt-12 lg:pt-16">
-        <p className="text-sm text-ink/50">Carrinho, {itemCountLabel(count)}</p>
-        <h1 className="type-display mt-3 max-w-3xl">
-          O total do seu carrinho é <RollingPrice value={total} className="align-bottom" />
-        </h1>
+      <header className="container-site flex flex-col gap-6 pt-8 lg:flex-row lg:items-end lg:justify-between lg:pt-12">
+        <div>
+          <h1 className="type-display">Carrinho</h1>
+          <p className="type-lead mt-2 text-ink/55">
+            {itemCountLabel(count)}, <RollingPrice value={total} className="align-bottom text-ink" />
+          </p>
+        </div>
+        <CheckoutProgress current={0} />
       </header>
 
-      <div className="container-site mt-12 grid gap-12 lg:mt-16 lg:grid-cols-12 lg:gap-16">
-        <ul className="divide-y divide-ink/10 border-y border-ink/10 lg:col-span-7">
+      <div className="container-site mt-10 grid gap-10 lg:mt-12 lg:grid-cols-12 lg:gap-10">
+        <ul className="space-y-3 lg:col-span-7">
           <AnimatePresence initial={false}>
             {lines.map((line) => (
               <motion.li
                 key={line.id}
                 layout
                 exit={{ opacity: 0, height: 0, transition: { duration: 0.35, ease: easeOutExpo } }}
-                className="overflow-hidden"
+                className="overflow-hidden rounded-[28px] bg-white"
               >
-                <div className="py-8">
+                <div className="p-5 sm:p-7">
                   <CartLineItem line={line} size="full" />
                 </div>
               </motion.li>
@@ -95,7 +99,7 @@ const CartPage = () => {
         <aside className="lg:col-span-5" aria-label="Resumo da encomenda">
           <div className="rounded-[28px] bg-white p-6 sm:p-8 lg:sticky lg:top-28">
             <h2 className="type-heading">Resumo</h2>
-            <dl className="mt-6 space-y-3 text-sm">
+            <dl className="mt-6 space-y-3 rounded-2xl bg-paper p-5 text-sm">
               <div className="flex justify-between gap-4">
                 <dt className="text-ink/60">Subtotal, {itemCountLabel(count)}</dt>
                 <dd>
@@ -104,9 +108,9 @@ const CartPage = () => {
               </div>
               <div className="flex justify-between gap-4">
                 <dt className="text-ink/60">Entrega</dt>
-                <dd className="text-ink/60">Calculada no checkout</dd>
+                <dd className="text-right text-ink/60">Grátis na loja, ou a confirmar</dd>
               </div>
-              <div className="flex items-baseline justify-between gap-4 border-t border-ink/10 pt-4">
+              <div className="flex items-baseline justify-between gap-4 pt-2">
                 <dt className="text-base font-medium">Total</dt>
                 <dd className="text-xl font-medium">
                   <RollingPrice value={total} />
@@ -116,7 +120,7 @@ const CartPage = () => {
 
             <Link
               to="/checkout"
-              className="mt-8 grid h-14 place-items-center rounded-full bg-ink text-sm font-medium text-paper transition-[background-color,transform] duration-300 hover:bg-ink-soft active:scale-[0.98]"
+              className="mt-6 grid h-14 place-items-center rounded-full bg-ink text-sm font-medium text-paper transition-[background-color,transform] duration-300 hover:bg-ink-soft active:scale-[0.98]"
             >
               Finalizar compra
             </Link>
@@ -124,7 +128,7 @@ const CartPage = () => {
               href={whatsappOrderUrl(items, total)}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 grid h-14 place-items-center rounded-full border border-ink/[0.12] text-sm font-medium transition-colors hover:border-ink"
+              className="mt-3 grid h-14 place-items-center rounded-full bg-paper text-sm font-medium transition-colors hover:bg-ink hover:text-paper"
             >
               Encomendar pelo WhatsApp
             </a>
@@ -132,8 +136,8 @@ const CartPage = () => {
               A mensagem já leva a lista do carrinho, só tem de a enviar
             </p>
 
-            <p className="mt-8 border-t border-ink/10 pt-6 text-sm text-ink/60">
-              Pague com M-Pesa, e-Mola, cartão ou PayPal.{' '}
+            <p className="mt-6 text-center text-sm text-ink/55">
+              Pague com M-Pesa, e-Mola, cartão ou PayPal{' '}
               <Link to="/#pagamentos" className="link-underline text-ink">
                 Saber mais
               </Link>

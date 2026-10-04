@@ -23,12 +23,7 @@ const COMPACT_AFTER = 48; // px scrolled before the bar contracts
 // Minimal contraction on scroll: the bar stays full-featured, it just tightens and lifts.
 const barTransition = { duration: 0.5, ease: easeOutExpo };
 
-interface HeaderProps {
-  onSignIn: () => void;
-  onOpenProfile: () => void;
-}
-
-const Header = ({ onSignIn, onOpenProfile }: HeaderProps) => {
+const Header = () => {
   const { currentUser, logout } = useUserStore();
   const itemCount = useCartStore((state) => state.items.reduce((sum, item) => sum + item.quantity, 0));
   const openCart = useCartUi((state) => state.open);
@@ -94,13 +89,12 @@ const Header = ({ onSignIn, onOpenProfile }: HeaderProps) => {
         </nav>
 
         <div className="flex shrink-0 items-center gap-1 text-[13.5px]">
-          <button
-            type="button"
-            onClick={currentUser ? onOpenProfile : onSignIn}
+          <Link
+            to={currentUser ? '/conta' : `/entrar?voltar=${encodeURIComponent(pathname)}`}
             className="hidden h-10 items-center rounded-full px-4 transition-colors hover:bg-ink/[0.05] sm:inline-flex"
           >
             {currentUser ? currentUser.name.split(' ')[0] : 'Entrar'}
-          </button>
+          </Link>
 
           <button
             type="button"
@@ -185,17 +179,13 @@ const Header = ({ onSignIn, onOpenProfile }: HeaderProps) => {
               <div className="flex gap-6 border-t border-ink/10 pt-6 text-base">
                 {currentUser ? (
                   <>
-                    <button type="button" onClick={() => { setIsMenuOpen(false); onOpenProfile(); }}>
-                      A minha conta
-                    </button>
+                    <Link to="/conta">A minha conta</Link>
                     <button type="button" onClick={logout} className="text-ink/60">
                       Sair
                     </button>
                   </>
                 ) : (
-                  <button type="button" onClick={() => { setIsMenuOpen(false); onSignIn(); }}>
-                    Entrar ou criar conta
-                  </button>
+                  <Link to={`/entrar?voltar=${encodeURIComponent(pathname)}`}>Entrar ou criar conta</Link>
                 )}
               </div>
             </motion.nav>

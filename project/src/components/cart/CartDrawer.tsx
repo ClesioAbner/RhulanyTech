@@ -193,7 +193,7 @@ const CartDrawer = () => {
                   </div>
                   <div className="flex justify-between gap-4 text-ink/55">
                     <dt>Entrega</dt>
-                    <dd>Calculada no checkout</dd>
+                    <dd>Grátis na loja, ou a confirmar</dd>
                   </div>
                 </dl>
                 <button

@@ -1,7 +1,6 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import { Navigate, Routes, Route, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { MotionConfig } from 'framer-motion';
-import { useUserStore } from './stores/userStore';
 import Home from './pages/Home';
 import Footer from './components/Footer';
 import Header from './components/layout/Header';
@@ -20,11 +19,12 @@ const Contact = lazy(() => import('./pages/Contact'));
 const Blog = lazy(() => import('./pages/Blog'));
 const BlogPost = lazy(() => import('./pages/BlogPost'));
 const AIRecommendation = lazy(() => import('./components/AIRecommendation'));
-const UserRegistration = lazy(() => import('./components/UserRegistration'));
-const UserProfile = lazy(() => import('./components/UserProfile'));
+const OrderConfirmation = lazy(() => import('./pages/OrderConfirmation'));
+const SignIn = lazy(() => import('./pages/SignIn'));
+const Account = lazy(() => import('./pages/Account'));
 
 // Pages that open with a full-screen banner under the floating header.
-const FULL_BLEED_PATHS = ['/', '/blog', '/sobre', '/contacto'];
+const FULL_BLEED_PATHS = ['/', '/blog', '/sobre', '/contacto', '/entrar'];
 
 const isShopPath = (pathname: string) => pathname.startsWith('/loja') || pathname.startsWith('/produto/');
 
@@ -71,12 +71,9 @@ const LegacyProduct = () => {
 const PageFallback = () => <div className="min-h-[60vh]" aria-busy="true" />;
 
 function App() {
-  const { currentUser } = useUserStore();
   const { pathname } = useLocation();
   // The homepage hero sits under the floating header; every other page starts below it.
   const fullBleed = FULL_BLEED_PATHS.includes(pathname);
-  const [showRegistration, setShowRegistration] = useState(false);
-  const [showProfile, setShowProfile] = useState(false);
 
   return (
     <MotionConfig reducedMotion="user">
@@ -89,9 +86,11 @@ function App() {
           Saltar para o conteúdo
         </a>
 
-        <Header onSignIn={() => setShowRegistration(true)} onOpenProfile={() => setShowProfile(true)} />
+        <div className="print:hidden">
+          <Header />
+        </div>
 
-        <main id="conteudo" className={`flex-grow ${fullBleed ? '' : 'pt-24'}`}>
+        <main id="conteudo" className={`flex-grow ${fullBleed ? '' : 'pt-24 print:pt-0'}`}>
           <Suspense fallback={<PageFallback />}>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -104,6 +103,9 @@ function App() {
               <Route path="/products/:id" element={<LegacyProduct />} />
               <Route path="/cart" element={<CartPage />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/encomenda/:number" element={<OrderConfirmation />} />
+              <Route path="/entrar" element={<SignIn />} />
+              <Route path="/conta" element={<Account />} />
               <Route path="/sobre" element={<About />} />
               <Route path="/contacto" element={<Contact />} />
               <Route path="/blog" element={<Blog />} />
@@ -115,17 +117,9 @@ function App() {
           </Suspense>
         </main>
 
-        <Suspense fallback={null}>
-          {showRegistration && (
-            <UserRegistration
-              onClose={() => setShowRegistration(false)}
-              onSuccess={() => setShowRegistration(false)}
-            />
-          )}
-          {showProfile && currentUser && <UserProfile onClose={() => setShowProfile(false)} />}
-        </Suspense>
-
-        <Footer />
+        <div className="print:hidden">
+          <Footer />
+        </div>
       </div>
       <CartDrawer />
     </MotionConfig>
