@@ -38,6 +38,128 @@ export interface Article {
 
 export const ARTICLES: Article[] = [
   {
+    slug: 'como-limpar-o-telemovel',
+    title: 'Como limpar o telemóvel sem estragar o ecrã',
+    excerpt: 'O que usar no ecrã, nas entradas e na capa, e o que acaba com o revestimento',
+    topic: 'telemoveis',
+    date: '2026-10-02',
+    cover: { src: '/images/blog/limpar-telemovel', alt: 'Telemóvel sobre uma mesa de madeira com um pano branco e um frasco de spray' },
+    summary: [
+      'Desligue o telemóvel e retire a capa antes de começar.',
+      'Use um pano de microfibra, seco ou ligeiramente humedecido.',
+      'Álcool isopropílico a 70% pode ser usado com moderação, sempre aplicado no pano.',
+      'Nunca use limpa-vidros, lixívia nem objectos metálicos nas entradas.',
+    ],
+    body: [
+      {
+        type: 'p',
+        text: 'Passamos o dia a tocar no telemóvel e a pousá-lo em todo o lado. O ecrã acumula gordura, as entradas enchem-se de pó e a capa ganha sujidade que acaba por riscar o aparelho. Uma limpeza simples, uma vez por semana, mantém tudo como novo.',
+      },
+      { type: 'h2', id: 'antes', text: 'Antes de começar' },
+      {
+        type: 'list',
+        ordered: true,
+        items: [
+          'Desligue o telemóvel e desligue o carregador.',
+          'Retire a capa e a película solta, se tiver.',
+          'Tenha à mão um pano de microfibra limpo e uma escova macia e seca.',
+        ],
+      },
+      { type: 'h2', id: 'ecra', text: 'O ecrã e a traseira' },
+      {
+        type: 'p',
+        text: 'Passe o pano de microfibra seco em movimentos suaves. Para gordura ou marcas mais teimosas, humedeça ligeiramente o pano com água ou com álcool isopropílico a 70% e volte a passar, sem pressionar. A traseira de vidro limpa-se da mesma forma.',
+      },
+      {
+        type: 'tip',
+        title: 'O revestimento do ecrã',
+        text: 'O ecrã tem uma camada que repele a gordura das dedadas. Limpa-vidros, lixívia, vinagre e produtos abrasivos desgastam essa camada e o ecrã passa a sujar-se mais depressa.',
+      },
+      { type: 'h2', id: 'entradas', text: 'Entradas e altifalantes' },
+      {
+        type: 'p',
+        text: 'Use uma escova macia e seca para soltar o pó da entrada de carregamento e das grelhas dos altifalantes. Não use alfinetes, clipes ou ar comprimido directamente nas entradas: podem danificar os contactos ou empurrar o pó para dentro.',
+      },
+      { type: 'h2', id: 'capa', text: 'A capa' },
+      {
+        type: 'p',
+        text: 'As capas de silicone lavam-se com água e um pouco de sabão neutro. Deixe secar por completo antes de voltar a colocar. As transparentes ganham um tom amarelado com o tempo por causa da luz do sol, e quando isso acontece a limpeza já não resolve.',
+      },
+      { type: 'h2', id: 'frequencia', text: 'Com que frequência' },
+      {
+        type: 'p',
+        text: 'Uma vez por semana para o ecrã e a capa chega para a maioria das pessoas. As entradas pedem atenção quando o cabo deixa de encaixar bem ou o carregamento começa a falhar.',
+      },
+    ],
+    products: ['90', '37', '88'],
+  },
+  {
+    slug: 'sinais-de-que-o-computador-precisa-de-manutencao',
+    title: 'Sinais de que o computador precisa de manutenção',
+    excerpt: 'Ruído, calor e lentidão, o que pode resolver em casa e quando levar a um técnico',
+    topic: 'computadores',
+    date: '2026-09-30',
+    cover: { src: '/images/blog/tecnico-computador', alt: 'Técnico a abrir a caixa de um computador de secretária numa oficina' },
+    summary: [
+      'Ventoinha sempre alta e calor em tarefas simples costumam ser pó acumulado.',
+      'Lentidão ao arrancar pode ser falta de espaço, programas a mais ou um disco a falhar.',
+      'Faça uma cópia de segurança antes de qualquer reparação.',
+      'Limpeza interior e troca de pasta térmica são trabalho para um técnico.',
+    ],
+    body: [
+      {
+        type: 'p',
+        text: 'Um computador raramente avaria de um dia para o outro. Antes disso dá sinais: faz mais barulho, aquece, demora a abrir os programas. Reconhecer esses sinais cedo evita reparações caras e, sobretudo, a perda de ficheiros.',
+      },
+      { type: 'h2', id: 'ruido', text: 'Ruído e calor' },
+      {
+        type: 'list',
+        items: [
+          'A ventoinha acelera mesmo com o navegador aberto e pouco mais.',
+          'A base do portátil fica quente ao ponto de incomodar.',
+          'O desempenho cai depois de alguns minutos de trabalho.',
+        ],
+      },
+      {
+        type: 'p',
+        text: 'Quase sempre é pó acumulado nas grelhas e no dissipador, que impede o ar de circular. Em casas perto da estrada ou com muito pó, acontece mais depressa.',
+      },
+      { type: 'h2', id: 'lentidao', text: 'Lentidão' },
+      {
+        type: 'p',
+        text: 'Se o computador demora a arrancar ou a abrir programas, comece pelo que pode fazer em casa:',
+      },
+      {
+        type: 'list',
+        items: [
+          'Instale as actualizações pendentes do sistema.',
+          'Liberte espaço no disco, idealmente pelo menos 15% livre.',
+          'Desactive os programas que abrem sozinhos no arranque.',
+        ],
+      },
+      {
+        type: 'p',
+        text: 'Se nada disto ajudar, o disco pode estar a chegar ao fim da vida. Num computador com disco mecânico, trocar para um SSD é das melhorias que mais se notam.',
+      },
+      { type: 'h2', id: 'desligamentos', text: 'Desligamentos e ecrãs de erro' },
+      {
+        type: 'p',
+        text: 'Um computador que se desliga sozinho, reinicia sem aviso ou mostra ecrãs de erro com frequência precisa de ser visto. Pode ser sobreaquecimento, a fonte de alimentação ou a memória.',
+      },
+      {
+        type: 'tip',
+        title: 'Antes de levar o computador',
+        text: 'Faça uma cópia de segurança dos seus ficheiros, leve o carregador e anote a palavra-passe de acesso, para o técnico poder testar o sistema consigo.',
+      },
+      { type: 'h2', id: 'tecnico', text: 'Quando levar a um técnico' },
+      {
+        type: 'p',
+        text: 'A limpeza interior, a troca da pasta térmica do processador e a substituição de discos ou memória pedem ferramentas e experiência. Em ambientes com muito pó, uma limpeza interior a cada um ou dois anos prolonga bastante a vida do equipamento. Na loja ajudamos a perceber o que se passa e indicamos o melhor caminho.',
+      },
+    ],
+    products: ['22', '23', '35'],
+  },
+  {
     slug: 'como-cuidar-da-bateria-do-telemovel',
     title: 'Como cuidar da bateria do telemóvel',
     excerpt: 'O que gasta a bateria mais depressa e os hábitos que a fazem durar mais anos',

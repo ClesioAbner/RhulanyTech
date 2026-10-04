@@ -7,12 +7,13 @@ import { unsplash } from '../lib/images';
 import { easeOutExpo, inViewOnce } from '../lib/motion';
 import ArticleCard from '../components/content/ArticleCard';
 import FaqList from '../components/content/FaqList';
-import PageHero from '../components/content/PageHero';
+import BlogSearchHero from '../components/content/BlogSearchHero';
+import { FaqPhone, HelpPhone } from '../components/content/PhoneChats';
+import { WhatsAppIcon } from '../components/ui/Icons';
 import { SearchIcon } from '../components/ui/Icons';
 
 const BY_DATE = [...ARTICLES].sort((a, b) => b.date.localeCompare(a.date));
-const FEATURED = BY_DATE[0];
-const PICKS = BY_DATE.slice(1, 4);
+const PICKS = BY_DATE.slice(0, 3);
 
 // Topic tiles use the newest guide's photo of that topic.
 const TOPICS = BLOG_TOPICS.map((topic) => {
@@ -27,29 +28,6 @@ const reveal = {
   whileInView: { opacity: 1, y: 0 },
   viewport: inViewOnce,
 };
-
-/** The featured guide as a frosted card over the banner. */
-const FeaturedCard = () => (
-  <Link
-    to={`/blog/${FEATURED.slug}`}
-    className="group flex items-center gap-4 rounded-[24px] border border-paper/15 bg-paper/10 p-3 pr-5 backdrop-blur-xl transition-colors duration-500 hover:bg-paper/15"
-  >
-    <span className="h-20 w-20 shrink-0 overflow-hidden rounded-[16px] bg-ink">
-      <img
-        src={unsplash(FEATURED.cover.src, 300)}
-        alt=""
-        className="h-full w-full object-cover transition-transform duration-700 ease-out-expo group-hover:scale-105"
-      />
-    </span>
-    <span className="min-w-0">
-      <span className="block text-[11px] font-medium uppercase tracking-[0.16em] text-paper/55">Em destaque</span>
-      <span className="mt-1.5 block font-display text-lg font-medium leading-snug tracking-tight">{FEATURED.title}</span>
-      <span className="mt-1 block text-sm text-paper/60">
-        <span className="link-underline">Ler o guia</span>
-      </span>
-    </span>
-  </Link>
-);
 
 /** Editorial opening: one large story and two smaller ones beside it. */
 const Picks = () => {
@@ -104,6 +82,7 @@ const Blog = () => {
   const [topic, setTopic] = useState<BlogTopic | 'todos'>('todos');
   const [query, setQuery] = useState('');
   const [view, setView] = useState<'lista' | 'grelha'>('lista');
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   useEffect(() => {
     document.title = 'Blog | Rhulany Tech';
@@ -121,6 +100,17 @@ const Blog = () => {
     [topic, search],
   );
   const faqs = useMemo(() => FAQ.filter((item) => !search || normalise(`${item.q} ${item.a}`).includes(search)), [search]);
+  // Every guide that matches the search, whatever topic is selected below.
+  const searchResults = useMemo(
+    () => (search ? BY_DATE.filter((article) => normalise(`${article.title} ${article.excerpt} ${topicLabel(article.topic)}`).includes(search)) : []),
+    [search],
+  );
+  const phoneFaq = faqs[openFaq ?? 0] ?? FAQ[0];
+
+  const showAllResults = () => {
+    setTopic('todos');
+    window.setTimeout(() => document.getElementById('todos-os-guias')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  };
 
   const chooseTopic = (next: BlogTopic | 'todos') => {
     setTopic(next);
@@ -129,15 +119,7 @@ const Blog = () => {
 
   return (
     <div className="pb-28 lg:pb-36">
-      <PageHero
-        image={FEATURED.cover.src}
-        alt={FEATURED.cover.alt}
-        eyebrow="Blog"
-        title="Cuide da sua tecnologia"
-        lead="Guias práticos e respostas às dúvidas que mais recebemos"
-        aside={<FeaturedCard />}
-        nextId="para-comecar"
-      />
+      <BlogSearchHero query={query} onQueryChange={setQuery} results={searchResults} onShowAll={showAllResults} />
 
       <Picks />
 
@@ -308,7 +290,7 @@ const Blog = () => {
 
       <section id="duvidas" className="container-site scroll-mt-20 pt-24 lg:pt-32" aria-labelledby="duvidas-titulo">
         <div className="grid gap-10 lg:grid-cols-12">
-          <motion.div className="lg:col-span-4" {...reveal} transition={{ duration: 0.8, ease: easeOutExpo }}>
+          <motion.div className="lg:col-span-5" {...reveal} transition={{ duration: 0.8, ease: easeOutExpo }}>
             <p className="eyebrow text-ink/45">Dúvidas frequentes</p>
             <h2 id="duvidas-titulo" className="type-title mt-3">
               As perguntas que mais recebemos
@@ -319,10 +301,13 @@ const Blog = () => {
             <Link to="/contacto" className="link-underline mt-5 inline-block text-sm font-medium">
               Fazer outra pergunta
             </Link>
+            <div className="mt-10 hidden lg:block">
+              <FaqPhone question={phoneFaq.q} answer={phoneFaq.a} />
+            </div>
           </motion.div>
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-7">
             {faqs.length > 0 ? (
-              <FaqList key={search} items={faqs} initiallyOpen={search ? 0 : null} />
+              <FaqList key={search} items={faqs} open={openFaq} onOpenChange={setOpenFaq} />
             ) : (
               <p className="rounded-[22px] bg-white px-6 py-10 text-sm text-ink/60">Nenhuma dúvida corresponde à pesquisa</p>
             )}
@@ -331,34 +316,39 @@ const Blog = () => {
       </section>
 
       <section className="container-site pt-24 lg:pt-32" aria-labelledby="ajuda-blog">
-        <motion.div
-          className="relative overflow-hidden rounded-[32px] bg-ink px-6 py-14 text-paper sm:px-12 lg:flex lg:items-end lg:justify-between lg:gap-12 lg:px-16 lg:py-16"
-          {...reveal}
-          transition={{ duration: 0.9, ease: easeOutExpo }}
-        >
-          <div className="max-w-xl">
-            <h2 id="ajuda-blog" className="type-title">
+        <motion.div className="relative overflow-hidden rounded-[32px] bg-white" {...reveal} transition={{ duration: 0.9, ease: easeOutExpo }}>
+          {/* Desktop: the hand and phone fill the right of the card; the copy sits on the empty left */}
+          <div className="hidden lg:block">
+            <HelpPhone variant="wide" />
+          </div>
+          <div className="p-8 sm:p-12 lg:absolute lg:inset-y-0 lg:left-0 lg:flex lg:w-[48%] lg:flex-col lg:justify-center lg:p-16">
+            <p className="eyebrow text-ink/45">Ajuda</p>
+            <h2 id="ajuda-blog" className="type-title mt-3">
               Precisa de ajuda com um equipamento
             </h2>
-            <p className="type-lead mt-4 text-paper/65">
-              Diga-nos o modelo e o que está a acontecer, e indicamos o que fazer
+            <p className="type-lead mt-4 max-w-md text-ink/60">
+              Diga-nos o modelo e o que está a acontecer. Respondemos pelo WhatsApp e indicamos o que fazer
             </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href={STORE.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-12 items-center gap-2 rounded-full bg-ink px-6 text-sm font-medium text-paper transition-colors hover:bg-ink-soft"
+              >
+                <WhatsAppIcon className="h-[18px] w-[18px]" />
+                Falar no WhatsApp
+              </a>
+              <Link
+                to="/contacto"
+                className="inline-flex h-12 items-center rounded-full border border-ink/15 px-6 text-sm font-medium transition-colors hover:border-ink"
+              >
+                Outros contactos
+              </Link>
+            </div>
           </div>
-          <div className="mt-8 flex flex-wrap gap-3 lg:mt-0 lg:shrink-0">
-            <a
-              href={STORE.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-12 items-center rounded-full bg-paper px-6 text-sm font-medium text-ink transition-colors hover:bg-white"
-            >
-              Falar no WhatsApp
-            </a>
-            <Link
-              to="/contacto"
-              className="inline-flex h-12 items-center rounded-full border border-paper/25 px-6 text-sm font-medium transition-colors hover:border-paper"
-            >
-              Outros contactos
-            </Link>
+          <div className="lg:hidden">
+            <HelpPhone variant="compact" />
           </div>
         </motion.div>
       </section>

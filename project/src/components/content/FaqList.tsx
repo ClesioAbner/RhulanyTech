@@ -4,8 +4,18 @@ import type { Faq } from '../../data/blog';
 import { easeOutExpo } from '../../lib/motion';
 
 /** Accordion of questions; one answer open at a time, with a soft height animation. */
-const FaqList = ({ items, initiallyOpen = 0 }: { items: Faq[]; initiallyOpen?: number | null }) => {
-  const [open, setOpen] = useState<number | null>(initiallyOpen);
+interface FaqListProps {
+  items: Faq[];
+  initiallyOpen?: number | null;
+  /** Controlled mode: which answer is open, and a callback when that changes. */
+  open?: number | null;
+  onOpenChange?: (index: number | null) => void;
+}
+
+const FaqList = ({ items, initiallyOpen = 0, open: controlledOpen, onOpenChange }: FaqListProps) => {
+  const [ownOpen, setOwnOpen] = useState<number | null>(initiallyOpen);
+  const open = controlledOpen !== undefined ? controlledOpen : ownOpen;
+  const setOpen = (index: number | null) => (onOpenChange ? onOpenChange(index) : setOwnOpen(index));
   const baseId = useId();
 
   return (
