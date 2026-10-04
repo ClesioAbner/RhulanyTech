@@ -1,14 +1,12 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion, useDragControls, type PanInfo } from 'framer-motion';
-import { complementaryProducts, newArrivals, type CatalogProduct } from '../../lib/catalog';
 import { itemCountLabel, toCartLine, whatsappOrderUrl } from '../../lib/cart';
 import { easeOutExpo } from '../../lib/motion';
 import { useMediaQuery } from '../../lib/useMediaQuery';
 import { useCartStore } from '../../stores/cartStore';
 import { useCartUi } from '../../stores/cartUi';
 import CartLineItem from './CartLineItem';
-import CartSuggestions from './CartSuggestions';
 import RollingPrice from './RollingPrice';
 
 const DISMISS_DISTANCE = 120;
@@ -31,10 +29,6 @@ const CartDrawer = () => {
 
   const lines = useMemo(() => items.map(toCartLine), [items]);
   const count = items.reduce((sum, item) => sum + item.quantity, 0);
-  const suggestions = useMemo(() => {
-    const products = lines.map((line) => line.product).filter((p): p is CatalogProduct => Boolean(p));
-    return products.length ? complementaryProducts(products, 8) : newArrivals().slice(0, 6);
-  }, [lines]);
 
   // Any navigation closes the drawer.
   useEffect(() => close(), [pathname, close]);
@@ -133,7 +127,7 @@ const CartDrawer = () => {
 
             <div className="flex-1 overflow-y-auto overscroll-contain pb-6">
               {lines.length > 0 ? (
-                <ul ref={listRef} className="divide-y divide-ink/[0.07] border-y border-ink/[0.07]">
+                <ul ref={listRef} className="space-y-2 px-3">
                   <AnimatePresence>
                     {lines.map((line, index) => (
                       <motion.li
@@ -143,9 +137,9 @@ const CartDrawer = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto', transition: { duration: 0.5, ease: easeOutExpo, delay: 0.15 + index * 0.04 } }}
                         exit={{ opacity: 0, height: 0, transition: { duration: 0.35, ease: easeOutExpo } }}
-                        className={`overflow-hidden transition-colors duration-700 ${line.id === lastAddedId ? 'bg-white' : ''}`}
+                        className={`overflow-hidden rounded-[22px] transition-colors duration-700 ${line.id === lastAddedId ? 'bg-white' : ''}`}
                       >
-                        <div className="px-6 py-5">
+                        <div className="px-3 py-4">
                           <CartLineItem line={line} isNew={line.id === lastAddedId} onNavigate={close} />
                         </div>
                       </motion.li>
@@ -163,7 +157,7 @@ const CartDrawer = () => {
                     O seu carrinho está vazio
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-ink/60">
-                    Quando encontrar algo de que goste, junte-o aqui. Fica guardado neste dispositivo.
+                    Quando encontrar algo de que goste, junte-o aqui
                   </p>
                   <Link
                     to="/loja"
@@ -174,53 +168,37 @@ const CartDrawer = () => {
                   </Link>
                 </motion.div>
               )}
-
-              <CartSuggestions
-                title={lines.length ? 'Combina bem com' : 'Acabou de chegar'}
-                products={suggestions}
-                onNavigate={close}
-              />
             </div>
 
             {lines.length > 0 && (
-              <div className="border-t border-ink/[0.07] px-6 pb-6 pt-5">
-                <dl className="space-y-1.5 text-sm">
-                  <div className="flex items-baseline justify-between gap-4">
-                    <dt className="font-medium">Subtotal</dt>
-                    <dd className="text-lg font-medium">
-                      <RollingPrice value={total} />
-                    </dd>
-                  </div>
-                  <div className="flex justify-between gap-4 text-ink/55">
-                    <dt>Entrega</dt>
-                    <dd>Grátis na loja, ou a confirmar</dd>
-                  </div>
-                </dl>
+              <div className="px-6 pb-6 pt-4">
+                <div className="flex items-baseline justify-between gap-4">
+                  <p className="text-sm font-medium">Subtotal</p>
+                  <p className="text-xl font-medium">
+                    <RollingPrice value={total} />
+                  </p>
+                </div>
+                <p className="mt-1 text-xs text-ink/45">Entrega e pagamento escolhidos no passo seguinte</p>
                 <button
                   type="button"
                   onClick={checkout}
-                  className="mt-5 h-12 w-full rounded-full bg-ink text-sm font-medium text-paper transition-[background-color,transform] duration-300 hover:bg-ink-soft active:scale-[0.98]"
+                  className="mt-5 h-14 w-full rounded-full bg-ink text-sm font-medium text-paper transition-[background-color,transform] duration-300 hover:bg-ink-soft active:scale-[0.98]"
                 >
                   Finalizar compra
                 </button>
-                <div className="mt-2 grid grid-cols-2 gap-2">
+                <div className="mt-4 flex items-center justify-center gap-6 text-sm">
+                  <Link to="/cart" onClick={close} className="link-underline text-ink/65 hover:text-ink">
+                    Ver carrinho
+                  </Link>
                   <a
                     href={whatsappOrderUrl(items, total)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="grid h-11 place-items-center rounded-full border border-ink/[0.12] text-sm transition-colors hover:border-ink"
+                    className="link-underline text-ink/65 hover:text-ink"
                   >
                     Pedir no WhatsApp
                   </a>
-                  <Link
-                    to="/cart"
-                    onClick={close}
-                    className="grid h-11 place-items-center rounded-full border border-ink/[0.12] text-sm transition-colors hover:border-ink"
-                  >
-                    Ver carrinho
-                  </Link>
                 </div>
-                <p className="mt-4 text-center text-xs text-ink/45">Pague com M-Pesa, e-Mola, cartão ou PayPal</p>
               </div>
             )}
           </motion.div>

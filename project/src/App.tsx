@@ -74,6 +74,8 @@ function App() {
   const { pathname } = useLocation();
   // The homepage hero sits under the floating header; every other page starts below it.
   const fullBleed = FULL_BLEED_PATHS.includes(pathname);
+  // Sign-in is a focused page: no site header or footer, just the form.
+  const focused = pathname === '/entrar';
 
   return (
     <MotionConfig reducedMotion="user">
@@ -86,9 +88,11 @@ function App() {
           Saltar para o conteúdo
         </a>
 
-        <div className="print:hidden">
-          <Header />
-        </div>
+        {!focused && (
+          <div className="print:hidden">
+            <Header />
+          </div>
+        )}
 
         <main id="conteudo" className={`flex-grow ${fullBleed ? '' : 'pt-24 print:pt-0'}`}>
           <Suspense fallback={<PageFallback />}>
@@ -117,9 +121,11 @@ function App() {
           </Suspense>
         </main>
 
-        <div className="print:hidden">
-          <Footer />
-        </div>
+        {!focused && (
+          <div className="print:hidden">
+            <Footer />
+          </div>
+        )}
       </div>
       <CartDrawer />
     </MotionConfig>

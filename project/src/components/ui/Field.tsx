@@ -7,8 +7,10 @@ import { AnimatePresence, motion } from 'framer-motion';
  */
 
 const boxClass = (invalid: boolean, extra = '') =>
-  `w-full rounded-2xl bg-paper px-4 text-[15px] text-ink outline-none transition-[background-color,box-shadow] duration-300 placeholder:text-ink/35 hover:bg-[#efeff2] focus:bg-white focus:shadow-[0_0_0_2px_#0C0C0D] disabled:opacity-60 ${
-    invalid ? 'shadow-[0_0_0_1.5px_#b42318]' : ''
+  `w-full rounded-xl border bg-white px-4 text-[15px] text-ink outline-none transition-[border-color,box-shadow] duration-300 placeholder:text-ink/35 disabled:bg-paper disabled:text-ink/50 ${
+    invalid
+      ? 'border-[#b42318] focus:shadow-[0_0_0_4px_rgba(180,35,24,0.12)]'
+      : 'border-ink/[0.14] hover:border-ink/30 focus:border-ink focus:shadow-[0_0_0_4px_rgba(12,12,13,0.07)]'
   } ${extra}`;
 
 interface FrameProps {

@@ -31,6 +31,7 @@ const SignIn = () => {
   const currentUser = useUserStore((state) => state.currentUser);
   const mode: AuthMode = params.get('modo') === 'criar' ? 'criar' : 'entrar';
   const back = safeReturn(params.get('voltar'));
+  const leave = params.get('voltar') && back !== '/conta' ? back : '/';
   const photo = PHOTOS[mode];
 
   useEffect(() => {
@@ -52,6 +53,9 @@ const SignIn = () => {
   return (
     <div className="grid min-h-[100svh] lg:grid-cols-2">
       <div className="relative hidden overflow-hidden bg-ink lg:block">
+        <Link to="/" className="absolute left-12 top-10 z-10 font-display text-xl font-semibold tracking-tight text-paper xl:left-16" aria-label="Rhulany Tech, página inicial">
+          Rhulany<span className="text-paper/55">Tech</span>
+        </Link>
         {/* Both photos load up front and crossfade, so switching tabs never shows an empty frame */}
         {(Object.keys(PHOTOS) as AuthMode[]).map((key) => (
           <motion.img
@@ -84,7 +88,15 @@ const SignIn = () => {
         </div>
       </div>
 
-      <div className="flex flex-col justify-center px-5 pb-16 pt-28 sm:px-10 lg:px-14 lg:pt-32 xl:px-20">
+      <div className="relative flex flex-col justify-center px-5 pb-16 pt-24 sm:px-10 lg:px-14 lg:pt-28 xl:px-20">
+        <div className="absolute inset-x-5 top-7 flex items-center justify-between sm:inset-x-10 lg:inset-x-14 lg:top-9 xl:inset-x-20">
+          <Link to="/" className="font-display text-lg font-semibold tracking-tight lg:invisible" aria-label="Rhulany Tech, página inicial">
+            Rhulany<span className="text-ink/40">Tech</span>
+          </Link>
+          <Link to={leave} className="inline-flex h-10 items-center rounded-full bg-white px-5 text-sm font-medium transition-colors hover:bg-ink hover:text-paper">
+            Voltar
+          </Link>
+        </div>
         <motion.div
           className="mx-auto w-full max-w-[460px]"
           initial={{ opacity: 0, y: 20 }}

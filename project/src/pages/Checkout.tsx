@@ -445,8 +445,8 @@ const Checkout = () => {
                       role="radio"
                       aria-checked={selected}
                       onClick={() => setDelivery({ ...delivery, method: option.id })}
-                      className={`flex items-start gap-3 rounded-2xl p-5 text-left transition-[box-shadow,background-color] duration-300 ${
-                        selected ? 'bg-white shadow-[0_0_0_2px_#0C0C0D]' : 'bg-paper hover:bg-[#efeff2]'
+                      className={`flex items-start gap-3 rounded-xl border p-5 text-left transition-[border-color,box-shadow] duration-300 ${
+                        selected ? 'border-ink bg-white shadow-[0_0_0_1px_#0C0C0D]' : 'border-ink/[0.14] bg-white hover:border-ink/30'
                       }`}
                     >
                       <span className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full border ${selected ? 'border-ink' : 'border-ink/25'}`}>
@@ -567,8 +567,8 @@ const Checkout = () => {
                           setPayment(option.id);
                           setErrors({});
                         }}
-                        className={`flex items-start gap-3 rounded-2xl p-5 text-left transition-[box-shadow,background-color] duration-300 ${
-                          selected ? 'bg-white shadow-[0_0_0_2px_#0C0C0D]' : 'bg-paper hover:bg-[#efeff2]'
+                        className={`flex items-start gap-3 rounded-xl border p-5 text-left transition-[border-color,box-shadow] duration-300 ${
+                          selected ? 'border-ink bg-white shadow-[0_0_0_1px_#0C0C0D]' : 'border-ink/[0.14] bg-white hover:border-ink/30'
                         }`}
                       >
                         <span className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full border ${selected ? 'border-ink' : 'border-ink/25'}`}>
