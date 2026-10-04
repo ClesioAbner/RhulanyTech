@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useInView } from 'framer-motion';
-import { easeOutExpo } from '../../lib/motion';
+import { unsplash } from '../../lib/images';
 import PhotoScreen, { type ScreenPhoto } from './PhotoScreen';
 
 // ---------- The two photos and their measured screens (public/images/blog) ----------
@@ -46,6 +46,8 @@ interface Line {
   text: string;
   time: string;
   ticks: Ticks;
+  /** Emoji reaction shown under the bubble. */
+  reaction?: string;
 }
 
 interface ChatState {
@@ -60,6 +62,7 @@ type Step =
   | { type: 'ticks'; value: Ticks; after: number }
   | { type: 'typing'; duration: number }
   | { type: 'reply'; text: string }
+  | { type: 'react'; emoji: string; after: number }
   | { type: 'wait'; duration: number };
 
 const EMPTY: ChatState = { lines: [], composing: '', typing: false };
@@ -99,6 +102,13 @@ const useChatScript = (steps: Step[], active: boolean, loop: boolean) => {
             setState((s) => ({ ...s, typing: true }));
             await sleep(step.duration);
             setState((s) => ({ ...s, typing: false }));
+          } else if (step.type === 'react') {
+            await sleep(step.after);
+            // The store reacts to the customer's latest message.
+            setState((s) => {
+              const index = s.lines.map((line) => line.from).lastIndexOf('cliente');
+              return index < 0 ? s : { ...s, lines: s.lines.map((line, i) => (i === index ? { ...line, reaction: step.emoji } : line)) };
+            });
           } else if (step.type === 'reply') {
             idRef.current += 1;
             const id = idRef.current;
@@ -161,6 +171,38 @@ const TickMarks = ({ value }: { value: Ticks }) => {
   );
 };
 
+// Chat wallpaper: tech line drawings (phone, headphones, gamepad, laptop, camera, watch, chip, bolt).
+const WALLPAPER_TILE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="rgba(30,41,59,0.11)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+<rect x="10" y="8" width="16" height="28" rx="4"/><path d="M15 11h6"/>
+<path d="M56 32v-6a11 11 0 0 1 22 0v6"/><rect x="53" y="29" width="6" height="9" rx="2"/><rect x="75" y="29" width="6" height="9" rx="2"/>
+<path d="M90 48h20a7 7 0 0 1 0 14c-3 0-4.5-3-7-3h-6c-2.5 0-4 3-7 3a7 7 0 0 1 0-14z"/><path d="M95 52v6M92 55h6"/><circle cx="105" cy="54" r="1"/><circle cx="107" cy="57" r="1"/>
+<rect x="15" y="60" width="26" height="16" rx="2"/><path d="M10 80h36"/>
+<rect x="58" y="68" width="26" height="17" rx="3"/><circle cx="71" cy="76.5" r="5"/><path d="M64 68l2.5-4h9l2.5 4"/>
+<rect x="99" y="92" width="12" height="14" rx="3.5"/><path d="M101 92v-5h8v5M101 106v5h8v-5"/>
+<path d="M35 95l-6 10h6l-3 9 9-12h-6l4-7z"/>
+<rect x="64" y="100" width="13" height="13" rx="2"/><path d="M67 100v-3M74 100v-3M67 113v3M74 113v3M64 103h-3M64 110h-3M77 103h3M77 110h3"/>
+<circle cx="44" cy="22" r="1.2"/><circle cx="100" cy="20" r="1.2"/><circle cx="48" cy="112" r="1.2"/><circle cx="8" cy="100" r="1.2"/>
+</svg>`;
+const WALLPAPER = `url("data:image/svg+xml,${encodeURIComponent(WALLPAPER_TILE)}")`;
+
+/** Pinned at the top of the chat like a business profile: a tech banner with the store's name. */
+const BusinessCard = () => (
+  <div className="mx-auto mb-auto mt-[3cqw] w-[86%] shrink-0 overflow-hidden rounded-[3cqw] bg-white shadow-[0_1px_2px_rgba(12,12,13,0.12)]">
+    <div className="relative aspect-[16/8] overflow-hidden bg-ink">
+      <img src={unsplash('1616440347437-b1c73416efc2', 400)} alt="" className="h-full w-full object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent" />
+      <p className="absolute bottom-[2cqw] left-[3cqw] text-[4.4cqw] font-semibold leading-tight text-white">
+        Rhulany<span className="text-white/60">Tech</span>
+      </p>
+    </div>
+    <div className="px-[3cqw] py-[2.4cqw]">
+      <p className="text-[3.3cqw] font-medium leading-snug">Loja de tecnologia em Maputo</p>
+      <p className="mt-[0.6cqw] text-[2.8cqw] leading-snug text-ink/50">Originais com garantia, entregas em todo o país</p>
+      <p className="mt-[1.6cqw] border-t border-ink/[0.08] pt-[1.6cqw] text-center text-[3cqw] font-medium text-[#0a84ff]">Ver catálogo</p>
+    </div>
+  </div>
+);
+
 const ChatScreen = ({ state }: { state: ChatState }) => (
   <div className="flex h-full flex-col bg-white font-sans text-ink">
     {/* Status bar: either side of the notch */}
@@ -199,45 +241,62 @@ const ChatScreen = ({ state }: { state: ChatState }) => (
       </svg>
     </div>
 
-    {/* Messages over the chat wallpaper; new ones push the rest up */}
+    {/* Messages over a tech wallpaper; new ones push the rest up and out of view */}
     <div
-      className="relative flex min-h-0 flex-1 flex-col justify-end gap-[1.6cqw] overflow-hidden bg-[#efeae2] px-[3cqw] pb-[2.4cqw]"
-      style={{ backgroundImage: 'radial-gradient(rgba(12,12,13,0.045) 0.08em, transparent 0.09em)', backgroundSize: '3.2cqw 3.2cqw' }}
+      className="relative flex min-h-0 flex-1 flex-col justify-end overflow-hidden bg-[#eceff3] px-[3cqw] pb-[2.4cqw]"
+      style={{ backgroundImage: WALLPAPER, backgroundSize: '36cqw 36cqw' }}
     >
-      <span className="mx-auto mb-[1cqw] rounded-[1.6cqw] bg-white/85 px-[2.4cqw] py-[0.8cqw] text-[2.7cqw] font-medium text-ink/55 shadow-sm">Hoje</span>
+      <BusinessCard />
+      <span className="mx-auto mb-[2cqw] mt-[2.4cqw] rounded-[1.6cqw] bg-white/90 px-[2.4cqw] py-[0.8cqw] text-[2.7cqw] font-medium text-ink/55 shadow-sm">Hoje</span>
       <AnimatePresence initial={false}>
-        {state.lines.map((line) => (
-          <motion.div
-            key={line.id}
-            layout
-            className={`flex ${line.from === 'cliente' ? 'justify-end' : 'justify-start'}`}
-            initial={{ opacity: 0, y: 14, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: easeOutExpo }}
-          >
-            <p
-              className={`max-w-[80%] rounded-[2.6cqw] px-[2.8cqw] pb-[1.4cqw] pt-[1.8cqw] text-[4.1cqw] leading-[1.32] shadow-[0_1px_0.5px_rgba(12,12,13,0.13)] ${
-                line.from === 'cliente' ? 'rounded-tr-[0.6cqw] bg-[#d9fdd3]' : 'rounded-tl-[0.6cqw] bg-white'
-              }`}
+        {state.lines.map((line, index) => {
+          const first = state.lines[index - 1]?.from !== line.from;
+          const own = line.from === 'cliente';
+          return (
+            <motion.div
+              key={line.id}
+              layout
+              className={`flex ${own ? 'justify-end' : 'justify-start'} ${first ? 'mt-[2.2cqw]' : 'mt-[0.8cqw]'} ${line.reaction ? 'mb-[3.4cqw]' : ''}`}
+              initial={{ opacity: 0, y: 16, scale: 0.94, originX: own ? 1 : 0, originY: 1 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 420, damping: 32, mass: 0.7 }}
             >
-              {line.text}
-              <span className="float-right ml-[2cqw] mt-[1.2cqw] inline-flex items-center gap-[0.8cqw] text-[2.6cqw] tabular-nums text-ink/45">
-                {line.time}
-                {line.from === 'cliente' && <TickMarks value={line.ticks} />}
-              </span>
-            </p>
-          </motion.div>
-        ))}
+              <p
+                className={`relative max-w-[80%] rounded-[2.6cqw] px-[2.8cqw] pb-[1.4cqw] pt-[1.8cqw] text-[4.1cqw] leading-[1.32] shadow-[0_1px_0.5px_rgba(12,12,13,0.13)] ${
+                  own ? `bg-[#d9fdd3] ${first ? 'rounded-tr-[0.6cqw]' : ''}` : `bg-white ${first ? 'rounded-tl-[0.6cqw]' : ''}`
+                }`}
+              >
+                {line.text}
+                <span className="float-right ml-[2cqw] mt-[1.2cqw] inline-flex items-center gap-[0.8cqw] text-[2.6cqw] tabular-nums text-ink/45">
+                  {line.time}
+                  {own && <TickMarks value={line.ticks} />}
+                </span>
+                <AnimatePresence>
+                  {line.reaction && (
+                    <motion.span
+                      className={`absolute -bottom-[3.6cqw] grid h-[5.6cqw] min-w-[5.6cqw] place-items-center rounded-full border border-[#eceff3] bg-white px-[1cqw] text-[3.2cqw] shadow-[0_1px_2px_rgba(12,12,13,0.18)] ${own ? 'left-[2cqw]' : 'right-[2cqw]'}`}
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: [0, 1.35, 1], opacity: 1 }}
+                      transition={{ duration: 0.45, ease: 'easeOut' }}
+                    >
+                      {line.reaction}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </p>
+            </motion.div>
+          );
+        })}
         {state.typing && (
           <motion.div
             key="a-escrever"
             layout
-            className="flex"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
+            className="mt-[2.2cqw] flex"
+            initial={{ opacity: 0, y: 10, scale: 0.9, originX: 0 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.12 } }}
-            transition={{ duration: 0.3, ease: easeOutExpo }}
+            transition={{ type: 'spring', stiffness: 420, damping: 30 }}
           >
             <span className="flex items-center gap-[1.2cqw] rounded-[2.6cqw] rounded-tl-[0.6cqw] bg-white px-[3.2cqw] py-[2.8cqw] shadow-[0_1px_0.5px_rgba(12,12,13,0.13)]">
               {[0, 1, 2].map((dot) => (
@@ -346,18 +405,31 @@ const useStep = (question: string, answer: string) => {
 };
 
 const HELP_STEPS: Step[] = [
-  { type: 'compose', text: 'Olá, o meu portátil está a aquecer muito. É normal?', duration: 1900 },
+  { type: 'compose', text: 'Epá bro, preciso de help 🙏', duration: 1000 },
   { type: 'send' },
-  { type: 'ticks', value: 2, after: 400 },
+  { type: 'ticks', value: 2, after: 300 },
+  { type: 'ticks', value: 3, after: 500 },
+  { type: 'typing', duration: 1100 },
+  { type: 'reply', text: 'Diz aí, mano! Em que podemos ajudar?' },
+  { type: 'compose', text: 'Bro, o meu laptop está a aquecer muito mal, meu chefe. A ventoinha até parece avião 😅', duration: 2600 },
+  { type: 'send' },
   { type: 'ticks', value: 3, after: 600 },
-  { type: 'typing', duration: 1600 },
-  { type: 'reply', text: 'Olá! Confirme se as entradas de ar não estão tapadas e use-o numa superfície dura.' },
-  { type: 'typing', duration: 1200 },
-  { type: 'reply', text: 'Se continuar, traga-o à loja e vemos consigo.' },
-  { type: 'compose', text: 'Obrigado, passo aí amanhã', duration: 1100 },
+  { type: 'typing', duration: 1500 },
+  { type: 'reply', text: 'Fr bro! 😂 Estás a usar o gajo em cima da cama ou no sofá?' },
+  { type: 'compose', text: 'Às vezes na cama', duration: 800 },
   { type: 'send' },
-  { type: 'ticks', value: 3, after: 700 },
-  { type: 'wait', duration: 5000 },
+  { type: 'ticks', value: 3, after: 500 },
+  { type: 'typing', duration: 1600 },
+  { type: 'reply', text: 'Aí está! Assim tapas as entradas de ar. Usa-o numa mesa ou num suporte' },
+  { type: 'typing', duration: 1300 },
+  { type: 'reply', text: 'Se continuar, passa cá na loja e fazemos uma limpeza por dentro 👌' },
+  { type: 'compose', text: 'Tá nice bro, amanhã passo aí. Valeu brada! 🔥', duration: 1500 },
+  { type: 'send' },
+  { type: 'ticks', value: 3, after: 500 },
+  { type: 'react', emoji: '👍', after: 700 },
+  { type: 'typing', duration: 1000 },
+  { type: 'reply', text: 'Estamos à tua espera 👊' },
+  { type: 'wait', duration: 6000 },
 ];
 
 /** Help: a WhatsApp conversation with the store plays out while it is on screen. */
