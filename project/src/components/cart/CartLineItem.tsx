@@ -6,6 +6,7 @@ import { useCartStore } from '../../stores/cartStore';
 import QuantityStepper from './QuantityStepper';
 import RollingPrice from './RollingPrice';
 import { removeWithUndo } from './removeWithUndo';
+import ProductImage from '../product/ProductImage';
 
 interface CartLineItemProps {
   line: CartLine;
@@ -27,9 +28,9 @@ const CartLineItem = ({ line, size = 'compact', isNew = false, onNavigate }: Car
         onClick={onNavigate}
         tabIndex={-1}
         aria-hidden="true"
-        className={`shrink-0 overflow-hidden rounded-2xl bg-mist ${full ? 'h-24 w-24 sm:h-36 sm:w-36' : 'h-20 w-20'}`}
+        className={`stage relative shrink-0 overflow-hidden rounded-2xl ${full ? 'h-24 w-24 sm:h-36 sm:w-36' : 'h-20 w-20'}`}
       >
-        <img src={resolveImage(line.image, 320)} alt="" className="h-full w-full object-cover" />
+        <ProductImage src={resolveImage(line.image, 320)} inset="p-[9%]" />
       </Link>
 
       <div className="flex min-w-0 flex-1 flex-col">

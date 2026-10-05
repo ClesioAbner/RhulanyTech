@@ -11,6 +11,7 @@ import { useCartUi } from '../stores/cartUi';
 import { ORDER_STEPS, useOrderStore, type Order } from '../stores/orderStore';
 import { useUserStore } from '../stores/userStore';
 import { SelectField, TextField } from '../components/ui/Field';
+import ProductImage from '../components/product/ProductImage';
 
 type Tab = 'encomendas' | 'dados';
 
@@ -37,8 +38,8 @@ const OrderCard = ({ order, onBuyAgain }: { order: Order; onBuyAgain: (order: Or
       </div>
       <div className="mt-6 flex items-center gap-3">
         {order.lines.slice(0, 4).map((line) => (
-          <span key={line.id} className="h-16 w-16 overflow-hidden rounded-2xl bg-mist">
-            <img src={resolveImage(line.image, 200)} alt={line.title} className="h-full w-full object-cover" />
+          <span key={line.id} className="stage relative h-16 w-16 overflow-hidden rounded-2xl">
+            <ProductImage src={resolveImage(line.image, 200)} alt={line.title} inset="p-[9%]" />
           </span>
         ))}
         {order.lines.length > 4 && <span className="text-sm text-ink/45">+{order.lines.length - 4}</span>}

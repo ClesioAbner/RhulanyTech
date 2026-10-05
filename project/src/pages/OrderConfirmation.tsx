@@ -12,6 +12,7 @@ import { ORDER_STEPS, useOrderStore, type Order } from '../stores/orderStore';
 import { useUserStore } from '../stores/userStore';
 import CheckoutProgress from '../components/checkout/CheckoutProgress';
 import { WhatsAppIcon } from '../components/ui/Icons';
+import ProductImage from '../components/product/ProductImage';
 
 const Check = () => (
   <svg viewBox="0 0 52 52" className="h-16 w-16" aria-hidden="true">
@@ -107,8 +108,8 @@ const ReceiptCard = ({ order }: { order: Order }) => {
       <ul className="mt-8 space-y-4">
         {order.lines.map((line) => (
           <li key={line.id} className="flex items-center gap-4">
-            <span className="h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-mist print:hidden">
-              <img src={resolveImage(line.image, 200)} alt="" className="h-full w-full object-cover" />
+            <span className="stage relative h-14 w-14 shrink-0 overflow-hidden rounded-xl print:hidden">
+              <ProductImage src={resolveImage(line.image, 200)} inset="p-[9%]" />
             </span>
             <span className="min-w-0 flex-1">
               <span className="block truncate text-sm font-medium">{line.title}</span>

@@ -3,6 +3,7 @@ import { CATEGORIES, type Category, type Subcategory } from '../data/catalog/tax
 import { PLACEMENTS as LEGACY_PLACEMENTS } from '../data/catalog/placements';
 import { INVENTORY_MERCHANDISING, INVENTORY_PLACEMENTS } from '../data/catalog/inventory';
 import { OVERVIEWS } from '../data/catalog/overviews';
+import { CUTOUTS } from '../data/catalog/cutouts';
 import {
   COLOR_SWATCHES,
   MERCHANDISING as LEGACY_MERCHANDISING,
@@ -11,7 +12,7 @@ import {
   type Highlight,
   type Merchandising,
 } from '../data/catalog/merchandising';
-import { unsplash } from './images';
+import { isCutout, unsplash } from './images';
 
 const PLACEMENTS: Record<string, string[]> = { ...LEGACY_PLACEMENTS, ...INVENTORY_PLACEMENTS };
 const MERCHANDISING: Record<string, Merchandising> = { ...LEGACY_MERCHANDISING, ...INVENTORY_MERCHANDISING };
@@ -93,11 +94,17 @@ const finishViews = (title: string, finish: Finish): ResolvedView[] =>
 
 const toCatalogProduct = (product: Product): CatalogProduct => {
   const merch = MERCHANDISING[product.id] ?? {};
+  const cutouts = CUTOUTS[product.id] ?? {};
+  // Studio cut-outs lead each colour's photos.
   const finishes = pictured(
     merch.finishes ?? (product.colors ?? []).map((name) => ({ name, hex: COLOR_SWATCHES[name] ?? '#c9c9c9' })),
-  );
+  ).map((finish, index) => (cutouts[index] && finish.images ? { ...finish, images: [cutouts[index], ...finish.images] } : finish));
   const title = merch.option ? product.name.replace(STORAGE_SUFFIX, '') : product.name;
-  const gallery = finishes[0]?.images?.length ? finishViews(title, finishes[0]) : buildGallery(product, merch);
+  // The 3D model keeps the gallery; colour photos then only serve cards and the cart.
+  const baseGallery = !merch.scene3d && finishes[0]?.images?.length ? finishViews(title, finishes[0]) : buildGallery(product, merch);
+  const gallery = cutouts.product
+    ? [{ angle: 'frente' as const, src: cutouts.product, url: resolveImage(cutouts.product), alt: title }, ...baseGallery]
+    : baseGallery;
 
   return {
     ...product,
@@ -115,7 +122,9 @@ const toCatalogProduct = (product: Product): CatalogProduct => {
     gallery,
     highlights:
       merch.highlights ?? product.features.slice(0, 4).map((feature) => ({ title: feature, body: '' })),
-    primaryImage: gallery.find((view) => view.url)?.url ?? resolveImage(product.images[0]),
+    primaryImage: finishes[0]?.images?.[0]
+      ? resolveImage(finishes[0].images[0])
+      : gallery.find((view) => view.url)?.url ?? resolveImage(product.images[0]),
   };
 };
 
@@ -140,7 +149,7 @@ export const getProductById = (id?: string) => CATALOG.find((product) => product
 
 /** The gallery for a chosen colour: that colour's photos when it has them, otherwise the product gallery. */
 export const galleryFor = (product: CatalogProduct, finish?: Finish) =>
-  finish?.images?.length ? finishViews(product.title, finish) : product.gallery;
+  !product.scene3d && finish?.images?.length ? finishViews(product.title, finish) : product.gallery;
 
 /** The photo that represents a product in a given colour (cards, cart lines). */
 export const imageFor = (product: CatalogProduct, finish?: Finish, width = 1200) =>
@@ -148,6 +157,25 @@ export const imageFor = (product: CatalogProduct, finish?: Finish, width = 1200)
 
 /** The product's main shelf, used for breadcrumbs and "more like this". */
 export const primaryPlacement = (product: CatalogProduct) => product.placements[0];
+
+// The product that stands for each category on tiles and in the shop's side panel.
+const CATEGORY_FACES: Record<string, string> = {
+  celulares: '40',
+  computadores: '54',
+  gaming: '68',
+  cameras: '74',
+  'casa-inteligente': '29',
+  acessorios: '80',
+};
+
+/** Studio picture that represents a category. */
+export const categoryFace = (slug: string) => getProductById(CATEGORY_FACES[slug])?.primaryImage;
+
+/** Studio picture for a range: its best-selling product shot as a cut-out, else any photo. */
+export const subcategoryFace = (categorySlug: string, subcategory: Subcategory) => {
+  const list = sortProducts(productsIn(categorySlug, subcategory.slug), 'destaque');
+  return (list.find((p) => isCutout(p.primaryImage)) ?? list[0])?.primaryImage;
+};
 
 export const subcategoryCover = (categorySlug: string, subcategory: Subcategory, width = 800) => {
   if (subcategory.image) return resolveImage(subcategory.image, width);

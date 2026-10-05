@@ -4,6 +4,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { formatPrice } from '../../lib/format';
 import { priceFrom, productPath, type CatalogProduct } from '../../lib/catalog';
 import { useAddToCart } from '../../lib/useAddToCart';
+import ProductImage from '../product/ProductImage';
 
 const MAX_TILT = 5;
 const MAX_SWATCHES = 5;
@@ -55,17 +56,16 @@ const FeaturedProductCard = ({ product, mediaSlotRef, size = 'regular' }: Produc
         onPointerMove={handlePointerMove}
         onPointerLeave={resetTilt}
         style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
-        className="relative aspect-[4/5] rounded-2xl bg-mist transition-shadow duration-500 group-hover:shadow-[0_30px_60px_-34px_rgba(12,12,13,0.45)]"
+        className="stage relative aspect-[4/5] rounded-2xl transition-shadow duration-500 group-hover:shadow-[0_30px_60px_-34px_rgba(12,12,13,0.45)]"
       >
         <Link to={href} className="absolute inset-0 overflow-hidden rounded-2xl" tabIndex={-1} aria-hidden="true">
-          <img
-            src={product.primaryImage}
-            alt=""
-            loading="lazy"
-            className={`h-full w-full object-cover transition-[transform,opacity] duration-700 ease-out-expo group-hover:scale-[1.03] ${
+          <span
+            className={`absolute inset-0 transition-[transform,opacity] duration-700 ease-out-expo group-hover:scale-[1.03] ${
               secondImage && !mediaSlotRef ? 'lg:group-hover:opacity-0' : ''
             } ${mediaSlotRef ? 'lg:hidden' : ''}`}
-          />
+          >
+            <ProductImage src={product.primaryImage} loading="lazy" />
+          </span>
           {secondImage && !mediaSlotRef && (
             <img
               src={secondImage}

@@ -6,6 +6,7 @@ import { formatPrice } from '../../lib/format';
 import { easeOutExpo } from '../../lib/motion';
 import { itemCountLabel } from '../../lib/cart';
 import RollingPrice from '../cart/RollingPrice';
+import ProductImage from '../product/ProductImage';
 
 export interface SummaryLine {
   id: string;
@@ -28,8 +29,8 @@ const Lines = ({ lines }: { lines: SummaryLine[] }) => (
   <ul className="space-y-4">
     {lines.map((line) => (
       <li key={line.id} className="flex items-center gap-4">
-        <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-mist">
-          <img src={resolveImage(line.image, 200)} alt="" className="h-full w-full object-cover" />
+        <span className="stage relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl">
+          <ProductImage src={resolveImage(line.image, 200)} inset="p-[9%]" />
           {line.quantity > 1 && (
             <span className="absolute right-1 top-1 grid h-5 min-w-[1.25rem] place-items-center rounded-full bg-ink px-1 text-[10px] font-medium tabular-nums text-paper">
               {line.quantity}

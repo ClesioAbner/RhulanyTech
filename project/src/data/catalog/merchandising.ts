@@ -94,10 +94,10 @@ export const MERCHANDISING: Record<string, Merchandising> = {
     summary: 'Titânio, chip A18 Pro e o maior ecrã de sempre num iPhone',
     scene3d: 'iphone-pro',
     finishes: [
-      { name: 'Titânio Deserto', hex: '#bfa98c', model: { frame: '#bba98f', back: '#cdbca4' } },
-      { name: 'Titânio Natural', hex: '#b8b3aa', model: { frame: '#b5b0a6', back: '#c9c5bd' } },
-      { name: 'Titânio Branco', hex: '#e6e4df', model: { frame: '#d9d6d0', back: '#eeece8' } },
-      { name: 'Titânio Preto', hex: '#3a3a3c', model: { frame: '#4a4a4d', back: '#2f2f31' } },
+      { name: 'Titânio Deserto', hex: '#bfa98c', model: { frame: '#bba98f', back: '#cdbca4' }, images: ['/images/produtos/iphone-16-pro-max-deserto'] },
+      { name: 'Titânio Natural', hex: '#b8b3aa', model: { frame: '#b5b0a6', back: '#c9c5bd' }, images: ['/images/produtos/iphone-16-pro-max-natural'] },
+      { name: 'Titânio Branco', hex: '#e6e4df', model: { frame: '#d9d6d0', back: '#eeece8' }, images: ['/images/produtos/iphone-16-pro-max-branco'] },
+      { name: 'Titânio Preto', hex: '#3a3a3c', model: { frame: '#4a4a4d', back: '#2f2f31' }, images: ['/images/produtos/iphone-16-pro-max-preto'] },
     ],
     option: {
       name: 'Armazenamento',
@@ -127,7 +127,10 @@ export const MERCHANDISING: Record<string, Merchandising> = {
   '2': {
     summary: 'Galaxy AI, caneta S Pen integrada e zoom de 100x',
     finishes: [
-      { name: 'Phantom Violet', hex: '#8f83b5', images: ['1610945265064-0e34e5519bbf'] },
+      { name: 'Titanium Gray', hex: '#8c8b88', images: ['/images/produtos/galaxy-s24-ultra-gray'] },
+      { name: 'Titanium Violet', hex: '#6f6679', images: ['/images/produtos/galaxy-s24-ultra-violet'] },
+      { name: 'Titanium Black', hex: '#2e2f31', images: ['/images/produtos/galaxy-s24-ultra-black'] },
+      { name: 'Titanium Yellow', hex: '#e2d6a8', images: ['/images/produtos/galaxy-s24-ultra-yellow'] },
     ],
     option: {
       name: 'Armazenamento',
@@ -140,19 +143,22 @@ export const MERCHANDISING: Record<string, Merchandising> = {
   '3': {
     summary: 'A melhor câmara Pixel com as funcionalidades de IA da Google',
     finishes: [
-      { name: 'Obsidian', hex: '#2b2c2e', images: ['1697355360151-2866de32ad4d', '1706412703794-d944cd3625b3'] },
+      { name: 'Obsidian', hex: '#2b2c2e', images: ['/images/produtos/pixel-8-pro-obsidian', '1697355360151-2866de32ad4d', '1706412703794-d944cd3625b3'] },
     ],
   },
   '4': {
     summary: 'Snapdragon 8 Gen 3 e carregamento de 80W',
     finishes: [
-      { name: 'Flowy Emerald', hex: '#2f6b5c', images: ['1655384851782-89b0e119ab55'] },
+      { name: 'Flowy Emerald', hex: '#2f6b5c', images: ['/images/produtos/oneplus-12-emerald', '1655384851782-89b0e119ab55'] },
+      { name: 'Silky Black', hex: '#232425', images: ['/images/produtos/oneplus-12-black'] },
     ],
   },
   '5': {
     summary: 'Câmara Leica com sensor de uma polegada',
     finishes: [
-      { name: 'Azul', hex: '#5d7fa3', images: ['1770274813875-346bfaf0ee11'] },
+      { name: 'Azul', hex: '#5d7fa3', images: ['/images/produtos/xiaomi-14-ultra-azul', '1770274813875-346bfaf0ee11'] },
+      { name: 'Preto', hex: '#262729', images: ['/images/produtos/xiaomi-14-ultra-preto'] },
+      { name: 'Branco', hex: '#ececea', images: ['/images/produtos/xiaomi-14-ultra-branco'] },
     ],
   },
   '6': {
@@ -185,7 +191,6 @@ export const MERCHANDISING: Record<string, Merchandising> = {
   '12': {
     summary: 'Ecrã OLED de 7 polegadas, em casa ou fora dela',
     finishes: [
-      { name: 'Branco', hex: '#f2f2f0', images: ['1685567638296-bd4c0ba841a1'] },
       { name: 'Neon Red/Blue', hex: '#e0475d', images: ['1578303512597-81e6cc155b3e'] },
     ],
   },

@@ -54,6 +54,15 @@
     @apply text-base leading-relaxed sm:text-[17px];
   }
 
+  /* Product stage: soft light from above, as in a studio. Cut-outs sit on it with a drop shadow. */
+  .stage {
+    background: radial-gradient(120% 85% at 50% 18%, #ffffff 0%, #f3f4f6 55%, #e9ebef 100%);
+  }
+
+  .stage-shadow {
+    filter: drop-shadow(0 18px 22px rgba(12, 12, 13, 0.16)) drop-shadow(0 4px 6px rgba(12, 12, 13, 0.08));
+  }
+
   .link-underline {
     @apply relative inline-block;
   }

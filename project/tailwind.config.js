@@ -13,6 +13,11 @@ export default {
         },
         paper: '#F5F5F7',
         mist: '#E8E8ED',
+        // Rhulany orange: sparingly, for what is new, on offer or in progress.
+        accent: {
+          DEFAULT: '#EA5B0C',
+          deep: '#B8430A',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],

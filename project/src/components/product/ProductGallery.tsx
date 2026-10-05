@@ -3,6 +3,7 @@ import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } fr
 import type { CatalogProduct, Finish, ResolvedView } from '../../lib/catalog';
 import { easeOutExpo } from '../../lib/motion';
 import { LazyPhoneScene } from '../payments/LazyRealisticPhone';
+import ProductImage from './ProductImage';
 
 const ANGLE_LABELS: Record<ResolvedView['angle'], string> = {
   frente: 'Frente',
@@ -102,7 +103,7 @@ const ProductGallery = ({ product, views = product.gallery, finish }: ProductGal
   };
 
   const photoFallback = (
-    <img src={product.primaryImage} alt={product.title} className="absolute inset-0 h-full w-full object-cover" />
+    <ProductImage src={product.primaryImage} alt={product.title} />
   );
 
   return (
@@ -117,7 +118,7 @@ const ProductGallery = ({ product, views = product.gallery, finish }: ProductGal
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={() => (drag.current = null)}
-        className={`relative aspect-[4/5] touch-pan-y select-none overflow-hidden rounded-[28px] bg-mist outline-offset-4 lg:aspect-auto lg:h-[min(78svh,780px)] ${
+        className={`stage relative aspect-[4/5] touch-pan-y select-none overflow-hidden rounded-[28px] outline-offset-4 lg:aspect-auto lg:h-[min(78svh,780px)] ${
           is3dView ? 'cursor-grab active:cursor-grabbing' : ''
         }`}
       >
@@ -147,13 +148,10 @@ const ProductGallery = ({ product, views = product.gallery, finish }: ProductGal
 
         <AnimatePresence initial={false} custom={direction}>
           {view?.url && (
-            <motion.img
+            <motion.div
               key={view.url}
-              src={view.url}
-              alt={view.alt}
-              draggable={false}
               custom={direction}
-              className="absolute inset-0 h-full w-full object-cover"
+              className="absolute inset-0"
               variants={{
                 enter: (d: number) => ({ opacity: 0, x: d * 40, scale: 1.02 }),
                 center: { opacity: 1, x: 0, scale: 1 },
@@ -163,7 +161,9 @@ const ProductGallery = ({ product, views = product.gallery, finish }: ProductGal
               animate="center"
               exit="exit"
               transition={{ duration: 0.6, ease: easeOutExpo }}
-            />
+            >
+              <ProductImage src={view.url} alt={view.alt} inset="p-[10%] lg:p-[12%]" />
+            </motion.div>
           )}
         </AnimatePresence>
 
@@ -201,7 +201,9 @@ const ProductGallery = ({ product, views = product.gallery, finish }: ProductGal
                 }`}
               >
                 {item.url && !uses3d ? (
-                  <img src={item.url} alt={item.alt} className="h-full w-full object-cover" />
+                  <span className="stage absolute inset-0 block">
+                    <ProductImage src={item.url} alt={item.alt} inset="p-1.5" />
+                  </span>
                 ) : (
                   <>
                     {isActive && (
