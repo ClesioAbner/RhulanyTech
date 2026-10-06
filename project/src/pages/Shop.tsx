@@ -54,7 +54,7 @@ const Shop = () => (
                 <div className="stage relative aspect-square">
                   {face && (
                     <span className="absolute inset-0 transition-transform duration-700 ease-out-expo group-hover:-translate-y-1.5 group-hover:scale-[1.05]">
-                      <ProductImage src={face} inset="p-[16%]" loading="lazy" />
+                      <ProductImage src={face} inset="p-[16%]" loading="lazy" loader />
                     </span>
                   )}
                 </div>

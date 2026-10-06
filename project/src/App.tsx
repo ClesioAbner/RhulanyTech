@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Footer from './components/layout/Footer';
 import Header from './components/layout/Header';
 import CartDrawer from './components/cart/CartDrawer';
+import PageLoader from './components/ui/PageLoader';
 import { LEGACY_CATEGORY_PATHS, getProductById, productPath } from './lib/catalog';
 
 // Route-level code splitting: only the homepage ships in the first bundle.
@@ -67,8 +68,6 @@ const LegacyProduct = () => {
   return <Navigate to={product ? productPath(product) : '/loja'} replace />;
 };
 
-const PageFallback = () => <div className="min-h-[60vh]" aria-busy="true" />;
-
 function App() {
   const { pathname } = useLocation();
   // The homepage hero sits under the floating header; every other page starts below it.
@@ -94,7 +93,7 @@ function App() {
         )}
 
         <main id="conteudo" className={`flex-grow ${fullBleed ? '' : 'pt-24 print:pt-0'}`}>
-          <Suspense fallback={<PageFallback />}>
+          <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route element={<ShopLayout />}>

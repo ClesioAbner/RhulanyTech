@@ -42,7 +42,7 @@ const ProductCard = ({ product }: { product: CatalogProduct }) => {
             transition={{ duration: 0.6, ease: easeOutExpo }}
           >
             <div className="absolute inset-0 transition-transform duration-700 ease-out-expo group-hover:-translate-y-1.5 group-hover:scale-[1.035]">
-              <ProductImage src={image} inset="px-[13%] pb-[9%] pt-[15%]" loading="lazy" />
+              <ProductImage src={image} inset="px-[13%] pb-[9%] pt-[15%]" loading="lazy" loader />
             </div>
           </motion.div>
         </AnimatePresence>

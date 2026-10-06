@@ -4,6 +4,8 @@ import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, typ
 import { getProductById, priceFrom, productPath, resolveImage, type CatalogProduct } from '../../lib/catalog';
 import { formatPrice } from '../../lib/format';
 import { easeOutExpo } from '../../lib/motion';
+import { useImageReady } from '../../lib/useImageReady';
+import TechChip from '../ui/TechChip';
 import Phone3D, { type PhoneShape } from './Phone3D';
 
 // Phones on show, with their real proportions (body, corners, thickness, front camera).
@@ -71,6 +73,8 @@ const Showroom = () => {
   const { product, shape } = SLIDES[slide];
   const finish = product.finishes[finishIndex] ?? product.finishes[0];
   const image = resolveImage(finish.images![0], 1200);
+  // Each phone waits for its photo, so it never turns with an empty back; colour changes don't wait.
+  const phoneReady = useImageReady(resolveImage(product.finishes[0].images![0], 1200));
   const controls = useRef<ReturnType<typeof animate>>();
   const pausedRef = useRef(paused);
   pausedRef.current = paused;
@@ -169,38 +173,51 @@ const Showroom = () => {
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
           />
           <AnimatePresence initial={false} mode="popLayout">
-            <motion.div
-              key={product.id}
-              className="absolute inset-0 flex items-center justify-center [transform-style:preserve-3d]"
-              initial={{ opacity: 0, x: 260, y: 30, scale: 0.82, rotateZ: 8 }}
-              animate={{ opacity: 1, x: 0, y: 0, scale: 1, rotateZ: 0 }}
-              exit={{
-                opacity: 0,
-                x: -300,
-                y: 20,
-                scale: 0.82,
-                rotateZ: -8,
-                transition: { duration: 0.7, ease: [0.55, 0, 0.75, 0.2] },
-              }}
-              transition={{ duration: 1.5, ease: easeOutExpo }}
-            >
+            {!phoneReady ? (
               <motion.div
-                className="[transform-style:preserve-3d]"
-                animate={prefersReducedMotion ? undefined : { y: [0, -14, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                key="a-carregar"
+                className="absolute inset-0 grid place-items-center"
+                exit={{ opacity: 0, scale: 0.92, transition: { duration: 0.35 } }}
+                aria-hidden="true"
               >
-                <Phone3D
-                  image={image}
-                  alt={`${product.title} em ${finish.name}`}
-                  hex={finish.hex}
-                  shape={shape}
-                  height={phoneHeight}
-                  pointerX={pointerX}
-                  pointerY={pointerY}
-                  onGrab={() => setPaused(true)}
-                />
+                <span className="rt-loader">
+                  <TechChip size={64} />
+                </span>
               </motion.div>
-            </motion.div>
+            ) : (
+              <motion.div
+                key={product.id}
+                className="absolute inset-0 flex items-center justify-center [transform-style:preserve-3d]"
+                initial={{ opacity: 0, x: 260, y: 30, scale: 0.82, rotateZ: 8 }}
+                animate={{ opacity: 1, x: 0, y: 0, scale: 1, rotateZ: 0 }}
+                exit={{
+                  opacity: 0,
+                  x: -300,
+                  y: 20,
+                  scale: 0.82,
+                  rotateZ: -8,
+                  transition: { duration: 0.7, ease: [0.55, 0, 0.75, 0.2] },
+                }}
+                transition={{ duration: 1.5, ease: easeOutExpo }}
+              >
+                <motion.div
+                  className="[transform-style:preserve-3d]"
+                  animate={prefersReducedMotion ? undefined : { y: [0, -14, 0] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <Phone3D
+                    image={image}
+                    alt={`${product.title} em ${finish.name}`}
+                    hex={finish.hex}
+                    shape={shape}
+                    height={phoneHeight}
+                    pointerX={pointerX}
+                    pointerY={pointerY}
+                    onGrab={() => setPaused(true)}
+                  />
+                </motion.div>
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
 

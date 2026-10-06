@@ -124,7 +124,7 @@ const ShopCategory = () => {
                       exit={{ opacity: 0, y: 30, transition: { duration: 0.25 } }}
                       transition={{ duration: 1, ease: easeOutExpo, delay: 0.1 + index * 0.08 }}
                     >
-                      <ProductImage src={product.primaryImage} inset="p-0" />
+                      <ProductImage src={product.primaryImage} inset="p-0" loader />
                     </motion.div>
                   );
                 })}
