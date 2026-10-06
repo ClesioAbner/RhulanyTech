@@ -22,7 +22,7 @@ const reveal = {
 
 /** /loja: the showroom, the categories, then the whole catalogue with filters. */
 const Shop = () => (
-  <div className="pb-24 pt-4 lg:pb-32 lg:pt-6">
+  <div className="pb-24 lg:pb-32">
     <Showroom />
 
     {/* Categories */}

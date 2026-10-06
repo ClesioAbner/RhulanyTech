@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { AnimatePresence, motion, useInView } from 'framer-motion';
 import { unsplash } from '../../lib/images';
 import PhotoScreen, { type ScreenPhoto } from './PhotoScreen';
@@ -24,17 +24,42 @@ const SOFA: ScreenPhoto = {
   ],
 };
 
+// The hand holds an older phone; an iPhone Air is drawn over its whole body (outline measured on the
+// photo), and the fingers touching its sides are laid back on top from a cut-out of the same photo.
 const HAND: ScreenPhoto = {
   width: 1400,
   height: 902,
   corners: [
-    [806, 118],
-    [1087, 118],
-    [806, 743],
-    [1087, 743],
+    [787, 101],
+    [1108, 101],
+    [787, 761],
+    [1108, 761],
   ],
-  radius: 0.107,
+  radius: 0.11,
+  overlay: {
+    src: '/images/blog/telemovel-mao-dedos-1400.webp',
+    srcSet: '/images/blog/telemovel-mao-dedos-800.webp 800w, /images/blog/telemovel-mao-dedos-1400.webp 1400w',
+  },
 };
+
+/** iPhone Air from the front: polished titanium edge, a slim black border, the screen inside. */
+const AirFront = ({ children }: { children: ReactNode }) => (
+  <div
+    className="relative h-full w-full p-[1.4cqw]"
+    style={{
+      borderRadius: '11cqw',
+      background: 'linear-gradient(90deg, #7d8087 0%, #e4e6ea 6%, #c4c7cd 22%, #eef0f2 50%, #c4c7cd 78%, #e9ebee 94%, #7b7e85 100%)',
+    }}
+  >
+    <div className="h-full w-full bg-black p-[2.1cqw] shadow-[inset_0_0_0_0.25cqw_rgba(255,255,255,0.07)]" style={{ borderRadius: '9.6cqw' }}>
+      <div className="relative h-full w-full overflow-hidden [container-type:inline-size]" style={{ borderRadius: '7.6cqw' }}>
+        {children}
+        {/* Glass: a faint reflection across the top corner */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(125deg,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0)_32%)]" />
+      </div>
+    </div>
+  </div>
+);
 
 // ---------- Chat state and a small script runner ----------
 
@@ -205,12 +230,15 @@ const BusinessCard = () => (
 
 const ChatScreen = ({ state }: { state: ChatState }) => (
   <div className="flex h-full flex-col bg-white font-sans text-ink">
-    {/* Status bar: either side of the notch */}
-    <div className="flex h-[11.5cqw] shrink-0 items-center justify-between pl-[9cqw] pr-[6.5cqw] pt-[1.2cqw] text-[3.8cqw] font-semibold tabular-nums">
-      <span>{clock()}</span>
-      <span className="flex items-center gap-[1.2cqw]">
+    {/* Status bar: time and icons either side of the Dynamic Island */}
+    <div className="relative grid h-[13.6cqw] shrink-0 grid-cols-[1fr_32cqw_1fr] items-center pt-[0.6cqw] text-[4.2cqw] font-semibold tabular-nums tracking-tight">
+      <span className="justify-self-center pl-[2cqw]">{clock()}</span>
+      <span aria-hidden="true" className="h-[9.4cqw] rounded-full bg-black shadow-[inset_0_0_0_0.3cqw_rgba(255,255,255,0.04)]">
+        <span className="ml-auto mr-[3.2cqw] mt-[3.2cqw] block h-[3cqw] w-[3cqw] rounded-full bg-[radial-gradient(circle_at_35%_35%,#2a3550_0%,#0b0d14_60%)]" />
+      </span>
+      <span className="flex items-center justify-self-center gap-[1.2cqw] pr-[2cqw]">
         <Signal />
-        <span className="text-[3cqw] font-semibold">4G</span>
+        <span className="text-[3.1cqw] font-semibold">4G</span>
         <Battery />
       </span>
     </div>
@@ -404,14 +432,15 @@ const useStep = (question: string, answer: string) => {
   return steps;
 };
 
+// The store opens the conversation.
 const HELP_STEPS: Step[] = [
+  { type: 'typing', duration: 1100 },
+  { type: 'reply', text: 'Bro! 👋 Aqui é a Rhulany Tech. Em que te podemos ajudar?' },
   { type: 'compose', text: 'Epá bro, preciso de help 🙏', duration: 1000 },
   { type: 'send' },
   { type: 'ticks', value: 2, after: 300 },
-  { type: 'ticks', value: 3, after: 500 },
-  { type: 'typing', duration: 1100 },
-  { type: 'reply', text: 'Diz aí, mano! Em que podemos ajudar?' },
-  { type: 'compose', text: 'Bro, o meu laptop está a aquecer muito mal, meu chefe. A ventoinha até parece avião 😅', duration: 2600 },
+  { type: 'ticks', value: 3, after: 400 },
+  { type: 'compose', text: 'O meu laptop está a aquecer muito mal, meu chefe. A ventoinha até parece avião 😅', duration: 2400 },
   { type: 'send' },
   { type: 'ticks', value: 3, after: 600 },
   { type: 'typing', duration: 1500 },
@@ -445,13 +474,15 @@ export const HelpPhone = ({ variant }: { variant: 'wide' | 'compact' }) => {
         src="/images/blog/telemovel-mao-1400.png"
         srcSet="/images/blog/telemovel-mao-800.png 800w, /images/blog/telemovel-mao-1400.png 1400w"
         sizes={wide ? '(min-width: 1360px) 1264px, 100vw' : '100vw'}
-        alt="Mão a segurar um telemóvel com uma conversa de WhatsApp com a Rhulany Tech"
+        alt="Mão a segurar um iPhone Air com uma conversa de WhatsApp com a Rhulany Tech"
         photo={HAND}
         aspect={wide ? HAND.width / HAND.height : 4 / 5}
-        zoom={wide ? 1 : 2.6}
+        zoom={wide ? 1 : 2.5}
         focus={wide ? undefined : { x: 0.676, y: 0.477 }}
       >
-        <ChatScreen state={state} />
+        <AirFront>
+          <ChatScreen state={state} />
+        </AirFront>
       </PhotoScreen>
     </div>
   );

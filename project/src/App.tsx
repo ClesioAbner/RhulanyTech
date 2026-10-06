@@ -24,7 +24,7 @@ const SignIn = lazy(() => import('./pages/SignIn'));
 const Account = lazy(() => import('./pages/Account'));
 
 // Pages that open with a full-screen banner under the floating header.
-const FULL_BLEED_PATHS = ['/', '/blog', '/sobre', '/contacto', '/entrar'];
+const FULL_BLEED_PATHS = ['/', '/loja', '/blog', '/sobre', '/contacto', '/entrar'];
 
 const isShopPath = (pathname: string) => pathname.startsWith('/loja') || pathname.startsWith('/produto/');
 

@@ -20,6 +20,8 @@ export interface ScreenPhoto {
   radius: number;
   /** Shapes in front of the screen (photo pixels), redrawn over the content. */
   occluders?: Point[][];
+  /** A cut-out the size of the photo with only what lies in front of the screen (fingers). */
+  overlay?: { src: string; srcSet?: string };
 }
 
 interface PhotoScreenProps {
@@ -140,6 +142,18 @@ const PhotoScreen = ({
           }}
         />
       ))}
+      {photo.overlay && (
+        <img
+          src={photo.overlay.src}
+          srcSet={photo.overlay.srcSet}
+          sizes={sizes}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          className="pointer-events-none absolute max-w-none"
+          style={imageStyle}
+        />
+      )}
     </div>
   );
 };
