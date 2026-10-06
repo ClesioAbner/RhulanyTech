@@ -20,8 +20,6 @@ export const useAddToCart = () => {
         name: [product.title, option?.label, finish?.name].filter(Boolean).join(' · '),
         price: product.price + (option?.priceDelta ?? 0),
         image: imageFor(product, finish),
-        brand: product.brand,
-        model: product.model,
         maxQuantity: product.stockQuantity,
       });
       if (shouldOpen) openDrawer(id);

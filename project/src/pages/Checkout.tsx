@@ -13,7 +13,6 @@ import {
   maskMobile,
   newOrderNumber,
   orderPath,
-  paymentName,
   processPayment,
   walletError,
   type PaymentMethodId,
@@ -38,7 +37,7 @@ const Checkout = () => {
   const subtotal = useCartStore((state) => state.total);
   const clearCart = useCartStore((state) => state.clearCart);
   const addOrder = useOrderStore((state) => state.addOrder);
-  const { currentUser, addPurchase, updateProfile } = useUserStore();
+  const { currentUser, updateProfile } = useUserStore();
 
   const [step, setStep] = useState(0);
   const [contact, setContact] = useState<ContactDetails>({ name: '', email: '', phone: '' });
@@ -177,34 +176,18 @@ const Checkout = () => {
     };
 
     addOrder(order);
-    if (currentUser) {
-      addPurchase({
-        id: order.number,
-        orderNumber: order.number,
-        date: new Date(order.createdAt),
-        items: order.lines.map((line) => ({
-          id: line.id,
-          name: line.name,
-          price: line.price,
-          quantity: line.quantity,
-          image: line.image,
-        })),
-        total: order.subtotal,
-        paymentMethod: paymentName(payment),
-        status: 'confirmed',
+    // Signed-in customers get the address filled in next time.
+    if (currentUser && delivery.method === 'entrega') {
+      updateProfile({
+        phone: currentUser.phone || localNumber(contact.phone),
+        savedAddress: {
+          province: delivery.province,
+          city: delivery.city.trim(),
+          neighbourhood: delivery.neighbourhood.trim(),
+          street: delivery.street.trim(),
+          reference: delivery.reference.trim(),
+        },
       });
-      if (delivery.method === 'entrega') {
-        updateProfile({
-          phone: currentUser.phone || localNumber(contact.phone),
-          savedAddress: {
-            province: delivery.province,
-            city: delivery.city.trim(),
-            neighbourhood: delivery.neighbourhood.trim(),
-            street: delivery.street.trim(),
-            reference: delivery.reference.trim(),
-          },
-        });
-      }
     }
     navigate(orderPath(order), { replace: true });
     clearCart();

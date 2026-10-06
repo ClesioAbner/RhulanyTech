@@ -2,8 +2,8 @@ import type { Product } from '../products';
 import type { Merchandising } from './merchandising';
 
 /*
- * Catalogue additions, written compactly. Each entry becomes a regular Product (so the chatbot and
- * AI recommendations see it too) plus its shelves and merchandising.
+ * Catalogue additions, written compactly. Each entry becomes a regular Product plus its shelves
+ * and merchandising.
  * Images are Unsplash ids of the actual model. Prices are indicative and should be confirmed.
  */
 

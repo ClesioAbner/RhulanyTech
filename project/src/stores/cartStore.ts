@@ -7,8 +7,7 @@ export interface CartItem {
   price: number;
   image: string;
   quantity: number;
-  brand?: string;
-  model?: string;
+  /** Units in stock; the quantity never goes above it. */
   maxQuantity?: number;
 }
 
@@ -19,9 +18,6 @@ interface CartStore {
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
-  getItemCount: () => number;
-  getItemById: (id: string) => CartItem | undefined;
-  isInCart: (id: string) => boolean;
 }
 
 export const useCartStore = create<CartStore>()(
@@ -87,21 +83,6 @@ export const useCartStore = create<CartStore>()(
       },
 
       clearCart: () => set({ items: [], total: 0 }),
-
-      getItemCount: () => {
-        const { items } = get();
-        return items.reduce((count, item) => count + item.quantity, 0);
-      },
-
-      getItemById: (id) => {
-        const { items } = get();
-        return items.find((item) => item.id === id);
-      },
-
-      isInCart: (id) => {
-        const { items } = get();
-        return items.some((item) => item.id === id);
-      },
     }),
     {
       name: 'rhulany-tech-cart',
