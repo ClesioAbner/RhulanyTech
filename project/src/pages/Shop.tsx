@@ -11,7 +11,7 @@ import { PhoneIcon, WhatsAppIcon } from '../components/ui/Icons';
 const SERVICES = [
   { title: 'Garantia oficial', body: 'Produtos originais e selados, com a garantia do fabricante.' },
   { title: 'Entrega em todo o país', body: 'Em Maputo e em todas as províncias, com acompanhamento.' },
-  { title: 'Pague como preferir', body: 'M-Pesa, e-Mola, cartão ou PayPal, no checkout.' },
+  { title: 'Pague como preferir', body: 'M-Pesa, e-Mola, mKesh, cartão ou PayPal, no checkout.' },
   { title: 'Ajuda de quem percebe', body: 'Uma equipa que conhece os produtos e o ajuda a escolher.' },
 ];
 

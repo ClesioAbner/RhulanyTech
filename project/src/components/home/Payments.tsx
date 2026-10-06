@@ -2,8 +2,8 @@ import type { RefObject } from 'react';
 import { AnimatePresence, motion, type MotionValue } from 'framer-motion';
 import { easeOutExpo } from '../../lib/motion';
 import { PAYMENT_METHODS } from '../payments/methods';
-import RealisticPhone from '../payments/LazyRealisticPhone';
-import type { ScreenKey } from '../payments/screenTexture';
+import ShowcasePhone from '../payments/ShowcasePhone';
+import type { ScreenKey } from '../payments/screens';
 import SectionHeading from '../ui/SectionHeading';
 
 const ROW_HEIGHT = 64; // px — height of one entry in the method wheel
@@ -66,8 +66,8 @@ const Payments = ({
               className="hidden h-[calc(var(--phone-w)*2.1)] w-[var(--phone-w)] [--phone-w:clamp(190px,26vh,250px)] lg:block"
             />
             {mobilePhone && (
-              <div className="relative [--phone-w:clamp(160px,23vh,250px)] lg:hidden">
-                <RealisticPhone
+              <div className="relative h-[calc(var(--phone-w)*2.1)] w-[var(--phone-w)] [--phone-w:clamp(160px,23vh,250px)] lg:hidden">
+                <ShowcasePhone
                   rotateX={mobilePhone.rotateX}
                   rotateY={mobilePhone.rotateY}
                   rotateZ={mobilePhone.rotateZ}

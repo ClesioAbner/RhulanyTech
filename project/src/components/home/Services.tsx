@@ -13,7 +13,7 @@ const REASONS = [
   },
   {
     title: 'Pagamento à sua medida',
-    body: 'M-Pesa, e-Mola, cartão ou PayPal. Escolha o método que lhe der mais jeito no checkout.',
+    body: 'M-Pesa, e-Mola, mKesh, cartão ou PayPal. Escolha o método que lhe der mais jeito no checkout.',
   },
   {
     title: 'Aconselhamento real',

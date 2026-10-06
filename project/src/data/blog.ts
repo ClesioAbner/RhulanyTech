@@ -689,7 +689,7 @@ export const FAQ: Faq[] = [
   },
   {
     q: 'Que métodos de pagamento aceitam?',
-    a: 'M-Pesa, e-Mola, cartão Visa ou Mastercard e PayPal. Escolhe o método no checkout.',
+    a: 'M-Pesa, e-Mola, mKesh, cartão Visa ou Mastercard e PayPal. Escolhe o método no checkout.',
   },
   {
     q: 'Podem encomendar um produto que não encontro na loja?',

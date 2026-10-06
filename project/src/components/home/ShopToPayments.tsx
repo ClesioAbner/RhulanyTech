@@ -8,8 +8,8 @@ import {
   useSpring,
   useTransform,
 } from 'framer-motion';
-import RealisticPhone from '../payments/LazyRealisticPhone';
-import type { ScreenKey } from '../payments/screenTexture';
+import ShowcasePhone from '../payments/ShowcasePhone';
+import type { ScreenKey } from '../payments/screens';
 import { useMediaQuery } from '../../lib/useMediaQuery';
 import {
   INTRO_END,
@@ -226,10 +226,10 @@ const ShopToPayments = () => {
           <motion.div className="absolute left-0 top-0 h-0 w-0" style={{ x, y, opacity }}>
             <div
               ref={phoneRef}
-              className="absolute left-0 top-0 h-[calc(var(--phone-w)*2.1)] w-[var(--phone-w)] -translate-x-1/2 -translate-y-1/2 [--phone-w:clamp(190px,26vh,250px)]"
+              className="absolute left-0 top-0 h-[calc(var(--phone-w)*2.1)] w-[var(--phone-w)] -translate-x-1/2 -translate-y-1/2 [--phone-w:clamp(190px,26vh,250px)] [perspective:1600px]"
             >
               {isDesktop && (
-                <RealisticPhone
+                <ShowcasePhone
                   rotateX={rotateX}
                   rotateY={rotateY}
                   rotateZ={rotateZ}

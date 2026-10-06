@@ -2,7 +2,8 @@ import { useRef, type PointerEvent, type RefObject } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { formatPrice } from '../../lib/format';
-import { priceFrom, productPath, type CatalogProduct } from '../../lib/catalog';
+import { priceFrom, productPath, resolveImage, type CatalogProduct } from '../../lib/catalog';
+import { isCutout } from '../../lib/images';
 import { useAddToCart } from '../../lib/useAddToCart';
 import ProductImage from '../product/ProductImage';
 
@@ -26,7 +27,9 @@ const FeaturedProductCard = ({ product, mediaSlotRef, size = 'regular' }: Produc
   const cardRef = useRef<HTMLDivElement>(null);
   const addToCart = useAddToCart();
   const href = productPath(product);
-  const secondImage = product.gallery.filter((view) => view.url)[1]?.url;
+  // On hover: the same product in another colour, always a studio shot (never a lifestyle photo).
+  const secondSrc = product.finishes[1]?.images?.[0];
+  const secondImage = secondSrc && isCutout(resolveImage(secondSrc)) ? resolveImage(secondSrc, 600) : undefined;
   const hasOptions = Boolean(product.option);
 
   // Pointer position normalised to -0.5…0.5; springs make the tilt feel physical, not glued to the cursor.
@@ -67,12 +70,9 @@ const FeaturedProductCard = ({ product, mediaSlotRef, size = 'regular' }: Produc
             <ProductImage src={product.primaryImage} loading="lazy" />
           </span>
           {secondImage && !mediaSlotRef && (
-            <img
-              src={secondImage}
-              alt=""
-              loading="lazy"
-              className="absolute inset-0 hidden h-full w-full scale-[1.03] object-cover opacity-0 transition-[transform,opacity] duration-700 ease-out-expo group-hover:scale-100 group-hover:opacity-100 lg:block"
-            />
+            <span className="absolute inset-0 hidden translate-y-3 opacity-0 transition-[transform,opacity] duration-700 ease-out-expo group-hover:translate-y-0 group-hover:scale-[1.03] group-hover:opacity-100 lg:block">
+              <ProductImage src={secondImage} loading="lazy" />
+            </span>
           )}
           {mediaSlotRef && (
             <div

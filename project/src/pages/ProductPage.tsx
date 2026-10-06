@@ -178,7 +178,7 @@ const ProductView = ({ product }: { product: CatalogProduct }) => {
                 <dt className="text-ink/50">Pagamento</dt>
                 <dd className="text-right">
                   <Link to="/#pagamentos" className="link-underline">
-                    M-Pesa, e-Mola, cartão ou PayPal
+                    M-Pesa, e-Mola, mKesh, cartão ou PayPal
                   </Link>
                 </dd>
               </div>

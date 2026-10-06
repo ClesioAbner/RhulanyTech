@@ -137,7 +137,7 @@ const CartPage = () => {
             </p>
 
             <p className="mt-6 text-center text-sm text-ink/55">
-              Pague com M-Pesa, e-Mola, cartão ou PayPal{' '}
+              Pague com M-Pesa, e-Mola, mKesh, cartão ou PayPal{' '}
               <Link to="/#pagamentos" className="link-underline text-ink">
                 Saber mais
               </Link>

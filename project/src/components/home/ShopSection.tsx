@@ -8,8 +8,8 @@ import SectionHeading from '../ui/SectionHeading';
 
 // A fixed selection that spans the catalogue, each with its own product photography.
 // The iPhone stays fourth (second row, left column): its card hosts the 3D phone that falls into payments.
-const FAVORITE_IDS = ['67', '57', '74', '1', '80', '71'];
-const PHONE_PRODUCT_ID = '1';
+const FAVORITE_IDS = ['67', '54', '46', '39', '80', '71'];
+const PHONE_PRODUCT_ID = '39';
 
 const FAVORITES = FAVORITE_IDS.map((id) => getProductById(id)).filter((product): product is CatalogProduct =>
   Boolean(product),

@@ -6,7 +6,7 @@ import type { Order } from '../stores/orderStore';
  * Checkout rules and helpers.
  *
  * PAYMENTS_LIVE is false while no payment gateway is connected: payments are simulated, nothing is
- * charged and the checkout says so. Connecting M-Pesa (Vodacom), e-Mola (Movitel), a card processor
+ * charged and the checkout says so. Connecting M-Pesa (Vodacom), e-Mola (Movitel), mKesh (Tmcel), a card processor
  * and PayPal means replacing `processPayment` with calls to a server that talks to those providers.
  */
 export const PAYMENTS_LIVE = false;
@@ -25,15 +25,20 @@ export const PROVINCES = [
   'Niassa',
 ];
 
-export type PaymentMethodId = 'mpesa' | 'emola' | 'card' | 'paypal';
+export type PaymentMethodId = 'mpesa' | 'emola' | 'mkesh' | 'card' | 'paypal';
+export type WalletId = 'mpesa' | 'emola' | 'mkesh';
 export type DeliveryMethod = 'entrega' | 'levantamento';
 
 export const PAYMENT_OPTIONS: { id: PaymentMethodId; name: string; note: string }[] = [
   { id: 'mpesa', name: 'M-Pesa', note: 'Confirma com o PIN no telemóvel' },
   { id: 'emola', name: 'e-Mola', note: 'Aprova o pedido na carteira Movitel' },
+  { id: 'mkesh', name: 'mKesh', note: 'Aprova o pedido na carteira Tmcel' },
   { id: 'card', name: 'Visa ou Mastercard', note: 'Débito ou crédito' },
   { id: 'paypal', name: 'PayPal', note: 'Para quem paga do estrangeiro' },
 ];
+
+/** Mobile wallets: paid by approving a request on the customer's phone number. */
+export const isWallet = (id: PaymentMethodId): id is WalletId => id === 'mpesa' || id === 'emola' || id === 'mkesh';
 
 export const paymentName = (id: PaymentMethodId) => PAYMENT_OPTIONS.find((option) => option.id === id)?.name ?? id;
 
@@ -54,15 +59,19 @@ export const formatMobile = (value: string) => {
 
 export const isMobile = (value: string) => /^8[2-7]\d{7}$/.test(localNumber(value));
 
-// M-Pesa runs on Vodacom (84, 85) and e-Mola on Movitel (86, 87).
-export const WALLET_PREFIXES: Record<'mpesa' | 'emola', string[]> = { mpesa: ['84', '85'], emola: ['86', '87'] };
+// M-Pesa runs on Vodacom (84, 85), e-Mola on Movitel (86, 87) and mKesh on Tmcel (82, 83).
+export const WALLET_PREFIXES: Record<WalletId, string[]> = { mpesa: ['84', '85'], emola: ['86', '87'], mkesh: ['82', '83'] };
 
-export const walletError = (method: 'mpesa' | 'emola', value: string) => {
+const WALLET_NETWORK: Record<WalletId, string> = {
+  mpesa: 'O M-Pesa usa números Vodacom, começados por 84 ou 85',
+  emola: 'O e-Mola usa números Movitel, começados por 86 ou 87',
+  mkesh: 'O mKesh usa números Tmcel, começados por 82 ou 83',
+};
+
+export const walletError = (method: WalletId, value: string) => {
   const number = localNumber(value);
   if (!/^\d{9}$/.test(number)) return 'Indique os 9 dígitos do número';
-  if (!WALLET_PREFIXES[method].some((prefix) => number.startsWith(prefix))) {
-    return method === 'mpesa' ? 'O M-Pesa usa números Vodacom, começados por 84 ou 85' : 'O e-Mola usa números Movitel, começados por 86 ou 87';
-  }
+  if (!WALLET_PREFIXES[method].some((prefix) => number.startsWith(prefix))) return WALLET_NETWORK[method];
   return undefined;
 };
 
@@ -122,7 +131,7 @@ export const newOrderNumber = (date = new Date()) => {
 
 /** Simulated payment while PAYMENTS_LIVE is false: waits like a real confirmation would. */
 export const processPayment = async (method: PaymentMethodId) => {
-  const wait = method === 'mpesa' || method === 'emola' ? 4200 : 2400;
+  const wait = isWallet(method) ? 4200 : 2400;
   await new Promise((resolve) => setTimeout(resolve, wait));
   return { reference: `${method.toUpperCase()}-${Date.now().toString(36).toUpperCase()}` };
 };

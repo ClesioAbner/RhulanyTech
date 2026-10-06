@@ -21,6 +21,7 @@ import {
   paymentName,
   processPayment,
   walletError,
+  isWallet,
   type DeliveryMethod,
   type PaymentMethodId,
 } from '../lib/checkout';
@@ -102,7 +103,7 @@ const primaryButton =
 
 /** Mobile-money confirmation screen shown while the customer approves on the phone. */
 const AwaitingConfirmation = ({ method, phone, amount }: { method: PaymentMethodId; phone: string; amount: number }) => {
-  const wallet = method === 'mpesa' || method === 'emola';
+  const wallet = isWallet(method);
   return (
     <motion.div
       className="rounded-[24px] bg-paper p-6 text-center sm:p-10"
@@ -213,7 +214,7 @@ const Checkout = () => {
         };
 
   const validatePayment = (): Errors => {
-    if (payment === 'mpesa' || payment === 'emola') return { wallet: walletError(payment, wallet) };
+    if (isWallet(payment)) return { wallet: walletError(payment, wallet) };
     if (payment === 'card')
       return {
         cardName: card.name.trim().length < 3 ? 'Indique o nome como aparece no cartão' : undefined,
@@ -591,7 +592,7 @@ const Checkout = () => {
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.3 }}
                   >
-                    {(payment === 'mpesa' || payment === 'emola') && (
+                    {isWallet(payment) && (
                       <TextField
                         label={`Número ${paymentName(payment)}`}
                         type="tel"

@@ -32,7 +32,7 @@ const PRINCIPLES = [
   },
   {
     title: 'Perto de si, em todo o país',
-    body: 'Uma loja física em Maputo e entregas em todas as províncias, com pagamento por M-Pesa, e-Mola, cartão ou PayPal.',
+    body: 'Uma loja física em Maputo e entregas em todas as províncias, com pagamento por M-Pesa, e-Mola, mKesh, cartão ou PayPal.',
     image: '1721403901773-ce6d56b709d2',
     alt: 'Avenida Marginal de Maputo ao fim da tarde, com palmeiras',
   },
