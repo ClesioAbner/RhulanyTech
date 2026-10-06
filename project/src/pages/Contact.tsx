@@ -3,23 +3,23 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FAQ } from '../data/blog';
 import { STORE } from '../data/store';
-import { unsplash, unsplashSrcSet } from '../lib/images';
 import { easeOutExpo, inViewOnce } from '../lib/motion';
 import ContactForm from '../components/content/ContactForm';
 import FaqList from '../components/content/FaqList';
 import PageHero from '../components/content/PageHero';
 import SocialLinks from '../components/ui/SocialLinks';
-import { ClockIcon, MailIcon, PhoneIcon, StoreIcon, WhatsAppIcon } from '../components/ui/Icons';
+import { MailIcon, PhoneIcon, WhatsAppIcon } from '../components/ui/Icons';
 
 // Maputo at sunset (Unsplash), kept locally so the banner does not wait on their CDN.
 const HERO_IMAGE = '/images/contacto/maputo-fim-de-tarde';
-const STORE_IMAGE = '1684777238927-1134cca28473';
+// Google's embed of the neighbourhood: no API key needed, loaded only when the section is near.
+const MAP_EMBED = `https://maps.google.com/maps?q=${encodeURIComponent(`${STORE.address}, Moçambique`)}&z=15&output=embed`;
 
 interface Channel {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   label: string;
   value: string;
-  href?: string;
+  href: string;
   external?: boolean;
 }
 
@@ -27,38 +27,33 @@ const CHANNELS: Channel[] = [
   { icon: WhatsAppIcon, label: 'WhatsApp', value: STORE.phone, href: STORE.whatsappUrl, external: true },
   { icon: PhoneIcon, label: 'Telefone', value: STORE.phone, href: STORE.phoneHref },
   { icon: MailIcon, label: 'Email', value: STORE.email, href: `mailto:${STORE.email}` },
-  { icon: StoreIcon, label: 'Loja', value: STORE.address, href: STORE.mapsUrl, external: true },
-  { icon: ClockIcon, label: 'Horário', value: STORE.hours },
 ];
 
 const heroAction =
   'inline-flex h-11 items-center gap-2 rounded-full border border-paper/20 bg-paper/10 px-5 text-sm font-medium backdrop-blur-xl transition-colors duration-300 hover:bg-paper hover:text-ink';
 
-/** One contact line: icon in a soft circle and the value; links fill the circle on hover. */
-const ChannelRow = ({ channel }: { channel: Channel }) => {
+/** One way to reach the team: a white card that turns dark on hover, the channel above its number or address. */
+const ChannelCard = ({ channel }: { channel: Channel }) => {
   const Icon = channel.icon;
-  const content = (
-    <>
-      <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white text-ink transition-colors duration-300 group-hover:bg-ink group-hover:text-paper">
-        <Icon className="h-5 w-5" />
-      </span>
-      <span className="min-w-0 break-words text-[17px] font-medium tracking-tight">{channel.value}</span>
-    </>
-  );
-  return channel.href ? (
+  return (
     <a
       href={channel.href}
       target={channel.external ? '_blank' : undefined}
       rel={channel.external ? 'noopener noreferrer' : undefined}
-      aria-label={`${channel.label}: ${channel.value}`}
-      className="group flex items-center gap-4 rounded-full transition-transform duration-500 ease-out-expo hover:translate-x-1"
+      className="group flex items-center gap-5 rounded-[24px] bg-white p-5 transition-colors duration-500 ease-out-expo hover:bg-ink hover:text-paper sm:p-6"
     >
-      {content}
+      <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-paper text-ink transition-[background-color,color,transform] duration-500 ease-out-expo group-hover:scale-105 group-hover:bg-paper/10 group-hover:text-paper">
+        <Icon className="h-5 w-5" />
+      </span>
+      <span className="min-w-0">
+        <span className="eyebrow block text-ink/45 transition-colors duration-500 group-hover:text-paper/55">
+          {channel.label}
+        </span>
+        <span className="mt-1.5 block break-words font-display text-lg font-medium tracking-tight sm:text-xl">
+          {channel.value}
+        </span>
+      </span>
     </a>
-  ) : (
-    <div className="group flex items-center gap-4" aria-label={`${channel.label}: ${channel.value}`}>
-      {content}
-    </div>
   );
 };
 
@@ -106,7 +101,7 @@ const Contact = () => {
 
       <div id="escreva" className="container-site grid scroll-mt-16 gap-12 pt-20 lg:grid-cols-12 lg:gap-16 lg:pt-28">
         <motion.section
-          className="lg:col-span-5 lg:pt-10"
+          className="lg:col-span-5 lg:pt-6"
           aria-labelledby="contactos-directos"
           initial="hidden"
           whileInView="visible"
@@ -121,9 +116,9 @@ const Contact = () => {
               visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: easeOutExpo } },
             }}
           >
-            Contactos
+            Como prefere falar connosco
           </motion.h2>
-          <ul className="mt-8 space-y-4">
+          <ul className="mt-8 space-y-3">
             {CHANNELS.map((channel) => (
               <motion.li
                 key={channel.label}
@@ -132,7 +127,7 @@ const Contact = () => {
                   visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: easeOutExpo } },
                 }}
               >
-                <ChannelRow channel={channel} />
+                <ChannelCard channel={channel} />
               </motion.li>
             ))}
           </ul>
@@ -143,7 +138,7 @@ const Contact = () => {
               visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: easeOutExpo } },
             }}
           >
-            <SocialLinks labelled />
+            <SocialLinks labelled omit={['whatsapp']} />
           </motion.div>
         </motion.section>
 
@@ -161,46 +156,58 @@ const Contact = () => {
 
       <section className="container-site pt-24 lg:pt-32" aria-labelledby="visite">
         <motion.div
-          className="relative h-[min(64svh,520px)] min-h-[400px] overflow-hidden rounded-[32px] bg-ink text-paper"
+          className="grid overflow-hidden rounded-[32px] bg-white lg:grid-cols-12"
           initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={inViewOnce}
           transition={{ duration: 0.9, ease: easeOutExpo }}
         >
-          <img
-            src={unsplash(STORE_IMAGE, 2000)}
-            srcSet={unsplashSrcSet(STORE_IMAGE)}
-            sizes="(min-width: 1360px) 1264px, 100vw"
-            alt="Prédios de Maputo sob um céu azul"
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/45 to-transparent" />
-          <div className="relative flex h-full max-w-xl flex-col justify-end p-6 sm:p-10 lg:p-14">
-            <p className="eyebrow text-paper/60">A loja</p>
-            <h2 id="visite" className="type-title mt-3">
-              Visite-nos em Maputo
-            </h2>
-            <p className="type-lead mt-3 text-paper/70">
-              {STORE.address}, {STORE.hours.charAt(0).toLowerCase() + STORE.hours.slice(1)}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+          <div className="flex flex-col justify-between gap-10 p-7 sm:p-12 lg:col-span-5 lg:p-14">
+            <div>
+              <p className="eyebrow text-ink/45">A loja</p>
+              <h2 id="visite" className="type-title mt-3">
+                Visite-nos em Maputo
+              </h2>
+              <p className="type-lead mt-4 max-w-sm text-ink/60">
+                Veja os equipamentos ao vivo e tire as dúvidas com quem os conhece
+              </p>
+            </div>
+            <dl className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
+              <div>
+                <dt className="eyebrow text-ink/40">Morada</dt>
+                <dd className="mt-2 font-display text-lg font-medium tracking-tight">{STORE.address}</dd>
+              </div>
+              <div>
+                <dt className="eyebrow text-ink/40">Horário</dt>
+                <dd className="mt-2 font-display text-lg font-medium tracking-tight">{STORE.hours}</dd>
+              </div>
+            </dl>
+            <div className="flex flex-wrap gap-3">
               <a
                 href={STORE.mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-12 items-center gap-2 rounded-full bg-paper px-6 text-sm font-medium text-ink transition-colors hover:bg-white"
+                className="inline-flex h-12 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper transition-colors duration-300 hover:bg-ink-soft"
               >
-                <StoreIcon className="h-[18px] w-[18px]" />
-                Abrir no Google Maps
+                Como chegar
               </a>
               <Link
                 to="/sobre"
-                className="inline-flex h-12 items-center rounded-full border border-paper/25 px-6 text-sm font-medium transition-colors hover:border-paper"
+                className="inline-flex h-12 items-center rounded-full border border-ink/15 px-6 text-sm font-medium transition-colors duration-300 hover:border-ink"
               >
                 Conhecer a Rhulany Tech
               </Link>
             </div>
+          </div>
+          <div className="relative order-first h-72 overflow-hidden bg-mist sm:h-96 lg:order-last lg:col-span-7 lg:h-auto lg:min-h-[540px]">
+            {/* Raised so Google's place card sits above the frame; the credits at the bottom stay visible */}
+            <iframe
+              title={`Mapa: ${STORE.address}`}
+              src={MAP_EMBED}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="absolute inset-x-0 -top-[120px] h-[calc(100%+120px)] w-full border-0 contrast-[1.05] grayscale-[0.9]"
+            />
           </div>
         </motion.div>
       </section>

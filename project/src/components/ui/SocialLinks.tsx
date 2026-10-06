@@ -7,12 +7,14 @@ interface SocialLinksProps {
   className?: string;
   /** Show the network name beside the icon. */
   labelled?: boolean;
+  /** Networks already offered elsewhere on the page. */
+  omit?: (typeof SOCIAL)[number]['id'][];
 }
 
 /** WhatsApp, Facebook and Instagram as quiet round buttons. */
-const SocialLinks = ({ className = '', labelled = false }: SocialLinksProps) => (
+const SocialLinks = ({ className = '', labelled = false, omit = [] }: SocialLinksProps) => (
   <ul className={`flex flex-wrap items-center gap-2 ${className}`} aria-label="Redes sociais">
-    {SOCIAL.map((item) => {
+    {SOCIAL.filter((item) => !omit.includes(item.id)).map((item) => {
       const Icon = ICONS[item.id];
       return (
         <li key={item.id}>
