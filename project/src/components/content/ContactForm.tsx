@@ -1,7 +1,7 @@
 import { useId, useState, type ChangeEvent, type FormEvent } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { STORE } from '../../data/store';
-import { CONTACT_TOPICS, EMAIL_PATTERN, sendContactMessage, type ContactMessage, type ContactTopic } from '../../lib/contact';
+import { EMAIL_PATTERN, sendContactMessage, type ContactMessage } from '../../lib/contact';
 import { easeOutExpo } from '../../lib/motion';
 
 const MESSAGE_MAX = 1000;
@@ -11,7 +11,7 @@ type Field = 'name' | 'email' | 'phone' | 'message';
 type Errors = Partial<Record<Field, string>>;
 type Status = 'idle' | 'sending' | 'sent' | 'mail-app' | 'error';
 
-const validate = (values: Omit<ContactMessage, 'topic'>): Errors => {
+const validate = (values: ContactMessage): Errors => {
   const errors: Errors = {};
   if (!values.name.trim()) errors.name = 'Indique o seu nome';
   if (!values.email.trim()) errors.email = 'Precisamos do email para responder';
@@ -45,10 +45,9 @@ const ErrorText = ({ id, text }: { id: string; text?: string }) => (
   </AnimatePresence>
 );
 
-/** The contact card: subject, details and message, sent by email. */
+/** The contact card: details and message, sent by email. */
 const ContactForm = () => {
   const baseId = useId();
-  const [topic, setTopic] = useState<ContactTopic>('Produto');
   const [values, setValues] = useState({ name: '', email: '', phone: '', message: '' });
   const [touched, setTouched] = useState<Partial<Record<Field, boolean>>>({});
   const [status, setStatus] = useState<Status>('idle');
@@ -85,7 +84,7 @@ const ContactForm = () => {
     if (honeypot) return; // only bots fill the hidden field
     setStatus('sending');
     try {
-      setStatus(await sendContactMessage({ topic, ...values, name: values.name.trim(), email: values.email.trim() }));
+      setStatus(await sendContactMessage({ ...values, name: values.name.trim(), email: values.email.trim() }));
     } catch {
       setStatus('error');
     }
@@ -174,33 +173,6 @@ const ContactForm = () => {
             <h2 id={`${baseId}-titulo`} className="type-heading">
               Escreva-nos
             </h2>
-
-            <div role="radiogroup" aria-label="Assunto" className="mt-6 flex flex-wrap gap-2">
-              {CONTACT_TOPICS.map((item) => {
-                const isActive = item === topic;
-                return (
-                  <button
-                    key={item}
-                    type="button"
-                    role="radio"
-                    aria-checked={isActive}
-                    onClick={() => setTopic(item)}
-                    className={`relative isolate h-10 rounded-full px-4 text-sm transition-colors duration-300 ${
-                      isActive ? 'text-paper' : 'bg-paper text-ink/65 hover:text-ink'
-                    }`}
-                  >
-                    {isActive && (
-                      <motion.span
-                        layoutId="contact-topic"
-                        className="absolute inset-0 -z-10 rounded-full bg-ink"
-                        transition={{ duration: 0.4, ease: easeOutExpo }}
-                      />
-                    )}
-                    {item}
-                  </button>
-                );
-              })}
-            </div>
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <div>

@@ -1,10 +1,6 @@
 import { STORE } from '../data/store';
 
-export const CONTACT_TOPICS = ['Encomenda', 'Produto', 'Assistência técnica', 'Outro'] as const;
-export type ContactTopic = (typeof CONTACT_TOPICS)[number];
-
 export interface ContactMessage {
-  topic: ContactTopic;
   name: string;
   email: string;
   phone: string;
@@ -21,7 +17,7 @@ const emailServiceConfigured = isSet(SERVICE_ID) && isSet(TEMPLATE_ID) && isSet(
 
 export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-const subjectFor = (message: ContactMessage) => `${message.topic}: mensagem de ${message.name}`;
+const subjectFor = (message: ContactMessage) => `Mensagem de ${message.name}`;
 
 /**
  * Sends the message through EmailJS when it is configured (VITE_EMAILJS_* in .env).
@@ -35,7 +31,6 @@ export const sendContactMessage = async (message: ContactMessage): Promise<'sent
       TEMPLATE_ID as string,
       {
         subject: subjectFor(message),
-        topic: message.topic,
         from_name: message.name,
         reply_to: message.email,
         phone: message.phone || 'Não indicado',
