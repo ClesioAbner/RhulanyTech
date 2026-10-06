@@ -12,7 +12,9 @@ const ProductHighlights = ({ product }: { product: CatalogProduct }) => {
     <section className="border-t border-ink/10" aria-labelledby="destaques-produto">
       <div className="container-site py-24 lg:py-32">
         <SectionHeading id="destaques-produto" index="01" eyebrow="Destaques" title={`Porquê escolher ${product.title}`} />
-        <ol className={`mt-14 grid gap-px overflow-hidden rounded-[24px] bg-ink/10 lg:mt-20 ${withBodies ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-2 lg:grid-cols-4'}`}>
+        <ol
+          className={`mt-14 grid gap-px overflow-hidden rounded-[24px] bg-ink/10 lg:mt-20 ${withBodies ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-2 lg:grid-cols-4'}`}
+        >
           {product.highlights.map((highlight, index) => (
             <motion.li
               key={highlight.title}
@@ -23,7 +25,9 @@ const ProductHighlights = ({ product }: { product: CatalogProduct }) => {
               transition={{ duration: 0.8, ease: easeOutExpo, delay: (index % 3) * 0.06 }}
             >
               <span className="font-display text-sm tabular-nums text-ink/35">{String(index + 1).padStart(2, '0')}</span>
-              <h3 className={`font-display font-medium tracking-tight ${withBodies ? 'mt-8 text-2xl' : 'mt-4 text-lg lg:text-xl'}`}>
+              <h3
+                className={`font-display font-medium tracking-tight ${withBodies ? 'mt-8 text-2xl' : 'mt-4 text-lg lg:text-xl'}`}
+              >
                 {highlight.title}
               </h3>
               {highlight.body && <p className="mt-3 text-sm leading-relaxed text-ink/60">{highlight.body}</p>}

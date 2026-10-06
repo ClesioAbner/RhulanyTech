@@ -13,7 +13,11 @@ const stepButton =
 
 /** Compact − n + control; the number rolls in the direction of the change. */
 const QuantityStepper = ({ value, max = 99, label, onChange }: QuantityStepperProps) => (
-  <div role="group" aria-label={`Quantidade de ${label}`} className="inline-flex h-9 items-center rounded-full border border-ink/[0.12]">
+  <div
+    role="group"
+    aria-label={`Quantidade de ${label}`}
+    className="inline-flex h-9 items-center rounded-full border border-ink/[0.12]"
+  >
     <button
       type="button"
       onClick={() => onChange(value - 1)}

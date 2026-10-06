@@ -57,7 +57,10 @@ const OrderCard = ({ order, onBuyAgain }: { order: Order; onBuyAgain: (order: Or
           >
             Comprar de novo
           </button>
-          <Link to={orderPath(order)} className="inline-flex h-11 items-center rounded-full bg-ink px-5 text-sm font-medium text-paper transition-colors hover:bg-ink-soft">
+          <Link
+            to={orderPath(order)}
+            className="inline-flex h-11 items-center rounded-full bg-ink px-5 text-sm font-medium text-paper transition-colors hover:bg-ink-soft"
+          >
             Ver recibo
           </Link>
         </div>
@@ -75,7 +78,15 @@ const Account = () => {
   const openCart = useCartUi((state) => state.open);
   const [tab, setTab] = useState<Tab>('encomendas');
 
-  const [form, setForm] = useState({ name: '', phone: '', province: 'Maputo Cidade', city: 'Maputo', neighbourhood: '', street: '', reference: '' });
+  const [form, setForm] = useState({
+    name: '',
+    phone: '',
+    province: 'Maputo Cidade',
+    city: 'Maputo',
+    neighbourhood: '',
+    street: '',
+    reference: '',
+  });
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
 
   useEffect(() => {
@@ -99,7 +110,10 @@ const Account = () => {
   }, [currentUser]);
 
   const orders = useMemo(
-    () => allOrders.filter((order) => order.userId === currentUser?.id || order.customer.email.toLowerCase() === currentUser?.email.toLowerCase()),
+    () =>
+      allOrders.filter(
+        (order) => order.userId === currentUser?.id || order.customer.email.toLowerCase() === currentUser?.email.toLowerCase(),
+      ),
     [allOrders, currentUser],
   );
 
@@ -147,7 +161,11 @@ const Account = () => {
           <h1 className="type-display mt-3">Olá, {currentUser.name.split(' ')[0]}</h1>
           <p className="mt-2 text-sm text-ink/55">{currentUser.email}</p>
         </div>
-        <button type="button" onClick={signOut} className="h-11 self-start rounded-full bg-white px-5 text-sm font-medium transition-colors hover:bg-ink hover:text-paper sm:self-auto">
+        <button
+          type="button"
+          onClick={signOut}
+          className="h-11 self-start rounded-full bg-white px-5 text-sm font-medium transition-colors hover:bg-ink hover:text-paper sm:self-auto"
+        >
           Terminar sessão
         </button>
       </header>
@@ -164,9 +182,17 @@ const Account = () => {
               onClick={() => setTab(item.id)}
               className={`relative isolate h-10 rounded-full px-5 text-sm font-medium transition-colors duration-300 ${isActive ? 'text-paper' : 'text-ink/55 hover:text-ink'}`}
             >
-              {isActive && <motion.span layoutId="conta-tab" className="absolute inset-0 -z-10 rounded-full bg-ink" transition={{ duration: 0.4, ease: easeOutExpo }} />}
+              {isActive && (
+                <motion.span
+                  layoutId="conta-tab"
+                  className="absolute inset-0 -z-10 rounded-full bg-ink"
+                  transition={{ duration: 0.4, ease: easeOutExpo }}
+                />
+              )}
               {item.label}
-              {item.id === 'encomendas' && orders.length > 0 && <span className={`ml-2 tabular-nums ${isActive ? 'text-paper/60' : 'text-ink/35'}`}>{orders.length}</span>}
+              {item.id === 'encomendas' && orders.length > 0 && (
+                <span className={`ml-2 tabular-nums ${isActive ? 'text-paper/60' : 'text-ink/35'}`}>{orders.length}</span>
+              )}
             </button>
           );
         })}
@@ -191,8 +217,13 @@ const Account = () => {
             ) : (
               <div className="rounded-[28px] bg-white px-6 py-16 text-center">
                 <p className="type-heading">Ainda não tem encomendas</p>
-                <p className="mx-auto mt-3 max-w-sm text-sm text-ink/60">Quando comprar, as encomendas e os recibos aparecem aqui</p>
-                <Link to="/loja" className="mt-6 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper">
+                <p className="mx-auto mt-3 max-w-sm text-sm text-ink/60">
+                  Quando comprar, as encomendas e os recibos aparecem aqui
+                </p>
+                <Link
+                  to="/loja"
+                  className="mt-6 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper"
+                >
                   Ir para a loja
                 </Link>
               </div>
@@ -202,7 +233,13 @@ const Account = () => {
               <section className="rounded-[28px] bg-white p-6 sm:p-8">
                 <h2 className="type-heading">Dados pessoais</h2>
                 <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                  <TextField label="Nome" value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} error={errors.name} autoComplete="name" />
+                  <TextField
+                    label="Nome"
+                    value={form.name}
+                    onChange={(event) => setForm({ ...form, name: event.target.value })}
+                    error={errors.name}
+                    autoComplete="name"
+                  />
                   <TextField
                     label="Telemóvel"
                     leading="+258"
@@ -213,21 +250,44 @@ const Account = () => {
                     error={errors.phone}
                     placeholder="84 123 4567"
                   />
-                  <TextField label="Email" value={currentUser.email} disabled wrapperClassName="sm:col-span-2" hint="O email identifica a sua conta" />
+                  <TextField
+                    label="Email"
+                    value={currentUser.email}
+                    disabled
+                    wrapperClassName="sm:col-span-2"
+                    hint="O email identifica a sua conta"
+                  />
                 </div>
               </section>
               <section className="rounded-[28px] bg-white p-6 sm:p-8">
                 <h2 className="type-heading">Morada de entrega</h2>
                 <p className="mt-1.5 text-sm text-ink/55">Preenchida automaticamente na próxima compra</p>
                 <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                  <SelectField label="Província" value={form.province} onChange={(event) => setForm({ ...form, province: event.target.value })}>
+                  <SelectField
+                    label="Província"
+                    value={form.province}
+                    onChange={(event) => setForm({ ...form, province: event.target.value })}
+                  >
                     {PROVINCES.map((province) => (
                       <option key={province}>{province}</option>
                     ))}
                   </SelectField>
-                  <TextField label="Cidade ou distrito" value={form.city} onChange={(event) => setForm({ ...form, city: event.target.value })} />
-                  <TextField label="Bairro" value={form.neighbourhood} onChange={(event) => setForm({ ...form, neighbourhood: event.target.value })} />
-                  <TextField label="Rua e número" optional value={form.street} onChange={(event) => setForm({ ...form, street: event.target.value })} />
+                  <TextField
+                    label="Cidade ou distrito"
+                    value={form.city}
+                    onChange={(event) => setForm({ ...form, city: event.target.value })}
+                  />
+                  <TextField
+                    label="Bairro"
+                    value={form.neighbourhood}
+                    onChange={(event) => setForm({ ...form, neighbourhood: event.target.value })}
+                  />
+                  <TextField
+                    label="Rua e número"
+                    optional
+                    value={form.street}
+                    onChange={(event) => setForm({ ...form, street: event.target.value })}
+                  />
                   <TextField
                     label="Ponto de referência"
                     wrapperClassName="sm:col-span-2"
@@ -237,7 +297,10 @@ const Account = () => {
                   />
                 </div>
               </section>
-              <button type="submit" className="h-14 rounded-full bg-ink px-10 text-sm font-medium text-paper transition-colors hover:bg-ink-soft">
+              <button
+                type="submit"
+                className="h-14 rounded-full bg-ink px-10 text-sm font-medium text-paper transition-colors hover:bg-ink-soft"
+              >
                 Guardar alterações
               </button>
             </form>

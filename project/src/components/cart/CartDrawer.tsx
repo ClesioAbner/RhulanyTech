@@ -92,7 +92,11 @@ const CartDrawer = () => {
             className="fixed z-[71] flex flex-col bg-paper shadow-[0_40px_80px_-30px_rgba(12,12,13,0.5)] outline-none max-sm:inset-x-0 max-sm:bottom-0 max-sm:max-h-[92svh] max-sm:rounded-t-[28px] max-sm:pb-[env(safe-area-inset-bottom)] sm:bottom-3 sm:right-3 sm:top-3 sm:w-[440px] sm:rounded-[28px]"
             initial={isDesktop ? { x: '110%' } : { y: '100%' }}
             animate={isDesktop ? { x: 0 } : { y: 0 }}
-            exit={isDesktop ? { x: '110%', transition: { duration: 0.4, ease: easeOutExpo } } : { y: '100%', transition: { duration: 0.35, ease: easeOutExpo } }}
+            exit={
+              isDesktop
+                ? { x: '110%', transition: { duration: 0.4, ease: easeOutExpo } }
+                : { y: '100%', transition: { duration: 0.35, ease: easeOutExpo } }
+            }
             transition={{ duration: 0.6, ease: easeOutExpo }}
             drag={isDesktop ? false : 'y'}
             dragListener={false}
@@ -135,7 +139,11 @@ const CartDrawer = () => {
                         data-line={line.id}
                         layout
                         initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto', transition: { duration: 0.5, ease: easeOutExpo, delay: 0.15 + index * 0.04 } }}
+                        animate={{
+                          opacity: 1,
+                          height: 'auto',
+                          transition: { duration: 0.5, ease: easeOutExpo, delay: 0.15 + index * 0.04 },
+                        }}
                         exit={{ opacity: 0, height: 0, transition: { duration: 0.35, ease: easeOutExpo } }}
                         className={`overflow-hidden rounded-[22px] transition-colors duration-700 ${line.id === lastAddedId ? 'bg-white' : ''}`}
                       >
@@ -156,9 +164,7 @@ const CartDrawer = () => {
                   <p className="font-display text-[1.75rem] font-medium leading-tight tracking-tight">
                     O seu carrinho está vazio
                   </p>
-                  <p className="mt-2 text-sm leading-relaxed text-ink/60">
-                    Quando encontrar algo de que goste, junte-o aqui
-                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-ink/60">Quando encontrar algo de que goste, junte-o aqui</p>
                   <Link
                     to="/loja"
                     onClick={close}

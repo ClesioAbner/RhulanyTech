@@ -4,7 +4,7 @@ import { useCartUi } from '../stores/cartUi';
 import { imageFor, type CatalogProduct, type Finish, type OptionChoice } from './catalog';
 
 // Cart lines are keyed by product + finish + option, e.g. "1:Titânio Deserto:256GB".
-export const cartLineId = (product: CatalogProduct, finish?: Finish, option?: OptionChoice) =>
+const cartLineId = (product: CatalogProduct, finish?: Finish, option?: OptionChoice) =>
   [product.id, finish?.name, option?.label].filter(Boolean).join(':');
 
 /** Adds a configured product to the cart and opens the cart drawer on it. */

@@ -1,4 +1,11 @@
-import { forwardRef, useId, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react';
+import {
+  forwardRef,
+  useId,
+  type InputHTMLAttributes,
+  type ReactNode,
+  type SelectHTMLAttributes,
+  type TextareaHTMLAttributes,
+} from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 /*
@@ -48,7 +55,14 @@ const Frame = ({ id, label, error, hint, optional, children, className = '' }: F
   </div>
 );
 
-type BaseProps = { label: string; error?: string; hint?: ReactNode; optional?: boolean; wrapperClassName?: string; leading?: ReactNode };
+type BaseProps = {
+  label: string;
+  error?: string;
+  hint?: ReactNode;
+  optional?: boolean;
+  wrapperClassName?: string;
+  leading?: ReactNode;
+};
 
 export const TextField = forwardRef<HTMLInputElement, BaseProps & InputHTMLAttributes<HTMLInputElement>>(
   ({ label, error, hint, optional, wrapperClassName, leading, className = '', id: givenId, ...props }, ref) => {
@@ -57,7 +71,11 @@ export const TextField = forwardRef<HTMLInputElement, BaseProps & InputHTMLAttri
     return (
       <Frame id={id} label={label} error={error} hint={hint} optional={optional} className={wrapperClassName}>
         <div className="relative">
-          {leading && <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[15px] text-ink/45">{leading}</span>}
+          {leading && (
+            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[15px] text-ink/45">
+              {leading}
+            </span>
+          )}
           <input
             ref={ref}
             id={id}
@@ -88,7 +106,12 @@ export const SelectField = ({
   return (
     <Frame id={id} label={label} error={error} hint={hint} optional={optional} className={wrapperClassName}>
       <div className="relative">
-        <select id={id} aria-invalid={Boolean(error)} className={boxClass(Boolean(error), 'h-[52px] cursor-pointer appearance-none pr-10')} {...props}>
+        <select
+          id={id}
+          aria-invalid={Boolean(error)}
+          className={boxClass(Boolean(error), 'h-[52px] cursor-pointer appearance-none pr-10')}
+          {...props}
+        >
           {children}
         </select>
         <span
@@ -113,7 +136,12 @@ export const TextAreaField = ({
   const id = givenId ?? autoId;
   return (
     <Frame id={id} label={label} error={error} hint={hint} optional={optional} className={wrapperClassName}>
-      <textarea id={id} aria-invalid={Boolean(error)} className={boxClass(Boolean(error), 'block min-h-[96px] resize-none py-3.5')} {...props} />
+      <textarea
+        id={id}
+        aria-invalid={Boolean(error)}
+        className={boxClass(Boolean(error), 'block min-h-[96px] resize-none py-3.5')}
+        {...props}
+      />
     </Frame>
   );
 };

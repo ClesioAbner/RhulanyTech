@@ -1,0 +1,2 @@
+# Text files keep LF on every machine, matching Prettier; binaries are detected and left alone.
+* text=auto eol=lf

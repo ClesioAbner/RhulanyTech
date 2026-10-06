@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } fr
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } from 'framer-motion';
 import type { CatalogProduct, Finish, ResolvedView } from '../../lib/catalog';
 import { easeOutExpo } from '../../lib/motion';
-import { LazyPhoneScene } from '../payments/LazyRealisticPhone';
+import LazyPhoneScene from './webgl/LazyPhoneScene';
 import ProductImage from './ProductImage';
 
 const ANGLE_LABELS: Record<ResolvedView['angle'], string> = {
@@ -102,9 +102,7 @@ const ProductGallery = ({ product, views = product.gallery, finish }: ProductGal
     if (event.key === 'ArrowLeft') go(index - 1);
   };
 
-  const photoFallback = (
-    <ProductImage src={product.primaryImage} alt={product.title} />
-  );
+  const photoFallback = <ProductImage src={product.primaryImage} alt={product.title} />;
 
   return (
     <div>

@@ -79,7 +79,8 @@ const Showroom = () => {
   useLayoutEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
-    const measure = () => setPhoneHeight(Math.round(Math.min(stage.clientHeight * 0.84, (stage.clientWidth * 0.62) / shape.aspect)));
+    const measure = () =>
+      setPhoneHeight(Math.round(Math.min(stage.clientHeight * 0.84, (stage.clientWidth * 0.62) / shape.aspect)));
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(stage);
@@ -140,7 +141,10 @@ const Showroom = () => {
         />
       </AnimatePresence>
       {/* Spotlight and floor line */}
-      <div aria-hidden="true" className="pointer-events-none absolute -z-10 aspect-square w-[min(92vw,820px)] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.85)_0%,rgba(255,255,255,0)_66%)] max-lg:left-1/2 max-lg:top-[6%] max-lg:-translate-x-1/2 lg:right-[4%] lg:top-1/2 lg:-translate-y-1/2" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -z-10 aspect-square w-[min(92vw,820px)] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.85)_0%,rgba(255,255,255,0)_66%)] max-lg:left-1/2 max-lg:top-[6%] max-lg:-translate-x-1/2 lg:right-[4%] lg:top-1/2 lg:-translate-y-1/2"
+      />
 
       <div className="container-site grid min-h-[100svh] items-center gap-4 pb-32 pt-24 lg:grid-cols-12 lg:gap-8 lg:pb-36 lg:pt-28">
         {/* Phone */}
@@ -170,7 +174,14 @@ const Showroom = () => {
               className="absolute inset-0 flex items-center justify-center [transform-style:preserve-3d]"
               initial={{ opacity: 0, x: 260, y: 30, scale: 0.82, rotateZ: 8 }}
               animate={{ opacity: 1, x: 0, y: 0, scale: 1, rotateZ: 0 }}
-              exit={{ opacity: 0, x: -300, y: 20, scale: 0.82, rotateZ: -8, transition: { duration: 0.7, ease: [0.55, 0, 0.75, 0.2] } }}
+              exit={{
+                opacity: 0,
+                x: -300,
+                y: 20,
+                scale: 0.82,
+                rotateZ: -8,
+                transition: { duration: 0.7, ease: [0.55, 0, 0.75, 0.2] },
+              }}
               transition={{ duration: 1.5, ease: easeOutExpo }}
             >
               <motion.div
@@ -202,7 +213,11 @@ const Showroom = () => {
               </motion.p>
               <h2 className="type-display mt-4" aria-label={product.title}>
                 {words.map((text, index) => (
-                  <span key={index} aria-hidden="true" className="mr-[0.24em] inline-block overflow-hidden pb-[0.1em] align-bottom last:mr-0">
+                  <span
+                    key={index}
+                    aria-hidden="true"
+                    className="mr-[0.24em] inline-block overflow-hidden pb-[0.1em] align-bottom last:mr-0"
+                  >
                     <motion.span variants={word} className="inline-block">
                       {text}
                     </motion.span>
@@ -281,7 +296,11 @@ const Showroom = () => {
 
       {/* Phones on show, with time left on the current one */}
       <div className="absolute inset-x-0 bottom-0">
-        <div role="tablist" aria-label="Escolher telemóvel" className="container-site grid grid-cols-4 gap-2 pb-6 sm:gap-6 lg:pb-8">
+        <div
+          role="tablist"
+          aria-label="Escolher telemóvel"
+          className="container-site grid grid-cols-4 gap-2 pb-6 sm:gap-6 lg:pb-8"
+        >
           {SLIDES.map(({ product: item }, index) => {
             const active = index === slide;
             return (

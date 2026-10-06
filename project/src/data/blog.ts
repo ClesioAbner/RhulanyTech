@@ -38,14 +38,18 @@ export interface Article {
   products?: string[];
 }
 
-export const ARTICLES: Article[] = [
+const ARTICLES: Article[] = [
   {
     slug: 'como-reconhecer-burlas-por-sms-e-whatsapp',
     title: 'Como reconhecer burlas por SMS, WhatsApp e chamadas',
     excerpt: 'Falso dinheiro enviado por engano, códigos de verificação e falsos técnicos, e o que fazer se cair numa',
     topic: 'seguranca',
     date: '2026-10-04',
-    cover: { src: '/images/blog/seguranca', alt: 'Homem a analisar documentos e fotografias num quadro de investigação, ao lado de um portátil', position: '50% 38%' },
+    cover: {
+      src: '/images/blog/seguranca',
+      alt: 'Homem a analisar documentos e fotografias num quadro de investigação, ao lado de um portátil',
+      position: '50% 38%',
+    },
     summary: [
       'Nenhuma empresa séria pede o seu PIN, a palavra-passe ou o código que recebeu por SMS.',
       'Confirme sempre o saldo no próprio M-Pesa ou e-Mola antes de devolver dinheiro.',
@@ -113,7 +117,10 @@ export const ARTICLES: Article[] = [
     excerpt: 'O que usar no ecrã, nas entradas e na capa, e o que acaba com o revestimento',
     topic: 'telemoveis',
     date: '2026-10-02',
-    cover: { src: '/images/blog/limpar-telemovel', alt: 'Telemóvel sobre uma mesa de madeira com um pano branco e um frasco de spray' },
+    cover: {
+      src: '/images/blog/limpar-telemovel',
+      alt: 'Telemóvel sobre uma mesa de madeira com um pano branco e um frasco de spray',
+    },
     summary: [
       'Desligue o telemóvel e retire a capa antes de começar.',
       'Use um pano de microfibra, seco ou ligeiramente humedecido.',
@@ -295,7 +302,11 @@ export const ARTICLES: Article[] = [
     excerpt: 'Ecrã, teclado e entradas de ar, com os produtos certos e os que nunca deve usar',
     topic: 'computadores',
     date: '2026-09-17',
-    cover: { src: '/images/blog/limpar-portatil', alt: 'Mãos com luvas a limpar o teclado de um portátil com um toalhete', position: '50% 62%' },
+    cover: {
+      src: '/images/blog/limpar-portatil',
+      alt: 'Mãos com luvas a limpar o teclado de um portátil com um toalhete',
+      position: '50% 62%',
+    },
     summary: [
       'Desligue o portátil por completo e retire o carregador antes de limpar.',
       'Ecrã: pano de microfibra seco ou ligeiramente humedecido, nunca produto directamente no vidro.',
@@ -356,7 +367,10 @@ export const ARTICLES: Article[] = [
     excerpt: 'Onde a colocar, como a limpar e os sinais de que algo não está bem',
     topic: 'gaming',
     date: '2026-09-09',
-    cover: { src: '1709587797077-7a2c94411514', alt: 'PlayStation 5 e comando DualSense ao lado de um candeeiro com os símbolos PlayStation em néon' },
+    cover: {
+      src: '1709587797077-7a2c94411514',
+      alt: 'PlayStation 5 e comando DualSense ao lado de um candeeiro com os símbolos PlayStation em néon',
+    },
     summary: [
       'Deixe pelo menos 10 cm livres à volta da consola e evite móveis fechados.',
       'Uma vez por mês, aspire ou escove as entradas de ar com a consola desligada.',
@@ -458,7 +472,11 @@ export const ARTICLES: Article[] = [
     excerpt: 'Os passos certos, pela ordem certa, e como evitar fungos com a humidade',
     topic: 'camaras',
     date: '2026-08-14',
-    cover: { src: '/images/blog/camara', alt: 'Fotógrafo a segurar uma câmara Fujifilm com uma objectiva grande angular', position: '50% 55%' },
+    cover: {
+      src: '/images/blog/camara',
+      alt: 'Fotógrafo a segurar uma câmara Fujifilm com uma objectiva grande angular',
+      position: '50% 55%',
+    },
     summary: [
       'Comece sempre pela pêra de ar, depois o pincel, e só no fim o pano.',
       'A limpeza manual do sensor é delicada; se as manchas persistirem, prefira um técnico.',
@@ -735,3 +753,6 @@ export const topicLabel = (topic: BlogTopic) => BLOG_TOPICS.find((item) => item.
 
 const dateFormatter = new Intl.DateTimeFormat('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' });
 export const formatArticleDate = (iso: string) => dateFormatter.format(new Date(`${iso}T12:00:00`));
+
+/** Every guide, newest first. */
+export const ARTICLES_BY_DATE = [...ARTICLES].sort((a, b) => b.date.localeCompare(a.date));

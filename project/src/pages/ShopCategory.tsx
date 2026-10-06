@@ -5,7 +5,7 @@ import { categoryPath, getCategory, getSubcategory, priceFrom, productsIn, sortP
 import { formatPrice } from '../lib/format';
 import { isCutout } from '../lib/images';
 import { easeOutExpo } from '../lib/motion';
-import Catalogue from '../components/shop/Catalogue';
+import Catalogue from '../components/shop/catalogue/Catalogue';
 import ProductImage from '../components/product/ProductImage';
 
 // Three products fanned out in the header, the middle one in front.
@@ -23,7 +23,10 @@ const ShopCategory = () => {
 
   const products = useMemo(() => (category ? productsIn(category.slug, subcategory?.slug) : []), [category, subcategory]);
   const faces = useMemo(
-    () => sortProducts(products, 'destaque').filter((p) => isCutout(p.primaryImage)).slice(0, 3),
+    () =>
+      sortProducts(products, 'destaque')
+        .filter((p) => isCutout(p.primaryImage))
+        .slice(0, 3),
     [products],
   );
 
@@ -32,7 +35,9 @@ const ShopCategory = () => {
       <div className="container-site py-32 text-center">
         <p className="eyebrow text-ink/45">Loja</p>
         <h1 className="type-display mt-4">Esta secção não existe</h1>
-        <p className="mx-auto mt-3 max-w-sm text-sm text-ink/60">O endereço pode estar incompleto ou a gama já não estar disponível.</p>
+        <p className="mx-auto mt-3 max-w-sm text-sm text-ink/60">
+          O endereço pode estar incompleto ou a gama já não estar disponível.
+        </p>
         <Link to="/loja" className="mt-8 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper">
           Voltar à loja
         </Link>
@@ -61,7 +66,9 @@ const ShopCategory = () => {
                     const last = index === list.length - 1;
                     return (
                       <li key={crumb.to} className="flex items-center gap-2">
-                        {index > 0 && <span aria-hidden="true" className="block h-[5px] w-[5px] -rotate-45 border-b border-r border-ink/35" />}
+                        {index > 0 && (
+                          <span aria-hidden="true" className="block h-[5px] w-[5px] -rotate-45 border-b border-r border-ink/35" />
+                        )}
                         {last ? (
                           <span aria-current="page" className="font-medium text-ink">
                             {crumb.label}

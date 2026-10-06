@@ -4,7 +4,7 @@ import { CATALOG, CATEGORIES, categoryFace, categoryPath, productsIn } from '../
 import { easeOutExpo, inViewOnce } from '../lib/motion';
 import { STORE } from '../data/store';
 import Showroom from '../components/shop/Showroom';
-import Catalogue from '../components/shop/Catalogue';
+import Catalogue from '../components/shop/catalogue/Catalogue';
 import ProductImage from '../components/product/ProductImage';
 import { PhoneIcon, WhatsAppIcon } from '../components/ui/Icons';
 
@@ -39,7 +39,14 @@ const Shop = () => (
         {CATEGORIES.map((category, index) => {
           const face = categoryFace(category.slug);
           return (
-            <motion.li key={category.slug} custom={index} variants={reveal} initial="hidden" whileInView="visible" viewport={inViewOnce}>
+            <motion.li
+              key={category.slug}
+              custom={index}
+              variants={reveal}
+              initial="hidden"
+              whileInView="visible"
+              viewport={inViewOnce}
+            >
               <Link
                 to={categoryPath(category.slug)}
                 className="group block overflow-hidden rounded-[22px] bg-white ring-1 ring-ink/[0.06] transition-[box-shadow,transform] duration-500 ease-out-expo hover:-translate-y-1 hover:shadow-[0_28px_50px_-32px_rgba(12,12,13,0.32)]"
@@ -69,7 +76,9 @@ const Shop = () => (
         <h2 id="catalogo-titulo" className="type-title mt-3">
           Todos os produtos
         </h2>
-        <p className="type-lead mt-3 max-w-xl text-ink/60">Originais, com garantia e entrega em todo o país. Filtre por marca, preço ou disponibilidade.</p>
+        <p className="type-lead mt-3 max-w-xl text-ink/60">
+          Originais, com garantia e entrega em todo o país. Filtre por marca, preço ou disponibilidade.
+        </p>
       </div>
       <Catalogue products={CATALOG} />
     </section>
@@ -78,7 +87,15 @@ const Shop = () => (
     <section aria-label="Porquê comprar na Rhulany Tech" className="container-site mt-24 lg:mt-32">
       <ul className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
         {SERVICES.map((service, index) => (
-          <motion.li key={service.title} custom={index} variants={reveal} initial="hidden" whileInView="visible" viewport={inViewOnce} className="rounded-[22px] bg-white p-6 ring-1 ring-ink/[0.06] lg:p-7">
+          <motion.li
+            key={service.title}
+            custom={index}
+            variants={reveal}
+            initial="hidden"
+            whileInView="visible"
+            viewport={inViewOnce}
+            className="rounded-[22px] bg-white p-6 ring-1 ring-ink/[0.06] lg:p-7"
+          >
             <h3 className="font-medium">{service.title}</h3>
             <p className="mt-1.5 text-sm leading-relaxed text-ink/60">{service.body}</p>
           </motion.li>

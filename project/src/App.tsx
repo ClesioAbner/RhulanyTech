@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useRef } from 'react';
 import { Navigate, Routes, Route, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { MotionConfig } from 'framer-motion';
 import Home from './pages/Home';
-import Footer from './components/Footer';
+import Footer from './components/layout/Footer';
 import Header from './components/layout/Header';
 import CartDrawer from './components/cart/CartDrawer';
 import { LEGACY_CATEGORY_PATHS, getProductById, productPath } from './lib/catalog';
@@ -18,7 +18,6 @@ const About = lazy(() => import('./pages/About'));
 const Contact = lazy(() => import('./pages/Contact'));
 const Blog = lazy(() => import('./pages/Blog'));
 const BlogPost = lazy(() => import('./pages/BlogPost'));
-const AIRecommendation = lazy(() => import('./components/AIRecommendation'));
 const OrderConfirmation = lazy(() => import('./pages/OrderConfirmation'));
 const SignIn = lazy(() => import('./pages/SignIn'));
 const Account = lazy(() => import('./pages/Account'));
@@ -116,7 +115,6 @@ function App() {
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/about" element={<Navigate to="/sobre" replace />} />
               <Route path="/academy" element={<Navigate to="/blog" replace />} />
-              <Route path="/ai-recommendation" element={<AIRecommendation />} />
             </Routes>
           </Suspense>
         </main>

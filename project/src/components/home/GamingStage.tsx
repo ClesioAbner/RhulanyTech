@@ -21,8 +21,24 @@ const PIECES: Piece[] = [
   { src: `${P}xbox-series-x-1tb`, alt: 'Xbox Series X', left: 11, top: 15, width: 22, rotate: 0, travel: 30 },
   { src: `${P}asus-rog-ally`, alt: 'ASUS ROG Ally', left: 50, top: 14, width: 40, rotate: 8, travel: 50 },
   { src: `${P}nintendo-switch-2`, alt: 'Nintendo Switch 2', left: 22, top: 47, width: 52, rotate: -4, travel: 80 },
-  { src: `${P}comando-sem-fios-dualsense-midnight-black`, alt: 'Comando DualSense Midnight Black', left: 3, top: 62, width: 25, rotate: -18, travel: 120 },
-  { src: `${P}comando-sem-fios-dualsense-nova-pink`, alt: 'Comando DualSense Nova Pink', left: 67, top: 52, width: 27, rotate: 16, travel: 140 },
+  {
+    src: `${P}comando-sem-fios-dualsense-midnight-black`,
+    alt: 'Comando DualSense Midnight Black',
+    left: 3,
+    top: 62,
+    width: 25,
+    rotate: -18,
+    travel: 120,
+  },
+  {
+    src: `${P}comando-sem-fios-dualsense-nova-pink`,
+    alt: 'Comando DualSense Nova Pink',
+    left: 67,
+    top: 52,
+    width: 27,
+    rotate: 16,
+    travel: 140,
+  },
 ];
 
 const StagePiece = ({ piece, progress, index }: { piece: Piece; progress: MotionValue<number>; index: number }) => {

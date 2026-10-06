@@ -8,7 +8,7 @@ import { itemCountLabel } from '../../lib/cart';
 import RollingPrice from '../cart/RollingPrice';
 import ProductImage from '../product/ProductImage';
 
-export interface SummaryLine {
+interface SummaryLine {
   id: string;
   title: string;
   variant: string;

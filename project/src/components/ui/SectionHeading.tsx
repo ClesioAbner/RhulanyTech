@@ -33,10 +33,7 @@ const SectionHeading = ({ id, index, eyebrow, title, action, tone = 'light', ali
           <span aria-hidden="true" className="h-px w-8 bg-current" />
           <span>{eyebrow}</span>
         </motion.p>
-        <h2
-          id={id}
-          className="type-display mt-5 max-w-3xl overflow-hidden pb-[0.1em]"
-        >
+        <h2 id={id} className="type-display mt-5 max-w-3xl overflow-hidden pb-[0.1em]">
           <motion.span
             className="block"
             initial={{ y: '100%' }}

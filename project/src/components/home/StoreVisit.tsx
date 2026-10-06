@@ -11,7 +11,11 @@ const DETAILS = [
 
 /** Closing call to visit the shop: the copy beside a display table of phones, then the shop details. */
 const StoreVisit = () => (
-  <section id="visitar" className="relative isolate scroll-mt-24 overflow-hidden bg-ink text-paper" aria-labelledby="visitar-titulo">
+  <section
+    id="visitar"
+    className="relative isolate scroll-mt-24 overflow-hidden bg-ink text-paper"
+    aria-labelledby="visitar-titulo"
+  >
     {/* Warm light from above, like the shop floor */}
     <div
       aria-hidden="true"
@@ -36,8 +40,8 @@ const StoreVisit = () => (
             Experimente antes de comprar
           </h2>
           <p className="mt-6 max-w-md text-base leading-relaxed text-paper/70 sm:text-lg">
-            Venha ver os equipamentos de perto, testar teclados e ecrãs e sair com tudo configurado. Ou fale connosco
-            pelo WhatsApp durante o horário de loja
+            Venha ver os equipamentos de perto, testar teclados e ecrãs e sair com tudo configurado. Ou fale connosco pelo
+            WhatsApp durante o horário de loja
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <a

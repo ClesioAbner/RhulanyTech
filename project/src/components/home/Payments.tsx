@@ -41,7 +41,12 @@ const Payments = ({
   const method = PAYMENT_METHODS[current];
 
   return (
-    <section id="pagamentos" ref={sectionRef} className="relative h-[460vh] border-t border-ink/10" aria-labelledby="pagamentos-titulo">
+    <section
+      id="pagamentos"
+      ref={sectionRef}
+      className="relative h-[460vh] border-t border-ink/10"
+      aria-labelledby="pagamentos-titulo"
+    >
       <ul className="sr-only">
         {PAYMENT_METHODS.map((item) => (
           <li key={item.name}>

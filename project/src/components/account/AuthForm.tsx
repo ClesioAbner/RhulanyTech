@@ -93,7 +93,13 @@ const AuthForm = ({ mode, onModeChange, onSuccess }: AuthFormProps) => {
               onClick={() => onModeChange(item.id)}
               className={`relative isolate h-11 rounded-full text-sm font-medium transition-colors duration-300 ${isActive ? 'text-paper' : 'text-ink/55 hover:text-ink'}`}
             >
-              {isActive && <motion.span layoutId="auth-modo" className="absolute inset-0 -z-10 rounded-full bg-ink" transition={{ duration: 0.4, ease: easeOutExpo }} />}
+              {isActive && (
+                <motion.span
+                  layoutId="auth-modo"
+                  className="absolute inset-0 -z-10 rounded-full bg-ink"
+                  transition={{ duration: 0.4, ease: easeOutExpo }}
+                />
+              )}
               {item.label}
             </button>
           );
@@ -205,7 +211,11 @@ const AuthForm = ({ mode, onModeChange, onSuccess }: AuthFormProps) => {
 
       <p className="mt-6 text-center text-sm text-ink/55">
         {mode === 'entrar' ? 'Ainda não tem conta? ' : 'Já tem conta? '}
-        <button type="button" onClick={() => onModeChange(mode === 'entrar' ? 'criar' : 'entrar')} className="link-underline font-medium text-ink">
+        <button
+          type="button"
+          onClick={() => onModeChange(mode === 'entrar' ? 'criar' : 'entrar')}
+          className="link-underline font-medium text-ink"
+        >
           {mode === 'entrar' ? 'Criar conta' : 'Entrar'}
         </button>
       </p>

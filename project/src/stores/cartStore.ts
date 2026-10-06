@@ -33,18 +33,14 @@ export const useCartStore = create<CartStore>()(
       addToCart: (item) => {
         const { items } = get();
         const existingItem = items.find((i) => i.id === item.id);
-        
+
         if (existingItem) {
           const newQuantity = existingItem.quantity + (item.quantity || 1);
           const maxQuantity = item.maxQuantity || 99;
-          
+
           if (newQuantity <= maxQuantity) {
-            const updatedItems = items.map((i) =>
-              i.id === item.id
-                ? { ...i, quantity: newQuantity }
-                : i
-            );
-            
+            const updatedItems = items.map((i) => (i.id === item.id ? { ...i, quantity: newQuantity } : i));
+
             set({
               items: updatedItems,
               total: updatedItems.reduce((sum, i) => sum + i.price * i.quantity, 0),
@@ -53,10 +49,10 @@ export const useCartStore = create<CartStore>()(
         } else {
           const newItem: CartItem = {
             ...item,
-            quantity: item.quantity || 1
+            quantity: item.quantity || 1,
           };
           const newItems = [...items, newItem];
-          
+
           set({
             items: newItems,
             total: newItems.reduce((sum, i) => sum + i.price * i.quantity, 0),
@@ -67,7 +63,7 @@ export const useCartStore = create<CartStore>()(
       removeFromCart: (id) => {
         const { items } = get();
         const newItems = items.filter((i) => i.id !== id);
-        
+
         set({
           items: newItems,
           total: newItems.reduce((sum, i) => sum + i.price * i.quantity, 0),
@@ -76,16 +72,14 @@ export const useCartStore = create<CartStore>()(
 
       updateQuantity: (id, quantity) => {
         const { items } = get();
-        
+
         if (quantity <= 0) {
           get().removeFromCart(id);
           return;
         }
-        
-        const updatedItems = items.map((i) =>
-          i.id === id ? { ...i, quantity: Math.min(quantity, i.maxQuantity || 99) } : i
-        );
-        
+
+        const updatedItems = items.map((i) => (i.id === id ? { ...i, quantity: Math.min(quantity, i.maxQuantity || 99) } : i));
+
         set({
           items: updatedItems,
           total: updatedItems.reduce((sum, i) => sum + i.price * i.quantity, 0),
@@ -101,20 +95,20 @@ export const useCartStore = create<CartStore>()(
 
       getItemById: (id) => {
         const { items } = get();
-        return items.find(item => item.id === id);
+        return items.find((item) => item.id === id);
       },
 
       isInCart: (id) => {
         const { items } = get();
-        return items.some(item => item.id === id);
-      }
+        return items.some((item) => item.id === id);
+      },
     }),
     {
       name: 'rhulany-tech-cart',
       partialize: (state) => ({
         items: state.items,
-        total: state.total
-      })
-    }
-  )
+        total: state.total,
+      }),
+    },
+  ),
 );

@@ -1,13 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import {
-  motion,
-  useMotionValue,
-  useMotionValueEvent,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from 'framer-motion';
+import { motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
 import ShowcasePhone from '../payments/ShowcasePhone';
 import type { ScreenKey } from '../payments/screens';
 import { useMediaQuery } from '../../lib/useMediaQuery';
@@ -97,13 +89,19 @@ const ShopToPayments = () => {
     past <= release ? 0 : Math.min(1, (past - release) / Math.max(1, height - release)),
   );
 
-  const x = useTransform([fall, startX, endX, layoutVersion], ([f, from, to]: number[]) => from + (to - from) * easeInOutCubic(f));
-  const y = useTransform([fall, pastShopTop, releaseAt, startY, endY, layoutVersion], ([f, past, release, from, to]: number[]) => {
-    if (f <= 0) return from - past; // riding along with its card
-    const releasedAt = from - release;
-    const { drop, rise } = fallTravel(f);
-    return releasedAt + (to - releasedAt) * drop - rise * 48;
-  });
+  const x = useTransform(
+    [fall, startX, endX, layoutVersion],
+    ([f, from, to]: number[]) => from + (to - from) * easeInOutCubic(f),
+  );
+  const y = useTransform(
+    [fall, pastShopTop, releaseAt, startY, endY, layoutVersion],
+    ([f, past, release, from, to]: number[]) => {
+      if (f <= 0) return from - past; // riding along with its card
+      const releasedAt = from - release;
+      const { drop, rise } = fallTravel(f);
+      return releasedAt + (to - releasedAt) * drop - rise * 48;
+    },
+  );
   const scale = useTransform(
     [fall, startScale, layoutVersion],
     ([f, from]: number[]) => (from + (1 - from) * easeInOutCubic(f)) * fallLiftScale(f),
@@ -215,9 +213,7 @@ const ShopToPayments = () => {
         headingOpacity={isDesktop ? headingOpacity : undefined}
         listOpacity={listOpacity}
         listY={listY}
-        mobilePhone={
-          isDesktop ? null : { rotateX: phoneRotateXMobile, rotateY: phoneRotateYMobile, rotateZ: phoneRotateZMobile }
-        }
+        mobilePhone={isDesktop ? null : { rotateX: phoneRotateXMobile, rotateY: phoneRotateYMobile, rotateZ: phoneRotateZMobile }}
       />
 
       {/* Shared phone layer (desktop) */}

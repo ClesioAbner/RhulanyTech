@@ -140,7 +140,11 @@ const CategoryGrid = () => (
                 {/* Name, count and the way in */}
                 <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-4 p-6 lg:p-8">
                   <div>
-                    <h3 className={`font-display font-medium tracking-tight ${wide ? 'text-2xl lg:text-3xl' : 'text-xl lg:text-2xl'}`}>{category.name}</h3>
+                    <h3
+                      className={`font-display font-medium tracking-tight ${wide ? 'text-2xl lg:text-3xl' : 'text-xl lg:text-2xl'}`}
+                    >
+                      {category.name}
+                    </h3>
                     <p className="mt-1 text-sm tabular-nums text-ink/50">{productsIn(category.slug).length} produtos</p>
                   </div>
                   <span

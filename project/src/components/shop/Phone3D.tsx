@@ -1,14 +1,7 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
-import {
-  animate,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-  type MotionValue,
-} from 'framer-motion';
-import PhoneBody, { mixColor } from '../product/PhoneBody';
+import { animate, motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from 'framer-motion';
+import PhoneBody from '../product/PhoneBody';
+import { mixColor } from '../../lib/color';
 
 /** Physical shape of a phone, relative to its width. */
 export interface PhoneShape {
@@ -43,7 +36,17 @@ const today = new Intl.DateTimeFormat('pt-PT', { weekday: 'long', day: 'numeric'
 const DATE = today.charAt(0).toUpperCase() + today.slice(1);
 
 /** Lock screen in the phone's colour: wallpaper, front camera, date and time. */
-const LockScreen = ({ frame, width, height, camera }: { frame: string; width: number; height: number; camera: PhoneShape['camera'] }) => (
+const LockScreen = ({
+  frame,
+  width,
+  height,
+  camera,
+}: {
+  frame: string;
+  width: number;
+  height: number;
+  camera: PhoneShape['camera'];
+}) => (
   <div
     className="absolute inset-0"
     style={{
@@ -51,19 +54,31 @@ const LockScreen = ({ frame, width, height, camera }: { frame: string; width: nu
     }}
   >
     {camera === 'island' ? (
-      <span className="absolute left-1/2 -translate-x-1/2 rounded-full bg-black" style={{ top: height * 0.018, width: width * 0.3, height: height * 0.034 }} />
+      <span
+        className="absolute left-1/2 -translate-x-1/2 rounded-full bg-black"
+        style={{ top: height * 0.018, width: width * 0.3, height: height * 0.034 }}
+      />
     ) : (
-      <span className="absolute left-1/2 -translate-x-1/2 rounded-full bg-black" style={{ top: height * 0.02, width: width * 0.052, height: width * 0.052 }} />
+      <span
+        className="absolute left-1/2 -translate-x-1/2 rounded-full bg-black"
+        style={{ top: height * 0.02, width: width * 0.052, height: width * 0.052 }}
+      />
     )}
     <div className="absolute inset-x-0 text-center text-white" style={{ top: height * 0.1 }}>
       <p className="font-medium text-white/85" style={{ fontSize: width * 0.055 }}>
         {DATE}
       </p>
-      <p className="font-display font-semibold leading-none tracking-tight" style={{ fontSize: width * 0.27, marginTop: width * 0.01 }}>
+      <p
+        className="font-display font-semibold leading-none tracking-tight"
+        style={{ fontSize: width * 0.27, marginTop: width * 0.01 }}
+      >
         {TIME}
       </p>
     </div>
-    <span className="absolute left-1/2 -translate-x-1/2 rounded-full bg-white/80" style={{ bottom: height * 0.012, width: width * 0.36, height: Math.max(3, height * 0.006) }} />
+    <span
+      className="absolute left-1/2 -translate-x-1/2 rounded-full bg-white/80"
+      style={{ bottom: height * 0.012, width: width * 0.36, height: Math.max(3, height * 0.006) }}
+    />
   </div>
 );
 

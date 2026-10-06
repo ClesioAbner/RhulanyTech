@@ -51,11 +51,30 @@ const ENTRIES: Entry[] = [
     summary: 'O iPhone mais potente, com o maior ecrã e a maior bateria de sempre',
     overview:
       'O iPhone 17 Pro Max estreia um corpo unibody em alumínio com câmara de vapor para dissipar calor, o que lhe permite manter o desempenho do chip A19 Pro em jogos e edição de vídeo longos. O sistema de três câmaras de 48MP inclui uma teleobjectiva com zoom óptico de 4x, e o ecrã de 6,9 polegadas com ProMotion chega aos 120 Hz.',
-    specs: ['Chip A19 Pro', 'Ecrã Super Retina XDR de 6,9" com ProMotion', 'Três câmaras Fusion de 48MP', 'Teleobjectiva com zoom óptico de 4x', 'Câmara frontal Center Stage de 18MP', 'Corpo unibody em alumínio'],
+    specs: [
+      'Chip A19 Pro',
+      'Ecrã Super Retina XDR de 6,9" com ProMotion',
+      'Três câmaras Fusion de 48MP',
+      'Teleobjectiva com zoom óptico de 4x',
+      'Câmara frontal Center Stage de 18MP',
+      'Corpo unibody em alumínio',
+    ],
     colours: [
-      ['Laranja cósmico', '#d9772f', '/images/produtos/iphone-17-pro-laranja', '1758327059164-396c3602b8f5', '1759203302534-c6e71c93e886'],
+      [
+        'Laranja cósmico',
+        '#d9772f',
+        '/images/produtos/iphone-17-pro-laranja',
+        '1758327059164-396c3602b8f5',
+        '1759203302534-c6e71c93e886',
+      ],
       ['Azul profundo', '#2b3a55', '/images/produtos/iphone-17-pro-azul', '1758578938566-c986f710feb6'],
-      ['Prateado', '#d9d9db', '/images/produtos/iphone-17-pro-prateado', '1759588071781-2c3ba9128497', '1759588073186-1d4ac7e33623'],
+      [
+        'Prateado',
+        '#d9d9db',
+        '/images/produtos/iphone-17-pro-prateado',
+        '1759588071781-2c3ba9128497',
+        '1759588073186-1d4ac7e33623',
+      ],
     ],
     storage: storage(['256GB', 0], ['512GB', 25000], ['1TB', 50000], ['2TB', 100000]),
     highlights: [
@@ -83,11 +102,30 @@ const ENTRIES: Entry[] = [
     summary: 'Desempenho Pro e três câmaras de 48MP num formato de 6,3"',
     overview:
       'Tudo o que define a gama Pro, num tamanho que cabe confortavelmente na mão. O iPhone 17 Pro partilha o chip A19 Pro, o sistema de três câmaras de 48MP e a teleobjectiva de 4x com o modelo Max, com um ecrã ProMotion de 6,3 polegadas.',
-    specs: ['Chip A19 Pro', 'Ecrã Super Retina XDR de 6,3" com ProMotion', 'Três câmaras Fusion de 48MP', 'Teleobjectiva com zoom óptico de 4x', 'Câmara frontal Center Stage de 18MP'],
+    specs: [
+      'Chip A19 Pro',
+      'Ecrã Super Retina XDR de 6,3" com ProMotion',
+      'Três câmaras Fusion de 48MP',
+      'Teleobjectiva com zoom óptico de 4x',
+      'Câmara frontal Center Stage de 18MP',
+    ],
     colours: [
-      ['Laranja cósmico', '#d9772f', '/images/produtos/iphone-17-pro-laranja', '1757709608566-4b9fd41a7af5', '1764746049934-69d8beed54b9'],
+      [
+        'Laranja cósmico',
+        '#d9772f',
+        '/images/produtos/iphone-17-pro-laranja',
+        '1757709608566-4b9fd41a7af5',
+        '1764746049934-69d8beed54b9',
+      ],
       ['Azul profundo', '#2b3a55', '/images/produtos/iphone-17-pro-azul', '1758578938566-c986f710feb6'],
-      ['Prateado', '#d9d9db', '/images/produtos/iphone-17-pro-prateado', '1759588071781-2c3ba9128497', '1759588073186-1d4ac7e33623', '1759588071838-d560be56b2a2'],
+      [
+        'Prateado',
+        '#d9d9db',
+        '/images/produtos/iphone-17-pro-prateado',
+        '1759588071781-2c3ba9128497',
+        '1759588073186-1d4ac7e33623',
+        '1759588071838-d560be56b2a2',
+      ],
     ],
     storage: storage(['256GB', 0], ['512GB', 25000], ['1TB', 50000]),
     rating: 4.9,
@@ -109,12 +147,24 @@ const ENTRIES: Entry[] = [
     summary: 'O iPhone mais fino de sempre, com o poder de um Pro',
     overview:
       'Com apenas 5,6 mm de espessura e uma estrutura em titânio, o iPhone Air é o iPhone mais fino alguma vez feito. Por dentro tem o chip A19 Pro e um ecrã ProMotion de 6,5 polegadas, e atrás uma câmara Fusion de 48MP que faz o trabalho de várias lentes.',
-    specs: ['Chip A19 Pro', 'Ecrã Super Retina XDR de 6,5" com ProMotion', 'Câmara Fusion de 48MP', 'Estrutura em titânio', '5,6 mm de espessura'],
+    specs: [
+      'Chip A19 Pro',
+      'Ecrã Super Retina XDR de 6,5" com ProMotion',
+      'Câmara Fusion de 48MP',
+      'Estrutura em titânio',
+      '5,6 mm de espessura',
+    ],
     colours: [
       ['Azul-céu', '#d3e0ec', '/images/produtos/iphone-air-azul'],
       ['Dourado-claro', '#e7d7b8', '/images/produtos/iphone-air-dourado', '1758348844327-b70d25c7589c'],
       ['Branco-nuvem', '#ececea', '/images/produtos/iphone-air-branco'],
-      ['Preto-espacial', '#2a2a2c', '/images/produtos/iphone-air-preto', '1758682663464-69d0d62fa2be', '1758682663454-8cc7515c5e21'],
+      [
+        'Preto-espacial',
+        '#2a2a2c',
+        '/images/produtos/iphone-air-preto',
+        '1758682663464-69d0d62fa2be',
+        '1758682663454-8cc7515c5e21',
+      ],
     ],
     storage: storage(['256GB', 0], ['512GB', 25000], ['1TB', 50000]),
     rating: 4.7,
@@ -136,7 +186,13 @@ const ENTRIES: Entry[] = [
     summary: 'Ecrã ProMotion e duas câmaras de 48MP, pela primeira vez no modelo base',
     overview:
       'O iPhone 17 traz ao modelo de entrada funcionalidades antes reservadas à gama Pro: ecrã ProMotion de 6,3 polegadas até 120 Hz e sempre ligado, duas câmaras traseiras de 48MP e uma câmara frontal Center Stage que se ajusta automaticamente às selfies de grupo.',
-    specs: ['Chip A19', 'Ecrã Super Retina XDR de 6,3" com ProMotion', 'Câmara Fusion de 48MP', 'Ultra grande angular de 48MP', 'Câmara frontal Center Stage de 18MP'],
+    specs: [
+      'Chip A19',
+      'Ecrã Super Retina XDR de 6,3" com ProMotion',
+      'Câmara Fusion de 48MP',
+      'Ultra grande angular de 48MP',
+      'Câmara frontal Center Stage de 18MP',
+    ],
     colours: [
       ['Lavanda', '#cdbfe0', '/images/produtos/iphone-17-lavanda', '1758467700578-7491a5c7eedd'],
       ['Azul-névoa', '#a9bbd6', '/images/produtos/iphone-17-azul'],
@@ -166,7 +222,13 @@ const ENTRIES: Entry[] = [
       'O iPhone 16 junta o chip A18 a uma câmara Fusion de 48MP e ao novo Controlo da Câmara, que abre a câmara e ajusta o zoom com um gesto. O botão de Acção personalizável e as cores intensas completam um iPhone pensado para durar muitos anos.',
     specs: ['Chip A18', 'Ecrã Super Retina XDR de 6,1"', 'Câmara Fusion de 48MP', 'Controlo da Câmara', 'Botão de Acção'],
     colours: [
-      ['Ultramarino', '#5f7fd9', '/images/produtos/iphone-16-ultramarino', '1726828537956-61ae115d7d7a', '1726732946451-98690db97aae'],
+      [
+        'Ultramarino',
+        '#5f7fd9',
+        '/images/produtos/iphone-16-ultramarino',
+        '1726828537956-61ae115d7d7a',
+        '1726732946451-98690db97aae',
+      ],
       ['Verde-azulado', '#7fa6a3', '/images/produtos/iphone-16-verde-azulado'],
       ['Rosa', '#f2c4d3', '/images/produtos/iphone-16-rosa'],
       ['Branco', '#ededeb', '/images/produtos/iphone-16-branco'],
@@ -192,11 +254,36 @@ const ENTRIES: Entry[] = [
     summary: 'Titânio, chip A17 Pro e teleobjectiva de 3x',
     overview:
       'O primeiro iPhone em titânio continua a ser uma excelente escolha Pro: chip A17 Pro com desempenho de consola em jogos, câmara principal de 48MP com teleobjectiva de 3x e porta USB-C com velocidades USB 3.',
-    specs: ['Chip A17 Pro', 'Ecrã Super Retina XDR de 6,1" com ProMotion', 'Câmara principal de 48MP', 'Teleobjectiva de 3x', 'USB-C (USB 3)'],
+    specs: [
+      'Chip A17 Pro',
+      'Ecrã Super Retina XDR de 6,1" com ProMotion',
+      'Câmara principal de 48MP',
+      'Teleobjectiva de 3x',
+      'USB-C (USB 3)',
+    ],
     colours: [
-      ['Titânio Natural', '#b8b3aa', '/images/produtos/iphone-15-pro-natural', '1718223483120-8131e57f948b', '1695048132832-b41495f12eb4'],
-      ['Titânio Azul', '#3f4757', '/images/produtos/iphone-15-pro-azul', '1710023038502-ba80a70a9f53', '1697284959152-32ef13855932', '1704380895316-caa2e4d68a7e'],
-      ['Titânio Branco', '#e6e4df', '/images/produtos/iphone-15-pro-branco', '1737190892130-fc90e4040877', '1737190892098-784bdd31b862'],
+      [
+        'Titânio Natural',
+        '#b8b3aa',
+        '/images/produtos/iphone-15-pro-natural',
+        '1718223483120-8131e57f948b',
+        '1695048132832-b41495f12eb4',
+      ],
+      [
+        'Titânio Azul',
+        '#3f4757',
+        '/images/produtos/iphone-15-pro-azul',
+        '1710023038502-ba80a70a9f53',
+        '1697284959152-32ef13855932',
+        '1704380895316-caa2e4d68a7e',
+      ],
+      [
+        'Titânio Branco',
+        '#e6e4df',
+        '/images/produtos/iphone-15-pro-branco',
+        '1737190892130-fc90e4040877',
+        '1737190892098-784bdd31b862',
+      ],
       ['Titânio Preto', '#3a3a3c', '/images/produtos/iphone-15-pro-preto', '1695639509828-d4260075e370'],
     ],
     storage: storage(['128GB', 0], ['256GB', 15000], ['512GB', 40000]),
@@ -277,10 +364,24 @@ const ENTRIES: Entry[] = [
     summary: 'Câmara de 200MP, S Pen e Galaxy AI em titânio',
     overview:
       'O Galaxy S25 Ultra combina uma estrutura em titânio, o processador Snapdragon 8 Elite for Galaxy e uma câmara principal de 200MP. A S Pen integrada e as funções Galaxy AI, como a tradução em tempo real e a edição generativa de fotografias, fazem dele uma ferramenta de trabalho completa.',
-    specs: ['Snapdragon 8 Elite for Galaxy', 'Ecrã Dynamic AMOLED 2X de 6,9" a 120 Hz', 'Câmara principal de 200MP', 'Teleobjectivas de 3x e 5x', 'S Pen integrada', 'Estrutura em titânio'],
+    specs: [
+      'Snapdragon 8 Elite for Galaxy',
+      'Ecrã Dynamic AMOLED 2X de 6,9" a 120 Hz',
+      'Câmara principal de 200MP',
+      'Teleobjectivas de 3x e 5x',
+      'S Pen integrada',
+      'Estrutura em titânio',
+    ],
     colours: [
       ['Titanium Silverblue', '#a7b3c2', '/images/produtos/galaxy-s25-ultra-silverblue'],
-      ['Titanium Jadegreen', '#a7b8a8', '/images/produtos/galaxy-s25-ultra-jadegreen', '1738830251513-a7bfef4b53c6', '1738830228067-ede76105594a', '1738830234395-a351829a1c7b'],
+      [
+        'Titanium Jadegreen',
+        '#a7b8a8',
+        '/images/produtos/galaxy-s25-ultra-jadegreen',
+        '1738830251513-a7bfef4b53c6',
+        '1738830228067-ede76105594a',
+        '1738830234395-a351829a1c7b',
+      ],
       ['Titanium Gray', '#8a8b8b', '/images/produtos/galaxy-s25-ultra-gray'],
       ['Titanium Black', '#2f3134', '/images/produtos/galaxy-s25-ultra-black'],
     ],
@@ -304,7 +405,13 @@ const ENTRIES: Entry[] = [
     summary: 'Topo de gama compacto com Galaxy AI',
     overview:
       'Todo o desempenho do Snapdragon 8 Elite for Galaxy num formato de 6,2 polegadas fácil de usar com uma mão. O Galaxy S25 tem câmara tripla com teleobjectiva de 3x e recebe sete anos de actualizações do sistema.',
-    specs: ['Snapdragon 8 Elite for Galaxy', 'Ecrã Dynamic AMOLED 2X de 6,2" a 120 Hz', 'Câmara principal de 50MP', 'Teleobjectiva de 3x', '7 anos de actualizações'],
+    specs: [
+      'Snapdragon 8 Elite for Galaxy',
+      'Ecrã Dynamic AMOLED 2X de 6,2" a 120 Hz',
+      'Câmara principal de 50MP',
+      'Teleobjectiva de 3x',
+      '7 anos de actualizações',
+    ],
     colours: [
       ['Icyblue', '#c9d8e6', '/images/produtos/galaxy-s25-icyblue'],
       ['Navy', '#2d3b5c', '/images/produtos/galaxy-s25-navy', '1744399335781-528757813604'],
@@ -331,9 +438,21 @@ const ENTRIES: Entry[] = [
     summary: 'Um telemóvel que se abre num ecrã de 7,6"',
     overview:
       'Fechado, o Galaxy Z Fold6 é um telemóvel com ecrã de 6,3 polegadas; aberto, transforma-se num ecrã de 7,6 polegadas para trabalhar com várias aplicações lado a lado, ler documentos ou ver vídeo. Mais leve e mais fino do que a geração anterior.',
-    specs: ['Snapdragon 8 Gen 3 for Galaxy', 'Ecrã interior de 7,6" e exterior de 6,3"', 'Câmara principal de 50MP', 'Multitarefa com três aplicações', 'Resistência IP48'],
+    specs: [
+      'Snapdragon 8 Gen 3 for Galaxy',
+      'Ecrã interior de 7,6" e exterior de 6,3"',
+      'Câmara principal de 50MP',
+      'Multitarefa com três aplicações',
+      'Resistência IP48',
+    ],
     colours: [
-      ['Silver Shadow', '#bfc1c4', '/images/produtos/galaxy-z-fold6-silver', '1722155961274-30d30d68ca51', '1724323224408-e24e732e56af'],
+      [
+        'Silver Shadow',
+        '#bfc1c4',
+        '/images/produtos/galaxy-z-fold6-silver',
+        '1722155961274-30d30d68ca51',
+        '1724323224408-e24e732e56af',
+      ],
       ['Navy', '#2b3448', '/images/produtos/galaxy-z-fold6-navy'],
       ['Pink', '#e9c9cf', '/images/produtos/galaxy-z-fold6-pink'],
     ],
@@ -357,7 +476,13 @@ const ENTRIES: Entry[] = [
     summary: 'Dobrável, compacto e com ecrã exterior de 3,4"',
     overview:
       'O Galaxy Z Flip6 dobra-se para metade e cabe em qualquer bolso. O ecrã exterior FlexWindow de 3,4 polegadas mostra notificações, controla a música e serve de visor para selfies com a câmara principal de 50MP.',
-    specs: ['Snapdragon 8 Gen 3 for Galaxy', 'Ecrã interior de 6,7" e FlexWindow de 3,4"', 'Câmara principal de 50MP', 'Modo FlexCam', 'Resistência IP48'],
+    specs: [
+      'Snapdragon 8 Gen 3 for Galaxy',
+      'Ecrã interior de 6,7" e FlexWindow de 3,4"',
+      'Câmara principal de 50MP',
+      'Modo FlexCam',
+      'Resistência IP48',
+    ],
     colours: [
       ['Blue', '#a9c4e0', '/images/produtos/galaxy-z-flip6-blue', '1721864428848-503a2a27bded'],
       ['Yellow', '#eedc8a', '/images/produtos/galaxy-z-flip6-yellow', '1721864428881-dbabb9ea0017'],
@@ -386,7 +511,13 @@ const ENTRIES: Entry[] = [
     summary: 'Óptica Leica e carregamento de 120W',
     overview:
       'O Xiaomi 14T Pro traz o sistema de câmaras co-desenvolvido com a Leica a um preço mais acessível, com sensor principal de 50MP e teleobjectiva de 2,6x. O carregamento HyperCharge de 120W enche a bateria em cerca de 20 minutos.',
-    specs: ['MediaTek Dimensity 9300+', 'Ecrã AMOLED de 6,67" a 144 Hz', 'Câmaras Leica de 50MP', 'Teleobjectiva de 2,6x', 'Carregamento de 120W'],
+    specs: [
+      'MediaTek Dimensity 9300+',
+      'Ecrã AMOLED de 6,67" a 144 Hz',
+      'Câmaras Leica de 50MP',
+      'Teleobjectiva de 2,6x',
+      'Carregamento de 120W',
+    ],
     colours: [
       ['Titan Gray', '#b1aea6', '/images/produtos/xiaomi-14t-pro-gray', '1701696255815-14a98bc1afcd'],
       ['Titan Blue', '#5b6d86', '/images/produtos/xiaomi-14t-pro-blue'],
@@ -414,9 +545,21 @@ const ENTRIES: Entry[] = [
     summary: 'Tensor G4, teleobjectiva de 5x e a fotografia computacional da Google',
     overview:
       'O Pixel 9 Pro reúne o chip Tensor G4, três câmaras traseiras com teleobjectiva de 5x e as ferramentas de IA da Google, como o Magic Editor e o Melhor Fotografia. Recebe sete anos de actualizações do sistema e de segurança.',
-    specs: ['Google Tensor G4', 'Ecrã Super Actua de 6,3" a 120 Hz', 'Câmara principal de 50MP', 'Teleobjectiva de 48MP a 5x', '7 anos de actualizações'],
+    specs: [
+      'Google Tensor G4',
+      'Ecrã Super Actua de 6,3" a 120 Hz',
+      'Câmara principal de 50MP',
+      'Teleobjectiva de 48MP a 5x',
+      '7 anos de actualizações',
+    ],
     colours: [
-      ['Porcelain', '#ece6dc', '/images/produtos/pixel-9-pro-porcelain', '1756517313520-c6c25364ce65', '1727132527836-a392cf3f07aa'],
+      [
+        'Porcelain',
+        '#ece6dc',
+        '/images/produtos/pixel-9-pro-porcelain',
+        '1756517313520-c6c25364ce65',
+        '1727132527836-a392cf3f07aa',
+      ],
       ['Rose Quartz', '#eed3cf', '/images/produtos/pixel-9-pro-rose'],
       ['Hazel', '#9a9d8d', '/images/produtos/pixel-9-pro-hazel', '1724322535079-11b08f7f5c88', '1724438192699-89f587b04c24'],
       ['Obsidian', '#2b2c2e', '/images/produtos/pixel-9-pro-obsidian', '1727132528094-117c9dceb047'],
@@ -441,7 +584,13 @@ const ENTRIES: Entry[] = [
     summary: 'A experiência Pixel completa, com Tensor G4',
     overview:
       'O Pixel 9 traz o mesmo chip Tensor G4 do modelo Pro, um ecrã Actua de 6,3 polegadas e câmaras de 50MP e 48MP ultra grande angular. Simples, rápido e com as melhores funcionalidades de fotografia da Google.',
-    specs: ['Google Tensor G4', 'Ecrã Actua de 6,3" a 120 Hz', 'Câmara principal de 50MP', 'Ultra grande angular de 48MP', '7 anos de actualizações'],
+    specs: [
+      'Google Tensor G4',
+      'Ecrã Actua de 6,3" a 120 Hz',
+      'Câmara principal de 50MP',
+      'Ultra grande angular de 48MP',
+      '7 anos de actualizações',
+    ],
     colours: [
       ['Obsidian', '#2b2c2e', '/images/produtos/pixel-9-obsidian', '1729302784412-c36bbab2a6ef'],
       ['Porcelain', '#ece7dd', '/images/produtos/pixel-9-porcelain'],
@@ -470,10 +619,22 @@ const ENTRIES: Entry[] = [
     summary: 'Snapdragon 8 Elite, câmaras Hasselblad e bateria de 6000 mAh',
     overview:
       'O OnePlus 13 junta o Snapdragon 8 Elite a três câmaras de 50MP afinadas pela Hasselblad e a uma bateria de 6000 mAh que carrega a 100W. O ecrã de 6,82 polegadas em resolução 2K é dos mais brilhantes da sua categoria.',
-    specs: ['Snapdragon 8 Elite', 'Ecrã AMOLED 2K de 6,82" a 120 Hz', 'Três câmaras Hasselblad de 50MP', 'Bateria de 6000 mAh', 'Carregamento de 100W'],
+    specs: [
+      'Snapdragon 8 Elite',
+      'Ecrã AMOLED 2K de 6,82" a 120 Hz',
+      'Três câmaras Hasselblad de 50MP',
+      'Bateria de 6000 mAh',
+      'Carregamento de 100W',
+    ],
     colours: [
       ['Midnight Ocean', '#34405a', '/images/produtos/oneplus-13-midnight'],
-      ['Black Eclipse', '#1f2023', '/images/produtos/oneplus-13-black', '1757847505239-ce2fb51da67d', '1757847505222-cfe856c93be0'],
+      [
+        'Black Eclipse',
+        '#1f2023',
+        '/images/produtos/oneplus-13-black',
+        '1757847505239-ce2fb51da67d',
+        '1757847505222-cfe856c93be0',
+      ],
       ['Arctic Dawn', '#e5e4e9', '/images/produtos/oneplus-13-arctic', '1773293915418-fb03a80120a7'],
     ],
     storage: storage(['256GB', 0], ['512GB', 15000]),
@@ -498,7 +659,14 @@ const ENTRIES: Entry[] = [
     summary: 'Leve, silencioso e com até 18 horas de bateria',
     overview:
       'O MacBook Air com chip M4 é o portátil mais equilibrado da Apple: sem ventoinha, totalmente silencioso, com 16GB de memória unificada de base e autonomia para um dia inteiro de trabalho. O ecrã Liquid Retina de 13,6 polegadas e a câmara Center Stage de 12MP completam o conjunto.',
-    specs: ['Chip Apple M4', '16GB de memória unificada', 'Ecrã Liquid Retina de 13,6"', 'Até 18 horas de bateria', 'Câmara Center Stage de 12MP', 'Design sem ventoinha'],
+    specs: [
+      'Chip Apple M4',
+      '16GB de memória unificada',
+      'Ecrã Liquid Retina de 13,6"',
+      'Até 18 horas de bateria',
+      'Câmara Center Stage de 12MP',
+      'Design sem ventoinha',
+    ],
     colours: [
       ['Azul-céu', '#b8cde0', '1717865499857-ec35ce6e65fa'],
       ['Meia-noite', '#2b2d33', '1660833638050-41f95d8b94e6', '1659135890064-d57187f0946c'],
@@ -523,7 +691,13 @@ const ENTRIES: Entry[] = [
     summary: 'Ecrã Liquid Retina XDR e até 24 horas de bateria',
     overview:
       'O MacBook Pro de 14 polegadas com chip M4 foi feito para trabalho criativo exigente: ecrã Liquid Retina XDR com brilho até 1600 nits em HDR, três portas Thunderbolt, HDMI e leitor de cartões SD, e uma autonomia que chega às 24 horas.',
-    specs: ['Chip Apple M4', '16GB de memória unificada', 'Ecrã Liquid Retina XDR de 14,2"', 'Até 24 horas de bateria', 'Thunderbolt, HDMI e SDXC'],
+    specs: [
+      'Chip Apple M4',
+      '16GB de memória unificada',
+      'Ecrã Liquid Retina XDR de 14,2"',
+      'Até 24 horas de bateria',
+      'Thunderbolt, HDMI e SDXC',
+    ],
     colours: [['Prateado', '#d9d9db', '1569770218135-bea267ed7e84']],
     storage: storage(['512GB', 0], ['1TB', 30000]),
     rating: 4.9,
@@ -545,7 +719,13 @@ const ENTRIES: Entry[] = [
     summary: 'Tudo-em-um com ecrã 4,5K, em sete cores',
     overview:
       'O iMac junta computador, ecrã 4,5K Retina de 24 polegadas, colunas e câmara num só objecto com apenas 11,5 mm de espessura. Com o chip M4 e a câmara Center Stage de 12MP, é ideal para casa, para o escritório ou para quem cria conteúdo.',
-    specs: ['Chip Apple M4', 'Ecrã Retina 4,5K de 24"', 'Câmara Center Stage de 12MP', 'Seis colunas com áudio espacial', 'Teclado e rato incluídos'],
+    specs: [
+      'Chip Apple M4',
+      'Ecrã Retina 4,5K de 24"',
+      'Câmara Center Stage de 12MP',
+      'Seis colunas com áudio espacial',
+      'Teclado e rato incluídos',
+    ],
     colours: [
       ['Amarelo', '#f2d98b', '1622774161048-863b17ed0d8e'],
       ['Azul', '#a9c2dc', '1622437553759-451cc114babb'],
@@ -705,7 +885,13 @@ const ENTRIES: Entry[] = [
     summary: 'Para jogar em 4K e criar sem esperas',
     overview:
       'O Forge Pro é a nossa configuração de topo: Ryzen 9 7950X3D, RTX 4080 Super e 64GB de memória DDR5 para jogar em 4K e editar vídeo sem compromissos. Refrigeração líquida, cablagem organizada e cada componente testado antes de sair da loja.',
-    specs: ['AMD Ryzen 9 7950X3D', 'NVIDIA RTX 4080 Super 16GB', '64GB DDR5 6000', 'SSD NVMe de 2TB', 'Refrigeração líquida de 360 mm'],
+    specs: [
+      'AMD Ryzen 9 7950X3D',
+      'NVIDIA RTX 4080 Super 16GB',
+      '64GB DDR5 6000',
+      'SSD NVMe de 2TB',
+      'Refrigeração líquida de 360 mm',
+    ],
     colours: [['Preto', '#1d1d1f']],
     rating: 4.9,
     reviews: 31,
@@ -786,7 +972,13 @@ const ENTRIES: Entry[] = [
     summary: 'A PS5, mais compacta e com 1TB',
     overview:
       'A PS5 Slim mantém o desempenho da PlayStation 5 num corpo mais pequeno e leve, com 1TB de armazenamento SSD. Carregamentos quase instantâneos, o comando DualSense com resposta háptica e uma biblioteca com os maiores exclusivos da Sony.',
-    specs: ['SSD de 1TB', 'Jogos em 4K até 120 fps', 'Leitor de discos Ultra HD Blu-ray', 'Comando DualSense incluído', 'Áudio 3D Tempest'],
+    specs: [
+      'SSD de 1TB',
+      'Jogos em 4K até 120 fps',
+      'Leitor de discos Ultra HD Blu-ray',
+      'Comando DualSense incluído',
+      'Áudio 3D Tempest',
+    ],
     colours: [['Branco', '#f2f2f0']],
     rating: 4.8,
     reviews: 3400,
@@ -872,7 +1064,13 @@ const ENTRIES: Entry[] = [
     summary: 'Ecrã maior, Joy-Con magnéticos e mais potência',
     overview:
       'A Nintendo Switch 2 cresce em tudo: ecrã de 7,9 polegadas em 1080p, Joy-Con que se prendem por íman e podem funcionar como rato, e desempenho para jogar até 4K na televisão. Compatível com a maioria dos jogos da Switch original.',
-    specs: ['Ecrã LCD de 7,9" 1080p a 120 Hz', 'Até 4K na televisão', 'Joy-Con 2 magnéticos', '256GB de armazenamento', 'Chat de jogo integrado'],
+    specs: [
+      'Ecrã LCD de 7,9" 1080p a 120 Hz',
+      'Até 4K na televisão',
+      'Joy-Con 2 magnéticos',
+      '256GB de armazenamento',
+      'Chat de jogo integrado',
+    ],
     colours: [['Preto', '#1f2023']],
     rating: 4.8,
     reviews: 1650,
@@ -1065,7 +1263,13 @@ const ENTRIES: Entry[] = [
     summary: 'Áudio de alta fidelidade com cancelamento de ruído',
     overview:
       'Os AirPods Max combinam conchas em alumínio, almofadas em espuma de memória e áudio computacional para um som rico e detalhado. O cancelamento activo de ruído e o modo transparência adaptam-se ao ambiente.',
-    specs: ['Cancelamento activo de ruído', 'Áudio espacial personalizado', 'Conchas em alumínio', 'Até 20 horas de autonomia', 'USB-C'],
+    specs: [
+      'Cancelamento activo de ruído',
+      'Áudio espacial personalizado',
+      'Conchas em alumínio',
+      'Até 20 horas de autonomia',
+      'USB-C',
+    ],
     colours: [
       ['Luz das estrelas', '#ece6dc', '1609081219090-a6d81d3085bf', '1612116454817-2b0841e30eaf'],
       ['Meia-noite', '#2b2d33', '1638803782506-d975a6809f43', '1628329567705-f8f7150c3cff'],
@@ -1090,7 +1294,13 @@ const ENTRIES: Entry[] = [
     summary: 'Referência em cancelamento de ruído',
     overview:
       'Os WH-1000XM5 usam oito microfones e dois processadores para um dos melhores cancelamentos de ruído do mercado. Leves, confortáveis durante horas e com 30 horas de autonomia, são ideais para viagens e escritório.',
-    specs: ['Cancelamento de ruído com 8 microfones', 'Até 30 horas de autonomia', 'Carregamento rápido', 'Multiponto Bluetooth', 'LDAC'],
+    specs: [
+      'Cancelamento de ruído com 8 microfones',
+      'Até 30 horas de autonomia',
+      'Carregamento rápido',
+      'Multiponto Bluetooth',
+      'LDAC',
+    ],
     colours: [['Preto', '#1d1d1f', '1755719401938-35c1b24f6d15']],
     rating: 4.8,
     reviews: 6100,
@@ -1132,7 +1342,13 @@ const ENTRIES: Entry[] = [
     summary: 'Teclado sem fios para escrever o dia inteiro',
     overview:
       'Teclas côncavas que acompanham a ponta dos dedos, retroiluminação inteligente que se acende quando as mãos se aproximam e ligação a três dispositivos com um toque. O MX Keys S é o teclado de quem escreve muito.',
-    specs: ['Teclas côncavas de baixo perfil', 'Retroiluminação inteligente', 'Até 3 dispositivos', 'USB-C recarregável', 'Windows e macOS'],
+    specs: [
+      'Teclas côncavas de baixo perfil',
+      'Retroiluminação inteligente',
+      'Até 3 dispositivos',
+      'USB-C recarregável',
+      'Windows e macOS',
+    ],
     colours: [['Grafite', '#4a4b4f', '1623371748986-9a829391f7c9', '1605640194493-44894a08b57d']],
     rating: 4.7,
     reviews: 2800,
@@ -1152,7 +1368,13 @@ const ENTRIES: Entry[] = [
     summary: 'Mecânico compacto, com e sem fios',
     overview:
       'O K2 Pro é um teclado mecânico 75% com switches substituíveis a quente, ligação Bluetooth ou por cabo, e personalização total das teclas. Compacto o suficiente para deixar espaço ao rato e robusto para anos de uso.',
-    specs: ['Formato 75%', 'Switches hot-swap', 'Bluetooth e cabo USB-C', 'Compatível com macOS e Windows', 'Retroiluminação RGB'],
+    specs: [
+      'Formato 75%',
+      'Switches hot-swap',
+      'Bluetooth e cabo USB-C',
+      'Compatível com macOS e Windows',
+      'Retroiluminação RGB',
+    ],
     colours: [['Cinzento', '#7c7d81']],
     rating: 4.6,
     reviews: 920,

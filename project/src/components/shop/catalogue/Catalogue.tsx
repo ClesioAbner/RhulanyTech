@@ -1,41 +1,26 @@
-import { useEffect, useId, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   CATEGORIES,
-  SORT_OPTIONS,
   categoryFace,
   categoryPath,
   priceFrom,
   productsIn,
-  slugify,
   sortProducts,
   subcategoryFace,
   type CatalogProduct,
   type Category,
   type SortId,
   type Subcategory,
-} from '../../lib/catalog';
-import { easeOutExpo } from '../../lib/motion';
-import { STORE } from '../../data/store';
-import ProductCard from '../product/ProductCard';
-import ProductImage from '../product/ProductImage';
-import SortMenu from './SortMenu';
-import { SearchIcon } from '../ui/Icons';
-
-const PAGE = 12;
-
-const PRICES = [
-  { id: 'ate-10000', label: 'Até 10 000 MT', test: (p: number) => p <= 10000 },
-  { id: '10000-50000', label: '10 000 a 50 000 MT', test: (p: number) => p > 10000 && p <= 50000 },
-  { id: '50000-100000', label: '50 000 a 100 000 MT', test: (p: number) => p > 50000 && p <= 100000 },
-  { id: '100000-150000', label: '100 000 a 150 000 MT', test: (p: number) => p > 100000 && p <= 150000 },
-  { id: 'mais-150000', label: 'Mais de 150 000 MT', test: (p: number) => p > 150000 },
-] as const;
-
-const isSort = (value: string | null): value is SortId => SORT_OPTIONS.some((option) => option.id === value);
-const fold = (text: string) => slugify(text).replace(/-/g, ' ');
-const countLabel = (n: number) => `${n} ${n === 1 ? 'produto' : 'produtos'}`;
+} from '../../../lib/catalog';
+import { easeOutExpo } from '../../../lib/motion';
+import { STORE } from '../../../data/store';
+import ProductCard from '../../product/ProductCard';
+import SortMenu from '../SortMenu';
+import { SearchIcon } from '../../ui/Icons';
+import { Group, NavItem, Option } from './FilterControls';
+import { PAGE, PRICES, VISIBLE_BRANDS, countLabel, fold, isSort } from './filters';
 
 interface CatalogueProps {
   /** Products in scope: the whole shop, a category or one of its ranges. */
@@ -43,145 +28,6 @@ interface CatalogueProps {
   category?: Category;
   subcategory?: Subcategory;
 }
-
-/* ---------- Filter controls ---------- */
-
-const Chevron = ({ open }: { open: boolean }) => (
-  <motion.span
-    aria-hidden="true"
-    className="block h-[7px] w-[7px] border-b-[1.5px] border-r-[1.5px] border-current"
-    initial={false}
-    animate={{ rotate: open ? 225 : 45, y: open ? 2 : -2 }}
-    transition={{ duration: 0.35, ease: easeOutExpo }}
-  />
-);
-
-/** A section of the side panel that opens and closes. */
-const Group = ({ title, children, defaultOpen = true }: { title: string; children: ReactNode; defaultOpen?: boolean }) => {
-  const [open, setOpen] = useState(defaultOpen);
-  const id = useId();
-  return (
-    <section className="border-t border-ink/[0.07] first:border-t-0">
-      <h3>
-        <button
-          type="button"
-          aria-expanded={open}
-          aria-controls={id}
-          onClick={() => setOpen((value) => !value)}
-          className="flex w-full items-center justify-between px-5 py-4 text-left text-[13px] font-semibold text-ink/85 transition-colors hover:text-ink"
-        >
-          {title}
-          <Chevron open={open} />
-        </button>
-      </h3>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            id={id}
-            className="overflow-hidden"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.4, ease: easeOutExpo }}
-          >
-            <div className="space-y-0.5 px-3 pb-4">{children}</div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </section>
-  );
-};
-
-const Option = ({
-  type,
-  checked,
-  onChange,
-  label,
-  count,
-}: {
-  type: 'checkbox' | 'radio';
-  checked: boolean;
-  onChange: () => void;
-  label: string;
-  count: number;
-}) => (
-  <label
-    className={`group/opt flex cursor-pointer items-center gap-3 rounded-xl px-2 py-[7px] text-sm transition-colors hover:bg-ink/[0.04] ${
-      count === 0 && !checked ? 'opacity-40' : ''
-    }`}
-  >
-    <input type={type} checked={checked} onChange={onChange} className="peer sr-only" />
-    <span
-      aria-hidden="true"
-      className={`grid h-[18px] w-[18px] shrink-0 place-items-center border transition-colors duration-200 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 ${
-        type === 'radio' ? 'rounded-full' : 'rounded-[6px]'
-      } ${checked ? 'border-ink bg-ink text-paper' : 'border-ink/25 bg-white group-hover/opt:border-ink/50'}`}
-    >
-      {checked &&
-        (type === 'radio' ? (
-          <span className="h-1.5 w-1.5 rounded-full bg-paper" />
-        ) : (
-          <svg viewBox="0 0 12 12" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-            <path d="M2.5 6.2l2.3 2.3 4.7-5" />
-          </svg>
-        ))}
-    </span>
-    <span className={`flex-1 ${checked ? 'font-medium' : 'text-ink/80'}`}>{label}</span>
-    <span className="text-xs tabular-nums text-ink/40">{count}</span>
-  </label>
-);
-
-/** Small studio tile: one product, or four for "everything". */
-const Thumb = ({ images }: { images: (string | undefined)[] }) => (
-  <span className="stage relative grid h-9 w-9 shrink-0 overflow-hidden rounded-[11px] ring-1 ring-ink/[0.06]">
-    {images.length > 1 ? (
-      <span className="grid grid-cols-2 p-[3px]">
-        {images.slice(0, 4).map((src, i) => (
-          <span key={i} className="relative">
-            {src && <ProductImage src={src} inset="p-[8%]" />}
-          </span>
-        ))}
-      </span>
-    ) : (
-      images[0] && <ProductImage src={images[0]} inset="p-[14%]" />
-    )}
-  </span>
-);
-
-const NavItem = ({
-  to,
-  label,
-  count,
-  active,
-  images,
-  group,
-}: {
-  to: string;
-  label: string;
-  count: number;
-  active: boolean;
-  images: (string | undefined)[];
-  group: string;
-}) => (
-  <Link to={to} aria-current={active ? 'page' : undefined} className="group/nav relative flex items-center gap-3 rounded-2xl px-2 py-1.5 text-sm">
-    {active && (
-      <motion.span
-        layoutId={`${group}-active`}
-        className="absolute inset-0 rounded-2xl bg-ink/[0.06]"
-        transition={{ duration: 0.45, ease: easeOutExpo }}
-      />
-    )}
-    <span className="relative transition-transform duration-500 ease-out-expo group-hover/nav:scale-[1.06]">
-      <Thumb images={images} />
-    </span>
-    <span className={`relative flex-1 truncate ${active ? 'font-medium text-ink' : 'text-ink/75 group-hover/nav:text-ink'}`}>{label}</span>
-    <span className="relative text-xs tabular-nums text-ink/40">{count}</span>
-  </Link>
-);
-
-const VISIBLE_BRANDS = 6;
-
-/* ---------- Catalogue ---------- */
 
 /*
  * The shop's organised view: the sections of the shop and the filters on the left, results with
@@ -226,7 +72,16 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
     return true;
   };
 
-  const results = useMemo(() => sortProducts(products.filter((p) => matches(p)), sort), [products, params]); // eslint-disable-line react-hooks/exhaustive-deps
+  const results = useMemo(
+    () =>
+      sortProducts(
+        products.filter((p) => matches(p)),
+        sort,
+      ),
+    // `matches` and `sort` only read values taken from the URL, so `params` covers them.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [products, params],
+  );
   const brandOptions = useMemo(() => [...new Set(products.map((p) => p.brand))].sort((a, b) => a.localeCompare(b)), [products]);
 
   useEffect(() => setShown(PAGE), [params, products]);
@@ -253,7 +108,10 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
               label="Tudo"
               count={productsIn(category.slug).length}
               active={!subcategory}
-              images={category.subcategories.map((sub) => subcategoryFace(category.slug, sub)).filter(Boolean).slice(0, 4)}
+              images={category.subcategories
+                .map((sub) => subcategoryFace(category.slug, sub))
+                .filter(Boolean)
+                .slice(0, 4)}
             />
             {category.subcategories.map((sub) => (
               <NavItem
@@ -269,7 +127,14 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
           </>
         ) : (
           <>
-            <NavItem group={where} to="/loja" label="Toda a loja" count={products.length} active images={CATEGORIES.slice(0, 4).map((c) => categoryFace(c.slug))} />
+            <NavItem
+              group={where}
+              to="/loja"
+              label="Toda a loja"
+              count={products.length}
+              active
+              images={CATEGORIES.slice(0, 4).map((c) => categoryFace(c.slug))}
+            />
             {CATEGORIES.map((item) => (
               <NavItem
                 key={item.slug}
@@ -367,9 +232,19 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
 
       <div className="min-w-0">
         {/* Sections of the shop, always at hand on small screens (the sidebar holds them on desktop) */}
-        <nav aria-label={category ? 'Gamas' : 'Categorias'} className="-mx-5 mb-4 flex gap-2 overflow-x-auto px-5 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:hidden [&::-webkit-scrollbar]:hidden">
+        <nav
+          aria-label={category ? 'Gamas' : 'Categorias'}
+          className="-mx-5 mb-4 flex gap-2 overflow-x-auto px-5 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:hidden [&::-webkit-scrollbar]:hidden"
+        >
           {(category
-            ? [{ to: keepSort(categoryPath(category.slug)), label: 'Tudo', active: !subcategory }, ...category.subcategories.map((sub) => ({ to: keepSort(categoryPath(category.slug, sub.slug)), label: sub.name, active: subcategory?.slug === sub.slug }))]
+            ? [
+                { to: keepSort(categoryPath(category.slug)), label: 'Tudo', active: !subcategory },
+                ...category.subcategories.map((sub) => ({
+                  to: keepSort(categoryPath(category.slug, sub.slug)),
+                  label: sub.name,
+                  active: subcategory?.slug === sub.slug,
+                })),
+              ]
             : CATEGORIES.map((item) => ({ to: categoryPath(item.slug), label: item.name, active: false }))
           ).map((item) => (
             <Link
@@ -404,13 +279,19 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
             className="inline-flex h-11 items-center gap-2 rounded-full bg-white px-5 text-sm font-medium ring-1 ring-ink/10 lg:hidden"
           >
             Filtros
-            {activeCount > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-ink px-1.5 text-[11px] tabular-nums text-paper">{activeCount}</span>}
+            {activeCount > 0 && (
+              <span className="grid h-5 min-w-5 place-items-center rounded-full bg-ink px-1.5 text-[11px] tabular-nums text-paper">
+                {activeCount}
+              </span>
+            )}
           </button>
           <div className="ml-auto flex items-center gap-4">
             <p className="text-sm tabular-nums text-ink/50 max-sm:hidden" aria-live="polite">
               {countLabel(results.length)}
             </p>
-            {results.length > 1 && <SortMenu value={sort} onChange={(next) => update({ ordem: next === 'destaque' ? null : next })} />}
+            {results.length > 1 && (
+              <SortMenu value={sort} onChange={(next) => update({ ordem: next === 'destaque' ? null : next })} />
+            )}
           </div>
         </div>
 
@@ -433,7 +314,9 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
                   aria-label={`Remover filtro ${chip.label}`}
                 >
                   {chip.label}
-                  <span aria-hidden="true" className="text-ink/45">×</span>
+                  <span aria-hidden="true" className="text-ink/45">
+                    ×
+                  </span>
                 </button>
               ))}
               <button type="button" onClick={clearAll} className="link-underline ml-1 text-[13px] text-ink/60 hover:text-ink">
@@ -497,8 +380,14 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
             ) : (
               <>
                 <h3 className="type-heading">Nenhum produto com estes filtros</h3>
-                <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink/60">Experimente outra marca ou outro intervalo de preço.</p>
-                <button type="button" onClick={clearAll} className="mt-7 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper">
+                <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink/60">
+                  Experimente outra marca ou outro intervalo de preço.
+                </p>
+                <button
+                  type="button"
+                  onClick={clearAll}
+                  className="mt-7 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper"
+                >
                   Limpar filtros
                 </button>
               </>
@@ -532,18 +421,31 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
             >
               <div className="flex items-center justify-between px-5 pb-3 pt-5">
                 <p className="type-heading">Filtros</p>
-                <button type="button" onClick={() => setSheetOpen(false)} className="h-10 rounded-full px-4 text-sm text-ink/60" aria-label="Fechar filtros">
+                <button
+                  type="button"
+                  onClick={() => setSheetOpen(false)}
+                  className="h-10 rounded-full px-4 text-sm text-ink/60"
+                  aria-label="Fechar filtros"
+                >
                   Fechar
                 </button>
               </div>
               <div className="flex-1 overflow-y-auto pb-6">{renderFilters('sheet')}</div>
               <div className="flex gap-3 border-t border-ink/[0.08] p-4">
                 {activeCount > 0 && (
-                  <button type="button" onClick={clearAll} className="h-12 rounded-full px-5 text-sm font-medium ring-1 ring-ink/15">
+                  <button
+                    type="button"
+                    onClick={clearAll}
+                    className="h-12 rounded-full px-5 text-sm font-medium ring-1 ring-ink/15"
+                  >
                     Limpar
                   </button>
                 )}
-                <button type="button" onClick={() => setSheetOpen(false)} className="h-12 flex-1 rounded-full bg-ink text-sm font-medium text-paper">
+                <button
+                  type="button"
+                  onClick={() => setSheetOpen(false)}
+                  className="h-12 flex-1 rounded-full bg-ink text-sm font-medium text-paper"
+                >
                   Ver {countLabel(results.length)}
                 </button>
               </div>

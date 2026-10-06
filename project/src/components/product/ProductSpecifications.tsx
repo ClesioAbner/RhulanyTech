@@ -39,7 +39,11 @@ const ProductSpecifications = ({ product }: { product: CatalogProduct }) => {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.35, ease: easeOutExpo, delay: index >= VISIBLE_ROWS ? (index - VISIBLE_ROWS) * 0.03 : 0 }}
+                  transition={{
+                    duration: 0.35,
+                    ease: easeOutExpo,
+                    delay: index >= VISIBLE_ROWS ? (index - VISIBLE_ROWS) * 0.03 : 0,
+                  }}
                 >
                   <dt className="text-ink/50">{label}</dt>
                   <dd>{value}</dd>

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { ScreenPainter } from './screens';
+import { ScreenPainter } from '../../payments/screens';
 
-export { SCREEN_W, SCREEN_H, type ScreenKey } from './screens';
+export type { ScreenKey } from '../../payments/screens';
 
 /*
  * The screens as a texture on the WebGL phone's display, so they stay glued to the glass, pick up

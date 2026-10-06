@@ -140,7 +140,8 @@ const ContactForm = () => {
             <p className="mt-3 max-w-sm text-[15px] leading-relaxed text-ink/60">
               {status === 'sent' ? (
                 <>
-                  Obrigado, {values.name.trim().split(' ')[0]}. Respondemos para <span className="text-ink">{values.email.trim()}</span>
+                  Obrigado, {values.name.trim().split(' ')[0]}. Respondemos para{' '}
+                  <span className="text-ink">{values.email.trim()}</span>
                 </>
               ) : (
                 <>
@@ -206,7 +207,13 @@ const ContactForm = () => {
                 <label htmlFor={ids('name').input} className="sr-only">
                   Nome
                 </label>
-                <input {...inputProps('name')} type="text" autoComplete="name" placeholder="Nome" className={`${fieldClass(Boolean(shown('name')))} h-14`} />
+                <input
+                  {...inputProps('name')}
+                  type="text"
+                  autoComplete="name"
+                  placeholder="Nome"
+                  className={`${fieldClass(Boolean(shown('name')))} h-14`}
+                />
                 <ErrorText id={ids('name').error} text={shown('name')} />
               </div>
               <div>

@@ -39,7 +39,12 @@ const PageHero = ({ image, alt, eyebrow, title, lead, aside, nextId }: PageHeroP
     <section ref={ref} className="relative isolate h-[100svh] min-h-[620px] overflow-hidden bg-ink text-paper">
       <motion.div className="absolute inset-0 -z-10" style={{ y: imageY, scale: imageScale }}>
         {/* Blur-up: a tiny copy shows the colours at once while the full photo loads */}
-        <img src={unsplash(image, 48)} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl" />
+        <img
+          src={unsplash(image, 48)}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl"
+        />
         <motion.img
           ref={photoRef}
           src={unsplash(image, 1600)}

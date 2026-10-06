@@ -45,11 +45,12 @@ const CartLineItem = ({ line, size = 'compact', isNew = false, onNavigate }: Car
               {line.title}
             </Link>
             {line.variant && <p className="mt-1 text-xs text-ink/50 sm:text-sm">{line.variant}</p>}
-            {full && line.quantity > 1 && (
-              <p className="mt-1 text-xs tabular-nums text-ink/45">{formatPrice(line.price)} cada</p>
-            )}
+            {full && line.quantity > 1 && <p className="mt-1 text-xs tabular-nums text-ink/45">{formatPrice(line.price)} cada</p>}
           </div>
-          <RollingPrice value={line.price * line.quantity} className={`shrink-0 text-right ${full ? 'text-base sm:text-lg' : 'text-sm'}`} />
+          <RollingPrice
+            value={line.price * line.quantity}
+            className={`shrink-0 text-right ${full ? 'text-base sm:text-lg' : 'text-sm'}`}
+          />
         </div>
 
         <div className={`flex items-center justify-between gap-4 ${full ? 'mt-auto pt-4' : 'mt-3'}`}>

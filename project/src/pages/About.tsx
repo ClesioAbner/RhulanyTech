@@ -52,7 +52,12 @@ const Principle = ({ item, index }: { item: (typeof PRINCIPLES)[number]; index: 
         viewport={{ once: true, margin: '0px 0px -15% 0px' }}
         transition={{ duration: 1.1, ease: easeOutExpo }}
       >
-        <img src={unsplash(item.image, 1400)} alt={item.alt} loading="lazy" className="aspect-[4/3] w-full object-cover lg:aspect-[3/2]" />
+        <img
+          src={unsplash(item.image, 1400)}
+          alt={item.alt}
+          loading="lazy"
+          className="aspect-[4/3] w-full object-cover lg:aspect-[3/2]"
+        />
       </motion.div>
       <motion.div
         className={`lg:col-span-5 ${flipped ? 'lg:order-1' : ''}`}
@@ -110,15 +115,11 @@ const About = () => {
           <h2 id="quem-somos-titulo" className="eyebrow text-ink/45 lg:col-span-3 lg:pt-3">
             Quem somos
           </h2>
-          <motion.p
-            className="type-title lg:col-span-9"
-            {...reveal}
-            transition={{ duration: 1, ease: easeOutExpo }}
-          >
+          <motion.p className="type-title lg:col-span-9" {...reveal} transition={{ duration: 1, ease: easeOutExpo }}>
             Comprar tecnologia em Moçambique devia ser tão seguro como em qualquer parte do mundo.{' '}
             <span className="text-ink/40">
-              Por isso vendemos só produtos originais, com preços claros, entrega em todo o país e uma equipa que
-              continua disponível depois da compra.
+              Por isso vendemos só produtos originais, com preços claros, entrega em todo o país e uma equipa que continua
+              disponível depois da compra.
             </span>
           </motion.p>
         </div>
@@ -150,7 +151,11 @@ const About = () => {
       </section>
 
       <section className="container-site pt-24 lg:pt-32" aria-labelledby="loja-fisica">
-        <motion.div className="grid overflow-hidden rounded-[32px] bg-white lg:grid-cols-2" {...reveal} transition={{ duration: 0.9, ease: easeOutExpo }}>
+        <motion.div
+          className="grid overflow-hidden rounded-[32px] bg-white lg:grid-cols-2"
+          {...reveal}
+          transition={{ duration: 0.9, ease: easeOutExpo }}
+        >
           <div className="relative min-h-[320px] overflow-hidden lg:min-h-[540px]">
             <img
               src={unsplash(CITY_IMAGE, 1600)}

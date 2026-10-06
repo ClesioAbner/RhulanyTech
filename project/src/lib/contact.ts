@@ -17,7 +17,7 @@ const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
 // .env.example ships placeholders ("your_service_id"); treat those as not configured.
 const isSet = (value?: string): value is string => Boolean(value && !value.startsWith('your_'));
-export const emailServiceConfigured = isSet(SERVICE_ID) && isSet(TEMPLATE_ID) && isSet(PUBLIC_KEY);
+const emailServiceConfigured = isSet(SERVICE_ID) && isSet(TEMPLATE_ID) && isSet(PUBLIC_KEY);
 
 export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 

@@ -26,10 +26,14 @@ const Services = () => (
     <div className="container-site grid gap-14 py-28 lg:grid-cols-12 lg:py-40">
       <div className="lg:col-span-5">
         <div className="lg:sticky lg:top-32">
-          <SectionHeading id="servicos-titulo" index="05" eyebrow="Porquê a Rhulany Tech" title="Comprar tecnologia devia ser simples" />
+          <SectionHeading
+            id="servicos-titulo"
+            index="05"
+            eyebrow="Porquê a Rhulany Tech"
+            title="Comprar tecnologia devia ser simples"
+          />
           <p className="mt-6 max-w-sm text-base leading-relaxed text-ink/60">
-            Somos uma equipa moçambicana que testa o que vende, explica sem jargão e continua consigo depois da
-            compra
+            Somos uma equipa moçambicana que testa o que vende, explica sem jargão e continua consigo depois da compra
           </p>
         </div>
       </div>

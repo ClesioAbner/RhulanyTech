@@ -33,11 +33,16 @@ const FaqList = ({ items, initiallyOpen = 0, open: controlledOpen, onOpenChange 
                 onClick={() => setOpen(isOpen ? null : index)}
                 className="group flex w-full items-center justify-between gap-6 py-6 text-left"
               >
-                <span className={`text-base font-medium transition-colors duration-300 sm:text-lg ${isOpen ? 'text-ink' : 'text-ink/80 group-hover:text-ink'}`}>
+                <span
+                  className={`text-base font-medium transition-colors duration-300 sm:text-lg ${isOpen ? 'text-ink' : 'text-ink/80 group-hover:text-ink'}`}
+                >
                   {item.q}
                 </span>
                 {/* Plus that turns into a minus: two hairlines, the vertical one folds away */}
-                <span aria-hidden="true" className="relative grid h-8 w-8 shrink-0 place-items-center rounded-full bg-ink/[0.05] transition-colors group-hover:bg-ink/[0.09]">
+                <span
+                  aria-hidden="true"
+                  className="relative grid h-8 w-8 shrink-0 place-items-center rounded-full bg-ink/[0.05] transition-colors group-hover:bg-ink/[0.09]"
+                >
                   <span className="absolute h-px w-3 bg-ink" />
                   <motion.span
                     className="absolute h-3 w-px bg-ink"

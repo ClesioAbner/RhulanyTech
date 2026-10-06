@@ -11,9 +11,7 @@ import SectionHeading from '../ui/SectionHeading';
 const FAVORITE_IDS = ['67', '54', '46', '39', '80', '71'];
 const PHONE_PRODUCT_ID = '39';
 
-const FAVORITES = FAVORITE_IDS.map((id) => getProductById(id)).filter((product): product is CatalogProduct =>
-  Boolean(product),
-);
+const FAVORITES = FAVORITE_IDS.map((id) => getProductById(id)).filter((product): product is CatalogProduct => Boolean(product));
 
 interface ShopSectionProps {
   sectionRef?: RefObject<HTMLElement>;
@@ -45,10 +43,7 @@ const ShopSection = ({ sectionRef, phoneSlotRef }: ShopSectionProps) => (
             transition={{ duration: 0.9, ease: easeOutExpo, delay: (index % 3) * 0.07 }}
             className="[transform-origin:50%_100%]"
           >
-            <FeaturedProductCard
-              product={product}
-              mediaSlotRef={product.id === PHONE_PRODUCT_ID ? phoneSlotRef : undefined}
-            />
+            <FeaturedProductCard product={product} mediaSlotRef={product.id === PHONE_PRODUCT_ID ? phoneSlotRef : undefined} />
           </motion.li>
         ))}
       </ul>

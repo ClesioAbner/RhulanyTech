@@ -26,7 +26,7 @@ export const PROVINCES = [
 ];
 
 export type PaymentMethodId = 'mpesa' | 'emola' | 'mkesh' | 'card' | 'paypal';
-export type WalletId = 'mpesa' | 'emola' | 'mkesh';
+type WalletId = 'mpesa' | 'emola' | 'mkesh';
 export type DeliveryMethod = 'entrega' | 'levantamento';
 
 export const PAYMENT_OPTIONS: { id: PaymentMethodId; name: string; note: string }[] = [
@@ -44,7 +44,7 @@ export const paymentName = (id: PaymentMethodId) => PAYMENT_OPTIONS.find((option
 
 // ---------- Phone numbers ----------
 
-export const digits = (value: string) => value.replace(/\D/g, '');
+const digits = (value: string) => value.replace(/\D/g, '');
 
 /** Local mobile number without the country code: 84 123 4567. */
 export const localNumber = (value: string) => {
@@ -60,7 +60,7 @@ export const formatMobile = (value: string) => {
 export const isMobile = (value: string) => /^8[2-7]\d{7}$/.test(localNumber(value));
 
 // M-Pesa runs on Vodacom (84, 85), e-Mola on Movitel (86, 87) and mKesh on Tmcel (82, 83).
-export const WALLET_PREFIXES: Record<WalletId, string[]> = { mpesa: ['84', '85'], emola: ['86', '87'], mkesh: ['82', '83'] };
+const WALLET_PREFIXES: Record<WalletId, string[]> = { mpesa: ['84', '85'], emola: ['86', '87'], mkesh: ['82', '83'] };
 
 const WALLET_NETWORK: Record<WalletId, string> = {
   mpesa: 'O M-Pesa usa números Vodacom, começados por 84 ou 85',
@@ -138,13 +138,21 @@ export const processPayment = async (method: PaymentMethodId) => {
 
 export const orderPath = (order: Pick<Order, 'number'>) => `/encomenda/${order.number}`;
 
-const dateTime = new Intl.DateTimeFormat('pt-PT', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+const dateTime = new Intl.DateTimeFormat('pt-PT', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+});
 export const formatOrderDate = (iso: string) => dateTime.format(new Date(iso));
 
 export const deliveryLine = (order: Order) =>
   order.delivery.method === 'levantamento'
     ? `Levantamento na loja, ${STORE.address}`
-    : [order.delivery.street, order.delivery.neighbourhood, order.delivery.city, order.delivery.province].filter(Boolean).join(', ');
+    : [order.delivery.street, order.delivery.neighbourhood, order.delivery.city, order.delivery.province]
+        .filter(Boolean)
+        .join(', ');
 
 /** WhatsApp message that sends the whole order to the store. */
 export const orderWhatsappUrl = (order: Order) => {

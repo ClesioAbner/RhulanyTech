@@ -55,7 +55,9 @@ const ArticleCard = ({ article, layout = 'stack' }: ArticleCardProps) => {
   const row = layout === 'row';
   return (
     <Link to={href} className={`group ${row ? 'flex items-center gap-5' : 'block'}`}>
-      <div className={`overflow-hidden bg-mist ${row ? 'aspect-square w-28 shrink-0 rounded-2xl sm:w-36' : 'aspect-[4/3] rounded-[22px]'}`}>
+      <div
+        className={`overflow-hidden bg-mist ${row ? 'aspect-square w-28 shrink-0 rounded-2xl sm:w-36' : 'aspect-[4/3] rounded-[22px]'}`}
+      >
         <img
           src={unsplash(article.cover.src, row ? 400 : 900)}
           alt={article.cover.alt}
@@ -69,10 +71,14 @@ const ArticleCard = ({ article, layout = 'stack' }: ArticleCardProps) => {
           <span className="font-medium uppercase tracking-[0.14em] text-ink/50">{topicLabel(article.topic)}</span>
           <span className="tabular-nums text-ink/40">{readingMinutes(article)} min</span>
         </p>
-        <h3 className={`mt-2 font-display font-medium leading-snug tracking-tight [text-wrap:balance] ${row ? 'text-lg' : 'type-heading'}`}>
+        <h3
+          className={`mt-2 font-display font-medium leading-snug tracking-tight [text-wrap:balance] ${row ? 'text-lg' : 'type-heading'}`}
+        >
           <Underline>{article.title}</Underline>
         </h3>
-        <p className={`mt-2 text-sm leading-relaxed text-ink/60 ${row ? 'line-clamp-2 max-sm:hidden' : 'line-clamp-2'}`}>{article.excerpt}</p>
+        <p className={`mt-2 text-sm leading-relaxed text-ink/60 ${row ? 'line-clamp-2 max-sm:hidden' : 'line-clamp-2'}`}>
+          {article.excerpt}
+        </p>
       </div>
     </Link>
   );

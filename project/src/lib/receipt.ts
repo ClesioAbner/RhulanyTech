@@ -4,11 +4,11 @@ import { PAYMENTS_LIVE, deliveryLine, formatOrderDate, paymentName } from './che
 import { formatPrice } from './format';
 
 // jsPDF's built-in fonts cover Latin-1; Intl uses narrow no-break spaces in numbers, so normalise them.
-const pdfText = (text: string) => text.replace(/[  ]/g, ' ');
+const pdfText = (text: string) => text.replace(/[\u00A0\u202F]/g, ' ');
 const money = (value: number) => pdfText(formatPrice(value));
 
 /** Plain text in the receipt's QR code, readable by any phone camera. */
-export const receiptQrText = (order: Order) =>
+const receiptQrText = (order: Order) =>
   ['Rhulany Tech', `Encomenda ${order.number}`, formatOrderDate(order.createdAt), `Total ${formatPrice(order.subtotal)}`]
     .map(pdfText)
     .join('\n');
@@ -28,7 +28,14 @@ export const downloadReceiptPdf = async (order: Order) => {
   const muted: [number, number, number] = [120, 120, 125];
   let y = 24;
 
-  const text = (value: string, x: number, size = 10, color = ink, style: 'normal' | 'bold' = 'normal', align: 'left' | 'right' = 'left') => {
+  const text = (
+    value: string,
+    x: number,
+    size = 10,
+    color = ink,
+    style: 'normal' | 'bold' = 'normal',
+    align: 'left' | 'right' = 'left',
+  ) => {
     doc.setFont('helvetica', style);
     doc.setFontSize(size);
     doc.setTextColor(...color);

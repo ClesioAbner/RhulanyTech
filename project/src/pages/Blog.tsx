@@ -1,82 +1,26 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ARTICLES, BLOG_TOPICS, FAQ, readingMinutes, topicLabel, type BlogTopic } from '../data/blog';
+import { ARTICLES_BY_DATE, BLOG_TOPICS, FAQ, topicLabel, type BlogTopic } from '../data/blog';
 import { STORE } from '../data/store';
 import { unsplash } from '../lib/images';
-import { easeOutExpo, inViewOnce } from '../lib/motion';
+import { easeOutExpo, inViewOnce, riseOnView } from '../lib/motion';
 import ArticleCard from '../components/content/ArticleCard';
 import FaqList from '../components/content/FaqList';
+import Picks from '../components/content/BlogPicks';
 import BlogSearchHero from '../components/content/BlogSearchHero';
-import { FaqPhone, HelpPhone } from '../components/content/PhoneChats';
+import FaqPhone from '../components/content/chat/FaqPhone';
+import HelpPhone from '../components/content/chat/HelpPhone';
 import { WhatsAppIcon } from '../components/ui/Icons';
 import { SearchIcon } from '../components/ui/Icons';
 
-const BY_DATE = [...ARTICLES].sort((a, b) => b.date.localeCompare(a.date));
-const PICKS = BY_DATE.slice(0, 3);
-
 // Topic tiles use the newest guide's photo of that topic.
 const TOPICS = BLOG_TOPICS.map((topic) => {
-  const guides = BY_DATE.filter((article) => article.topic === topic.id);
+  const guides = ARTICLES_BY_DATE.filter((article) => article.topic === topic.id);
   return { ...topic, count: guides.length, cover: guides[0]?.cover };
 }).filter((topic) => topic.count > 0);
 
 const normalise = (text: string) => text.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-
-const reveal = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: inViewOnce,
-};
-
-/** Editorial opening: one large story and two smaller ones beside it. */
-const Picks = () => {
-  const [lead, ...rest] = PICKS;
-  return (
-    <section className="container-site pt-20 lg:pt-28" aria-labelledby="para-comecar">
-      <motion.div {...reveal} transition={{ duration: 0.8, ease: easeOutExpo }}>
-        <p className="eyebrow text-ink/45">Para começar</p>
-        <h2 id="para-comecar" className="type-title mt-3">
-          Guias essenciais
-        </h2>
-      </motion.div>
-
-      <div className="mt-10 grid gap-10 lg:mt-12 lg:grid-cols-12 lg:gap-12">
-        <motion.div className="lg:col-span-7" {...reveal} transition={{ duration: 0.9, ease: easeOutExpo }}>
-          <Link to={`/blog/${lead.slug}`} className="group block">
-            <div className="aspect-[16/10] overflow-hidden rounded-[28px] bg-mist">
-              <img
-                src={unsplash(lead.cover.src, 1400)}
-                alt={lead.cover.alt}
-                style={{ objectPosition: lead.cover.position }}
-                loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-[1400ms] ease-out-expo group-hover:scale-[1.04]"
-              />
-            </div>
-            <p className="mt-6 flex items-center gap-4 text-xs">
-              <span className="font-medium uppercase tracking-[0.14em] text-ink/50">{topicLabel(lead.topic)}</span>
-              <span className="tabular-nums text-ink/40">{readingMinutes(lead)} min de leitura</span>
-            </p>
-            <h3 className="type-title mt-3">
-              <span className="bg-gradient-to-r from-current to-current bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 ease-out-expo group-hover:bg-[length:100%_1px]">
-                {lead.title}
-              </span>
-            </h3>
-            <p className="type-lead mt-3 max-w-xl text-ink/60">{lead.excerpt}</p>
-          </Link>
-        </motion.div>
-
-        <ul className="flex flex-col justify-center gap-8 lg:col-span-5 lg:gap-10">
-          {rest.map((article, index) => (
-            <motion.li key={article.slug} {...reveal} transition={{ duration: 0.8, ease: easeOutExpo, delay: 0.1 + index * 0.08 }}>
-              <ArticleCard article={article} layout="row" />
-            </motion.li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-};
 
 /** /blog: care guides and frequent questions. */
 const Blog = () => {
@@ -95,7 +39,7 @@ const Blog = () => {
   const search = normalise(query.trim());
   const articles = useMemo(
     () =>
-      BY_DATE.filter((article) => topic === 'todos' || article.topic === topic).filter(
+      ARTICLES_BY_DATE.filter((article) => topic === 'todos' || article.topic === topic).filter(
         (article) => !search || normalise(`${article.title} ${article.excerpt} ${topicLabel(article.topic)}`).includes(search),
       ),
     [topic, search],
@@ -103,14 +47,22 @@ const Blog = () => {
   const faqs = useMemo(() => FAQ.filter((item) => !search || normalise(`${item.q} ${item.a}`).includes(search)), [search]);
   // Every guide that matches the search, whatever topic is selected below.
   const searchResults = useMemo(
-    () => (search ? BY_DATE.filter((article) => normalise(`${article.title} ${article.excerpt} ${topicLabel(article.topic)}`).includes(search)) : []),
+    () =>
+      search
+        ? ARTICLES_BY_DATE.filter((article) =>
+            normalise(`${article.title} ${article.excerpt} ${topicLabel(article.topic)}`).includes(search),
+          )
+        : [],
     [search],
   );
   const phoneFaq = faqs[openFaq ?? 0] ?? FAQ[0];
 
   const showAllResults = () => {
     setTopic('todos');
-    window.setTimeout(() => document.getElementById('todos-os-guias')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+    window.setTimeout(
+      () => document.getElementById('todos-os-guias')?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+      50,
+    );
   };
 
   const chooseTopic = (next: BlogTopic | 'todos') => {
@@ -125,7 +77,7 @@ const Blog = () => {
       <Picks />
 
       <section className="container-site pt-24 lg:pt-32" aria-labelledby="temas">
-        <motion.div {...reveal} transition={{ duration: 0.8, ease: easeOutExpo }}>
+        <motion.div {...riseOnView} transition={{ duration: 0.8, ease: easeOutExpo }}>
           <p className="eyebrow text-ink/45">Temas</p>
           <h2 id="temas" className="type-title mt-3">
             Explore por equipamento
@@ -195,32 +147,36 @@ const Blog = () => {
         </div>
 
         <div className="mt-6 flex items-center justify-between gap-4">
-        <div role="tablist" aria-label="Filtrar por tema" className="-mx-5 flex min-w-0 gap-1 overflow-x-auto px-5 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
-          {[{ id: 'todos' as const, label: 'Todos' }, ...TOPICS].map((item) => {
-            const isActive = item.id === topic;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                onClick={() => setTopic(item.id)}
-                className={`relative isolate h-10 shrink-0 rounded-full px-4 text-sm transition-colors duration-300 ${
-                  isActive ? 'text-paper' : 'text-ink/60 hover:text-ink'
-                }`}
-              >
-                {isActive && (
-                  <motion.span
-                    layoutId="blog-topic"
-                    className="absolute inset-0 -z-10 rounded-full bg-ink"
-                    transition={{ duration: 0.45, ease: easeOutExpo }}
-                  />
-                )}
-                {item.label}
-              </button>
-            );
-          })}
-        </div>
+          <div
+            role="tablist"
+            aria-label="Filtrar por tema"
+            className="-mx-5 flex min-w-0 gap-1 overflow-x-auto px-5 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden"
+          >
+            {[{ id: 'todos' as const, label: 'Todos' }, ...TOPICS].map((item) => {
+              const isActive = item.id === topic;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setTopic(item.id)}
+                  className={`relative isolate h-10 shrink-0 rounded-full px-4 text-sm transition-colors duration-300 ${
+                    isActive ? 'text-paper' : 'text-ink/60 hover:text-ink'
+                  }`}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="blog-topic"
+                      className="absolute inset-0 -z-10 rounded-full bg-ink"
+                      transition={{ duration: 0.45, ease: easeOutExpo }}
+                    />
+                  )}
+                  {item.label}
+                </button>
+              );
+            })}
+          </div>
           {/* Reading list or photo grid, like the reading apps */}
           <div role="radiogroup" aria-label="Vista" className="hidden shrink-0 rounded-full bg-white p-1 sm:flex">
             {(['lista', 'grelha'] as const).map((item) => (
@@ -233,7 +189,11 @@ const Blog = () => {
                 className={`relative isolate h-8 rounded-full px-4 text-sm capitalize transition-colors duration-300 ${view === item ? 'text-paper' : 'text-ink/55 hover:text-ink'}`}
               >
                 {view === item && (
-                  <motion.span layoutId="blog-view" className="absolute inset-0 -z-10 rounded-full bg-ink" transition={{ duration: 0.4, ease: easeOutExpo }} />
+                  <motion.span
+                    layoutId="blog-view"
+                    className="absolute inset-0 -z-10 rounded-full bg-ink"
+                    transition={{ duration: 0.4, ease: easeOutExpo }}
+                  />
                 )}
                 {item}
               </button>
@@ -282,7 +242,10 @@ const Blog = () => {
               <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-ink/60">
                 Diga-nos o que procura e respondemos directamente, ou sugira o tema para um próximo guia
               </p>
-              <Link to="/contacto" className="mt-6 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper">
+              <Link
+                to="/contacto"
+                className="mt-6 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper"
+              >
                 Fazer uma pergunta
               </Link>
             </motion.div>
@@ -292,7 +255,7 @@ const Blog = () => {
 
       <section id="duvidas" className="container-site scroll-mt-20 pt-24 lg:pt-32" aria-labelledby="duvidas-titulo">
         <div className="grid gap-10 lg:grid-cols-12">
-          <motion.div className="lg:col-span-5" {...reveal} transition={{ duration: 0.8, ease: easeOutExpo }}>
+          <motion.div className="lg:col-span-5" {...riseOnView} transition={{ duration: 0.8, ease: easeOutExpo }}>
             <p className="eyebrow text-ink/45">Dúvidas frequentes</p>
             <h2 id="duvidas-titulo" className="type-title mt-3">
               As perguntas que mais recebemos
@@ -318,7 +281,11 @@ const Blog = () => {
       </section>
 
       <section className="container-site pt-24 lg:pt-32" aria-labelledby="ajuda-blog">
-        <motion.div className="relative overflow-hidden rounded-[32px] bg-white" {...reveal} transition={{ duration: 0.9, ease: easeOutExpo }}>
+        <motion.div
+          className="relative overflow-hidden rounded-[32px] bg-white"
+          {...riseOnView}
+          transition={{ duration: 0.9, ease: easeOutExpo }}
+        >
           {/* Desktop: the hand and phone fill the right of the card; the copy sits on the empty left */}
           <div className="hidden lg:block">
             <HelpPhone variant="wide" />

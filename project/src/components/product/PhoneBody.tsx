@@ -1,17 +1,8 @@
 import type { ReactNode } from 'react';
 import { motion, type MotionValue } from 'framer-motion';
+import { mixColor } from '../../lib/color';
 
 const SLICES = 16;
-
-const rgb = (hex: string) => {
-  const n = parseInt(hex.slice(1), 16);
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-};
-/** Mixes a colour towards black (0) or white (255). */
-export const mixColor = (hex: string, target: number, amount: number) =>
-  `rgb(${rgb(hex)
-    .map((c) => Math.round(c + (target - c) * amount))
-    .join(', ')})`;
 
 interface PhoneBodyProps {
   /** Size of the phone in px. */
@@ -89,7 +80,13 @@ const PhoneBody = ({ width, height, radius, depth, frame, back, backAlt = '', sc
       {/* Front: black glass with the screen inside a slim border */}
       <div
         className="absolute inset-0 overflow-hidden"
-        style={{ ...face, borderRadius: radius, transform: `translateZ(${half + 0.5}px)`, background: '#050506', padding: border }}
+        style={{
+          ...face,
+          borderRadius: radius,
+          transform: `translateZ(${half + 0.5}px)`,
+          background: '#050506',
+          padding: border,
+        }}
       >
         <div className="relative h-full w-full overflow-hidden" style={{ borderRadius: radius - border }}>
           {screen}

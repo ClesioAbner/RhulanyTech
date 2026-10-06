@@ -21,8 +21,6 @@ const DISPLAY_W = WIDTH - BEZEL * 2;
 const DISPLAY_H = HEIGHT - BEZEL * 2;
 const DISPLAY_CORNER = CORNER - BEZEL;
 
-// Camera framing: the canvas is CANVAS_SCALE times the phone's CSS box, so the phone can turn without clipping.
-export const CANVAS_SCALE = { x: 2.4, y: 1.35 };
 const FOV = 25;
 
 const TITANIUM = '#bba98f';
@@ -249,21 +247,3 @@ export const PhoneScene = ({ fit = 0.72, ...model }: PhoneModelProps & { fit?: n
     <Scene fit={fit} {...model} />
   </div>
 );
-
-interface RealisticPhoneProps extends PhoneModelProps {
-  className?: string;
-}
-
-// Renders inside a box the size of the phone; the canvas overflows it so rotations never clip.
-const RealisticPhone = ({ className, ...model }: RealisticPhoneProps) => (
-  <div className={`relative h-[calc(var(--phone-w)*2.1)] w-[var(--phone-w)] ${className ?? ''}`}>
-    <div
-      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-      style={{ width: `${CANVAS_SCALE.x * 100}%`, height: `${CANVAS_SCALE.y * 100}%` }}
-    >
-      <Scene fit={1 / CANVAS_SCALE.y} {...model} />
-    </div>
-  </div>
-);
-
-export default RealisticPhone;

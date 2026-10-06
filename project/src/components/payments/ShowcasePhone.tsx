@@ -96,7 +96,15 @@ const ShowcasePhone = ({ rotateX, rotateY, rotateZ, scale, screen, lockStage }: 
       ? { opacity: 1, x: -width * 0.28, y: height * 0.36, z: width * 0.45, rotateY: 14, rotateX: 12, rotateZ: 8, scale: 0.8 }
       : { opacity: 1, x: -width * 0.68, y: height * 0.22, z: width * 0.4, rotateY: 22, rotateX: 10, rotateZ: 9, scale: 1 };
     // Tapping: flat over the contactless target in the upper third of the screen.
-    const tap = { x: -width * 0.02, y: -height * 0.12, z: width * 0.55, rotateY: 6, rotateX: 4, rotateZ: 2, scale: compact ? 0.72 : 0.86 };
+    const tap = {
+      x: -width * 0.02,
+      y: -height * 0.12,
+      z: width * 0.55,
+      rotateY: 6,
+      rotateX: 4,
+      rotateZ: 2,
+      scale: compact ? 0.72 : 0.86,
+    };
 
     if (!showCard) {
       setPaid(false);

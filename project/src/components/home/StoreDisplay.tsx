@@ -44,14 +44,22 @@ const StoreDisplay = () => (
           }}
         >
           <div className="relative" style={{ height: `${phone.height}%` }}>
-            <img src={resolveImage(phone.src, 600)} alt={phone.alt} loading="lazy" className="h-full w-auto max-w-none drop-shadow-[0_18px_22px_rgba(0,0,0,0.55)]" />
+            <img
+              src={resolveImage(phone.src, 600)}
+              alt={phone.alt}
+              loading="lazy"
+              className="h-full w-auto max-w-none drop-shadow-[0_18px_22px_rgba(0,0,0,0.55)]"
+            />
             {/* Reflection on the table */}
             <img
               src={resolveImage(phone.src, 600)}
               alt=""
               loading="lazy"
               className="absolute left-0 top-full h-full w-auto max-w-none -scale-y-100 opacity-25"
-              style={{ maskImage: 'linear-gradient(to top, black, transparent 28%)', WebkitMaskImage: 'linear-gradient(to top, black, transparent 28%)' }}
+              style={{
+                maskImage: 'linear-gradient(to top, black, transparent 28%)',
+                WebkitMaskImage: 'linear-gradient(to top, black, transparent 28%)',
+              }}
             />
           </div>
         </motion.div>

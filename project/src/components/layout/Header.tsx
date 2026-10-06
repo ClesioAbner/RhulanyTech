@@ -59,7 +59,11 @@ const Header = () => {
         }}
         transition={barTransition}
       >
-        <Link to="/" className="shrink-0 font-display text-[17px] font-semibold tracking-tight" aria-label="Rhulany Tech, página inicial">
+        <Link
+          to="/"
+          className="shrink-0 font-display text-[17px] font-semibold tracking-tight"
+          aria-label="Rhulany Tech, página inicial"
+        >
           Rhulany<span className="text-ink/40">Tech</span>
         </Link>
 

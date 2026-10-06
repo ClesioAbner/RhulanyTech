@@ -112,13 +112,13 @@ export const useUserStore = create<UserStore>()(
             experience: userData.preferences?.experience || '',
             notifications: true,
             newsletter: true,
-          }
+          },
         };
 
-        set(state => ({
+        set((state) => ({
           users: [...state.users, newUser],
           currentUser: newUser,
-          isLoggedIn: true
+          isLoggedIn: true,
         }));
 
         return newUser;
@@ -145,13 +145,11 @@ export const useUserStore = create<UserStore>()(
         if (!currentUser) return;
 
         const updatedUser = { ...currentUser, ...updates };
-        const updatedUsers = users.map(u => 
-          u.id === currentUser.id ? updatedUser : u
-        );
+        const updatedUsers = users.map((u) => (u.id === currentUser.id ? updatedUser : u));
 
         set({
           currentUser: updatedUser,
-          users: updatedUsers
+          users: updatedUsers,
         });
       },
 
@@ -163,7 +161,7 @@ export const useUserStore = create<UserStore>()(
           ...currentUser,
           purchaseHistory: [...currentUser.purchaseHistory, purchase],
           totalSpent: currentUser.totalSpent + purchase.total,
-          loyaltyPoints: currentUser.loyaltyPoints + Math.floor(purchase.total / 1000) // 1 ponto por 1000 MT
+          loyaltyPoints: currentUser.loyaltyPoints + Math.floor(purchase.total / 1000), // 1 ponto por 1000 MT
         };
 
         get().updateProfile(updatedUser);
@@ -171,21 +169,21 @@ export const useUserStore = create<UserStore>()(
 
       checkEmailExists: (email) => {
         const { users } = get();
-        return users.some(u => u.email === email);
+        return users.some((u) => u.email === email);
       },
 
       getUserByEmail: (email) => {
         const { users } = get();
-        return users.find(u => u.email === email) || null;
-      }
+        return users.find((u) => u.email === email) || null;
+      },
     }),
     {
       name: 'rhulany-tech-users',
       partialize: (state) => ({
         users: state.users,
         currentUser: state.currentUser,
-        isLoggedIn: state.isLoggedIn
-      })
-    }
-  )
+        isLoggedIn: state.isLoggedIn,
+      }),
+    },
+  ),
 );

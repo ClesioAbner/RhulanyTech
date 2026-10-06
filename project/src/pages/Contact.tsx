@@ -115,7 +115,10 @@ const Contact = () => {
           <motion.h2
             id="contactos-directos"
             className="type-title"
-            variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: easeOutExpo } } }}
+            variants={{
+              hidden: { opacity: 0, y: 16 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: easeOutExpo } },
+            }}
           >
             Contactos
           </motion.h2>
@@ -123,7 +126,10 @@ const Contact = () => {
             {CHANNELS.map((channel) => (
               <motion.li
                 key={channel.label}
-                variants={{ hidden: { opacity: 0, x: -16 }, visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: easeOutExpo } } }}
+                variants={{
+                  hidden: { opacity: 0, x: -16 },
+                  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: easeOutExpo } },
+                }}
               >
                 <ChannelRow channel={channel} />
               </motion.li>
@@ -131,7 +137,10 @@ const Contact = () => {
           </ul>
           <motion.div
             className="mt-10"
-            variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: easeOutExpo } } }}
+            variants={{
+              hidden: { opacity: 0, y: 12 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: easeOutExpo } },
+            }}
           >
             <SocialLinks labelled />
           </motion.div>

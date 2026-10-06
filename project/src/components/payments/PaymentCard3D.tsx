@@ -8,7 +8,16 @@ const EMBOSS = {
 // Visa wordmark: heavy italic letters in Visa blue, with the gold flick on the V.
 const VisaMark = ({ width }: { width: number }) => (
   <svg viewBox="0 0 100 32" style={{ width, height: width * 0.32 }} role="img" aria-label="Visa">
-    <text x="0" y="28" fontFamily="Arial Black, Arial, sans-serif" fontWeight="900" fontStyle="italic" fontSize="34" letterSpacing="-1" fill="#1A1F71">
+    <text
+      x="0"
+      y="28"
+      fontFamily="Arial Black, Arial, sans-serif"
+      fontWeight="900"
+      fontStyle="italic"
+      fontSize="34"
+      letterSpacing="-1"
+      fill="#1A1F71"
+    >
       VISA
     </text>
     <path d="M3 4.5h10.5l-2.4 6.5H1.2z" fill="#F7B600" />
@@ -47,7 +56,11 @@ const PaymentCard3D = ({ width }: { width: number }) => {
           key={i}
           aria-hidden="true"
           className="absolute inset-0"
-          style={{ borderRadius: radius, background: '#a9acb3', transform: `translateZ(${-depth / 2 + (depth * (i + 0.5)) / 3}px)` }}
+          style={{
+            borderRadius: radius,
+            background: '#a9acb3',
+            transform: `translateZ(${-depth / 2 + (depth * (i + 0.5)) / 3}px)`,
+          }}
         />
       ))}
 
@@ -66,12 +79,18 @@ const PaymentCard3D = ({ width }: { width: number }) => {
         <span
           aria-hidden="true"
           className="absolute inset-0"
-          style={{ background: 'repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, rgba(0,0,0,0.02) 1px, rgba(0,0,0,0.02) 2px)' }}
+          style={{
+            background:
+              'repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, rgba(0,0,0,0.02) 1px, rgba(0,0,0,0.02) 2px)',
+          }}
         />
         <motion.span
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 mix-blend-soft-light"
-          style={{ backgroundImage: 'linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.9) 48%, transparent 62%)', backgroundSize: '260% 100%' }}
+          style={{
+            backgroundImage: 'linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.9) 48%, transparent 62%)',
+            backgroundSize: '260% 100%',
+          }}
           animate={{ backgroundPositionX: ['120%', '-20%'] }}
           transition={{ duration: 2.4, repeat: Infinity, repeatDelay: 3.2, ease: 'easeInOut' }}
         />
@@ -102,12 +121,24 @@ const PaymentCard3D = ({ width }: { width: number }) => {
           <span className="absolute inset-x-0 top-1/2 h-px bg-[rgba(60,60,70,0.35)]" />
         </span>
         {/* Contactless */}
-        <svg className="absolute text-[#4a4d55]" style={{ left: 23 * u, top: 19 * u, width: 6.5 * u, height: 8.5 * u }} viewBox="0 0 13 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" aria-hidden="true">
+        <svg
+          className="absolute text-[#4a4d55]"
+          style={{ left: 23 * u, top: 19 * u, width: 6.5 * u, height: 8.5 * u }}
+          viewBox="0 0 13 16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+          aria-hidden="true"
+        >
           <path d="M2 5.5c1.3 1.5 1.3 3.5 0 5" />
           <path d="M5.2 3.5c2.4 2.7 2.4 6.3 0 9" />
           <path d="M8.4 1.5c3.4 3.9 3.4 9.1 0 13" />
         </svg>
-        <span className="absolute whitespace-nowrap font-display font-semibold tabular-nums" style={{ ...EMBOSS, left: 8 * u, top: 31.5 * u, fontSize: 6.4 * u, letterSpacing: 0.85 * u }}>
+        <span
+          className="absolute whitespace-nowrap font-display font-semibold tabular-nums"
+          style={{ ...EMBOSS, left: 8 * u, top: 31.5 * u, fontSize: 6.4 * u, letterSpacing: 0.85 * u }}
+        >
           4258 0417 3902 4821
         </span>
         <span className="absolute" style={{ ...EMBOSS, left: 8 * u, top: 40.5 * u, fontSize: 2.5 * u }}>
@@ -123,7 +154,10 @@ const PaymentCard3D = ({ width }: { width: number }) => {
             09/29
           </span>
         </span>
-        <span className="absolute font-semibold uppercase" style={{ ...EMBOSS, left: 8 * u, bottom: 6 * u, fontSize: 4 * u, letterSpacing: 0.45 * u }}>
+        <span
+          className="absolute font-semibold uppercase"
+          style={{ ...EMBOSS, left: 8 * u, bottom: 6 * u, fontSize: 4 * u, letterSpacing: 0.45 * u }}
+        >
           Rhulany Tech
         </span>
         <span className="absolute" style={{ right: 6.5 * u, bottom: 5 * u }}>
@@ -134,22 +168,47 @@ const PaymentCard3D = ({ width }: { width: number }) => {
       {/* Back */}
       <div
         className="absolute inset-0 overflow-hidden"
-        style={{ ...face, borderRadius: radius, transform: `rotateY(180deg) translateZ(${depth / 2 + 0.3}px)`, background: 'linear-gradient(135deg, #e3e5e8, #c3c6cb)' }}
+        style={{
+          ...face,
+          borderRadius: radius,
+          transform: `rotateY(180deg) translateZ(${depth / 2 + 0.3}px)`,
+          background: 'linear-gradient(135deg, #e3e5e8, #c3c6cb)',
+        }}
       >
         <span className="absolute inset-x-0 bg-[#1b1c20]" style={{ top: 6 * u, height: 11 * u }} />
         <span
           className="absolute flex items-center justify-end"
-          style={{ left: 7 * u, right: 24 * u, top: 22 * u, height: 8 * u, borderRadius: 1 * u, background: 'repeating-linear-gradient(135deg, #f6f5f1 0px, #f6f5f1 4px, #e6e4dd 4px, #e6e4dd 8px)' }}
+          style={{
+            left: 7 * u,
+            right: 24 * u,
+            top: 22 * u,
+            height: 8 * u,
+            borderRadius: 1 * u,
+            background: 'repeating-linear-gradient(135deg, #f6f5f1 0px, #f6f5f1 4px, #e6e4dd 4px, #e6e4dd 8px)',
+          }}
         >
-          <span className="mr-[0.6em] italic text-[#3d4048]" style={{ fontSize: 3.6 * u, fontFamily: '"Courier New", monospace' }}>
+          <span
+            className="mr-[0.6em] italic text-[#3d4048]"
+            style={{ fontSize: 3.6 * u, fontFamily: '"Courier New", monospace' }}
+          >
             •••
           </span>
         </span>
         <span
           className="absolute"
-          style={{ right: 7 * u, top: 21 * u, width: 12 * u, height: 10 * u, borderRadius: 1.4 * u, background: 'linear-gradient(120deg, #d9e8ff, #f3d6ff, #d6fff0, #fff3c9)' }}
+          style={{
+            right: 7 * u,
+            top: 21 * u,
+            width: 12 * u,
+            height: 10 * u,
+            borderRadius: 1.4 * u,
+            background: 'linear-gradient(120deg, #d9e8ff, #f3d6ff, #d6fff0, #fff3c9)',
+          }}
         />
-        <span className="absolute text-[#5d6069]" style={{ left: 7 * u, right: 7 * u, top: 35 * u, fontSize: 2.5 * u, lineHeight: 1.45 }}>
+        <span
+          className="absolute text-[#5d6069]"
+          style={{ left: 7 * u, right: 7 * u, top: 35 * u, fontSize: 2.5 * u, lineHeight: 1.45 }}
+        >
           Cartão de débito Rhulany Classic. Em caso de perda ou roubo contacte a Rhulany Tech de imediato.
         </span>
         <span className="absolute" style={{ left: 7 * u, bottom: 5 * u }}>

@@ -17,8 +17,8 @@ interface ShelfProps {
 }
 
 // The scroller bleeds to the viewport edges but its first item lines up with .container-site.
-export const BLEED_GUTTER = 'px-5 sm:px-8 lg:px-[max(3rem,calc((100%-1360px)/2+3rem))]';
-export const BLEED_SCROLL_PAD = 'scroll-pl-5 sm:scroll-pl-8 lg:scroll-pl-[max(3rem,calc((100%-1360px)/2+3rem))]';
+const BLEED_GUTTER = 'px-5 sm:px-8 lg:px-[max(3rem,calc((100%-1360px)/2+3rem))]';
+const BLEED_SCROLL_PAD = 'scroll-pl-5 sm:scroll-pl-8 lg:scroll-pl-[max(3rem,calc((100%-1360px)/2+3rem))]';
 
 const Chevron = ({ direction }: { direction: 'left' | 'right' }) => (
   <span
@@ -67,7 +67,10 @@ const Shelf = ({
           {lead && <span className="text-ink/45"> {lead}</span>}
         </h2>
         {link && (
-          <Link to={link.to} className="link-underline shrink-0 self-start text-sm text-ink/70 hover:text-ink sm:self-auto sm:pb-1">
+          <Link
+            to={link.to}
+            className="link-underline shrink-0 self-start text-sm text-ink/70 hover:text-ink sm:self-auto sm:pb-1"
+          >
             {link.label}
           </Link>
         )}

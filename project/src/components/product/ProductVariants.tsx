@@ -19,8 +19,7 @@ const ProductVariants = ({ product, finishIndex, optionIndex, onFinishChange, on
       {product.finishes.length > 0 && (
         <fieldset>
           <legend className="text-sm">
-            <span className="text-ink/55">Acabamento</span>{' '}
-            <span className="font-medium">{finish?.name}</span>
+            <span className="text-ink/55">Acabamento</span> <span className="font-medium">{finish?.name}</span>
           </legend>
           <div role="radiogroup" aria-label="Acabamento" className="mt-4 flex flex-wrap gap-3">
             {product.finishes.map((item, index) => {
@@ -38,10 +37,7 @@ const ProductVariants = ({ product, finishIndex, optionIndex, onFinishChange, on
                     isActive ? 'ring-ink' : 'ring-transparent hover:ring-ink/25'
                   }`}
                 >
-                  <span
-                    className="h-7 w-7 rounded-full ring-1 ring-inset ring-ink/15"
-                    style={{ backgroundColor: item.hex }}
-                  />
+                  <span className="h-7 w-7 rounded-full ring-1 ring-inset ring-ink/15" style={{ backgroundColor: item.hex }} />
                 </button>
               );
             })}

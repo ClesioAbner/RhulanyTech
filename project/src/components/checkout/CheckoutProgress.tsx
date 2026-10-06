@@ -19,13 +19,24 @@ const CheckoutProgress = ({ current }: { current: number }) => (
             >
               {done ? (
                 <svg viewBox="0 0 12 12" className="h-3 w-3" aria-hidden="true">
-                  <path d="M2.5 6.2l2.2 2.2 4.8-5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  <path
+                    d="M2.5 6.2l2.2 2.2 4.8-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               ) : (
                 index + 1
               )}
             </span>
-            <span className={`${active ? 'font-medium text-ink' : done ? 'text-ink/70' : 'text-ink/40'} ${active ? '' : 'max-sm:hidden'}`}>{step}</span>
+            <span
+              className={`${active ? 'font-medium text-ink' : done ? 'text-ink/70' : 'text-ink/40'} ${active ? '' : 'max-sm:hidden'}`}
+            >
+              {step}
+            </span>
           </span>
           {index < STEPS.length - 1 && (
             <span className="relative block h-px w-6 overflow-hidden bg-ink/10 sm:w-12" aria-hidden="true">

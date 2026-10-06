@@ -61,7 +61,10 @@ const ProductView = ({ product }: { product: CatalogProduct }) => {
   const [searchParams] = useSearchParams();
   // A card can link straight to a colour (?cor=azul-profundo).
   const [finishIndex, setFinishIndex] = useState(() =>
-    Math.max(0, product.finishes.findIndex((item) => slugify(item.name) === searchParams.get('cor'))),
+    Math.max(
+      0,
+      product.finishes.findIndex((item) => slugify(item.name) === searchParams.get('cor')),
+    ),
   );
   const [optionIndex, setOptionIndex] = useState(0);
   const ctaRef = useRef<HTMLDivElement>(null);
@@ -99,9 +102,7 @@ const ProductView = ({ product }: { product: CatalogProduct }) => {
 
           <div className="lg:col-span-5 lg:pt-4">
             <p className="text-xs font-medium uppercase tracking-[0.18em] text-ink/45">{product.brand}</p>
-            <h1 className="type-display mt-3">
-              {product.title}
-            </h1>
+            <h1 className="type-display mt-3">{product.title}</h1>
             <p className="mt-4 max-w-md text-base leading-relaxed text-ink/60">{product.summary}</p>
             <button
               type="button"

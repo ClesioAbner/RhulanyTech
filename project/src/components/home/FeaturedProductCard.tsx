@@ -83,9 +83,7 @@ const FeaturedProductCard = ({ product, mediaSlotRef, size = 'regular' }: Produc
         </Link>
 
         {!product.inStock && (
-          <span className="absolute left-4 top-4 text-xs font-medium uppercase tracking-[0.14em] text-ink/60">
-            Esgotado
-          </span>
+          <span className="absolute left-4 top-4 text-xs font-medium uppercase tracking-[0.14em] text-ink/60">Esgotado</span>
         )}
 
         <button

@@ -18,7 +18,7 @@ const PLACEMENTS: Record<string, string[]> = { ...LEGACY_PLACEMENTS, ...INVENTOR
 const MERCHANDISING: Record<string, Merchandising> = { ...LEGACY_MERCHANDISING, ...INVENTORY_MERCHANDISING };
 
 export type { Category, Subcategory } from '../data/catalog/taxonomy';
-export type { Finish, GalleryView, Highlight, OptionChoice } from '../data/catalog/merchandising';
+export type { Finish, Highlight, OptionChoice } from '../data/catalog/merchandising';
 
 export interface Placement {
   category: string;
@@ -98,10 +98,13 @@ const toCatalogProduct = (product: Product): CatalogProduct => {
   // Studio cut-outs lead each colour's photos.
   const finishes = pictured(
     merch.finishes ?? (product.colors ?? []).map((name) => ({ name, hex: COLOR_SWATCHES[name] ?? '#c9c9c9' })),
-  ).map((finish, index) => (cutouts[index] && finish.images ? { ...finish, images: [cutouts[index], ...finish.images] } : finish));
+  ).map((finish, index) =>
+    cutouts[index] && finish.images ? { ...finish, images: [cutouts[index], ...finish.images] } : finish,
+  );
   const title = merch.option ? product.name.replace(STORAGE_SUFFIX, '') : product.name;
   // The 3D model keeps the gallery; colour photos then only serve cards and the cart.
-  const baseGallery = !merch.scene3d && finishes[0]?.images?.length ? finishViews(title, finishes[0]) : buildGallery(product, merch);
+  const baseGallery =
+    !merch.scene3d && finishes[0]?.images?.length ? finishViews(title, finishes[0]) : buildGallery(product, merch);
   const gallery = cutouts.product
     ? [{ angle: 'frente' as const, src: cutouts.product, url: resolveImage(cutouts.product), alt: title }, ...baseGallery]
     : baseGallery;
@@ -120,11 +123,10 @@ const toCatalogProduct = (product: Product): CatalogProduct => {
     option: merch.option,
     scene3d: merch.scene3d,
     gallery,
-    highlights:
-      merch.highlights ?? product.features.slice(0, 4).map((feature) => ({ title: feature, body: '' })),
+    highlights: merch.highlights ?? product.features.slice(0, 4).map((feature) => ({ title: feature, body: '' })),
     primaryImage: finishes[0]?.images?.[0]
       ? resolveImage(finishes[0].images[0])
-      : gallery.find((view) => view.url)?.url ?? resolveImage(product.images[0]),
+      : (gallery.find((view) => view.url)?.url ?? resolveImage(product.images[0])),
   };
 };
 
@@ -139,9 +141,7 @@ export const getSubcategory = (category: Category | undefined, slug?: string) =>
 
 export const productsIn = (categorySlug: string, subcategorySlug?: string) =>
   CATALOG.filter((product) =>
-    product.placements.some(
-      (p) => p.category === categorySlug && (!subcategorySlug || p.subcategory === subcategorySlug),
-    ),
+    product.placements.some((p) => p.category === categorySlug && (!subcategorySlug || p.subcategory === subcategorySlug)),
   );
 
 export const getProductBySlug = (slug?: string) => CATALOG.find((product) => product.slug === slug);
@@ -175,12 +175,6 @@ export const categoryFace = (slug: string) => getProductById(CATEGORY_FACES[slug
 export const subcategoryFace = (categorySlug: string, subcategory: Subcategory) => {
   const list = sortProducts(productsIn(categorySlug, subcategory.slug), 'destaque');
   return (list.find((p) => isCutout(p.primaryImage)) ?? list[0])?.primaryImage;
-};
-
-export const subcategoryCover = (categorySlug: string, subcategory: Subcategory, width = 800) => {
-  if (subcategory.image) return resolveImage(subcategory.image, width);
-  const product = productsIn(categorySlug, subcategory.slug)[0];
-  return product && resolveImage(product.primaryImage, width);
 };
 
 export const priceFrom = (product: CatalogProduct) =>
@@ -226,7 +220,7 @@ export const categoryPath = (categorySlug: string, subcategorySlug?: string) =>
 // ---------- Merchandising lists ----------
 
 /** Latest launches, newest first; drives the "Novo" label and the shop's new-arrivals shelf. */
-export const NEW_ARRIVAL_IDS = ['38', '39', '40', '41', '46', '71', '54', '55', '56', '57', '51', '53'];
+const NEW_ARRIVAL_IDS = ['38', '39', '40', '41', '46', '71', '54', '55', '56', '57', '51', '53'];
 export const isNewArrival = (product: Pick<CatalogProduct, 'id'>) => NEW_ARRIVAL_IDS.includes(product.id);
 export const newArrivals = () => NEW_ARRIVAL_IDS.map((id) => getProductById(id)).filter((p): p is CatalogProduct => Boolean(p));
 

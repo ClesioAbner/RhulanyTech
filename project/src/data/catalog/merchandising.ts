@@ -94,10 +94,30 @@ export const MERCHANDISING: Record<string, Merchandising> = {
     summary: 'Titânio, chip A18 Pro e o maior ecrã de sempre num iPhone',
     scene3d: 'iphone-pro',
     finishes: [
-      { name: 'Titânio Deserto', hex: '#bfa98c', model: { frame: '#bba98f', back: '#cdbca4' }, images: ['/images/produtos/iphone-16-pro-max-deserto'] },
-      { name: 'Titânio Natural', hex: '#b8b3aa', model: { frame: '#b5b0a6', back: '#c9c5bd' }, images: ['/images/produtos/iphone-16-pro-max-natural'] },
-      { name: 'Titânio Branco', hex: '#e6e4df', model: { frame: '#d9d6d0', back: '#eeece8' }, images: ['/images/produtos/iphone-16-pro-max-branco'] },
-      { name: 'Titânio Preto', hex: '#3a3a3c', model: { frame: '#4a4a4d', back: '#2f2f31' }, images: ['/images/produtos/iphone-16-pro-max-preto'] },
+      {
+        name: 'Titânio Deserto',
+        hex: '#bfa98c',
+        model: { frame: '#bba98f', back: '#cdbca4' },
+        images: ['/images/produtos/iphone-16-pro-max-deserto'],
+      },
+      {
+        name: 'Titânio Natural',
+        hex: '#b8b3aa',
+        model: { frame: '#b5b0a6', back: '#c9c5bd' },
+        images: ['/images/produtos/iphone-16-pro-max-natural'],
+      },
+      {
+        name: 'Titânio Branco',
+        hex: '#e6e4df',
+        model: { frame: '#d9d6d0', back: '#eeece8' },
+        images: ['/images/produtos/iphone-16-pro-max-branco'],
+      },
+      {
+        name: 'Titânio Preto',
+        hex: '#3a3a3c',
+        model: { frame: '#4a4a4d', back: '#2f2f31' },
+        images: ['/images/produtos/iphone-16-pro-max-preto'],
+      },
     ],
     option: {
       name: 'Armazenamento',
@@ -116,8 +136,14 @@ export const MERCHANDISING: Record<string, Merchandising> = {
       { angle: 'ambiente', src: '1726587912121-ea21fcc57ff8', alt: 'iPhone 16 Pro em Titânio Deserto, frente e traseira' },
     ],
     highlights: [
-      { title: 'Chip A18 Pro', body: 'Mais rápido e mais eficiente, para jogos exigentes, edição de vídeo e o dia inteiro de bateria.' },
-      { title: 'Câmara Fusion de 48MP', body: 'Fotografias com detalhe extraordinário e teleobjectiva de 5x para chegar mais perto.' },
+      {
+        title: 'Chip A18 Pro',
+        body: 'Mais rápido e mais eficiente, para jogos exigentes, edição de vídeo e o dia inteiro de bateria.',
+      },
+      {
+        title: 'Câmara Fusion de 48MP',
+        body: 'Fotografias com detalhe extraordinário e teleobjectiva de 5x para chegar mais perto.',
+      },
       { title: 'Ecrã de 6,9 polegadas', body: 'Super Retina XDR com ProMotion até 120 Hz e margens mais finas do que nunca.' },
       { title: 'Controlo da Câmara', body: 'Um botão dedicado para abrir a câmara, fotografar e ajustar o zoom com um gesto.' },
       { title: 'Design em titânio', body: 'Leve, resistente e com acabamentos que envelhecem bem.' },
@@ -143,7 +169,11 @@ export const MERCHANDISING: Record<string, Merchandising> = {
   '3': {
     summary: 'A melhor câmara Pixel com as funcionalidades de IA da Google',
     finishes: [
-      { name: 'Obsidian', hex: '#2b2c2e', images: ['/images/produtos/pixel-8-pro-obsidian', '1697355360151-2866de32ad4d', '1706412703794-d944cd3625b3'] },
+      {
+        name: 'Obsidian',
+        hex: '#2b2c2e',
+        images: ['/images/produtos/pixel-8-pro-obsidian', '1697355360151-2866de32ad4d', '1706412703794-d944cd3625b3'],
+      },
     ],
   },
   '4': {
@@ -163,9 +193,7 @@ export const MERCHANDISING: Record<string, Merchandising> = {
   },
   '6': {
     summary: 'M3 Max, até 22 horas de bateria e ecrã Liquid Retina XDR',
-    finishes: [
-      { name: 'Preto sideral', hex: '#2e2f33', images: ['1517336714731-489689fd1ca8'] },
-    ],
+    finishes: [{ name: 'Preto sideral', hex: '#2e2f33', images: ['1517336714731-489689fd1ca8'] }],
     option: {
       name: 'Memória unificada',
       choices: [
@@ -176,9 +204,7 @@ export const MERCHANDISING: Record<string, Merchandising> = {
   },
   '8': {
     summary: 'Ecrã 4K de 17 polegadas para criadores',
-    finishes: [
-      { name: 'Platinum Silver', hex: '#d4d5d7', images: ['1593642632559-0c6d3fc62b89'] },
-    ],
+    finishes: [{ name: 'Platinum Silver', hex: '#d4d5d7', images: ['1593642632559-0c6d3fc62b89'] }],
   },
   '9': {
     summary: 'Desktop gaming com refrigeração líquida e RTX',
@@ -190,9 +216,7 @@ export const MERCHANDISING: Record<string, Merchandising> = {
   '11': { summary: 'A Xbox mais potente, com 1TB e 4K a 120 fps' },
   '12': {
     summary: 'Ecrã OLED de 7 polegadas, em casa ou fora dela',
-    finishes: [
-      { name: 'Neon Red/Blue', hex: '#e0475d', images: ['1578303512597-81e6cc155b3e'] },
-    ],
+    finishes: [{ name: 'Neon Red/Blue', hex: '#e0475d', images: ['1578303512597-81e6cc155b3e'] }],
   },
   '13': { summary: 'A biblioteca Steam num portátil com ecrã HDR OLED' },
   '24': { summary: 'Full-frame de 33MP para foto e vídeo 4K' },
@@ -215,15 +239,11 @@ export const MERCHANDISING: Record<string, Merchandising> = {
   },
   '30': {
     summary: 'Assistente Google e música, em formato compacto',
-    finishes: [
-      { name: 'Carvão', hex: '#3b3c3f', images: ['1519558260268-cde7e03a0152'] },
-    ],
+    finishes: [{ name: 'Carvão', hex: '#3b3c3f', images: ['1519558260268-cde7e03a0152'] }],
   },
   '31': {
     summary: 'A agenda, a casa e as fotografias num ecrã de 7"',
-    finishes: [
-      { name: 'Carvão', hex: '#3b3c3f', images: ['1650682009477-52fd77302b78'] },
-    ],
+    finishes: [{ name: 'Carvão', hex: '#3b3c3f', images: ['1650682009477-52fd77302b78'] }],
   },
   '32': { summary: 'Câmara 2K de interior com rotação de 360°' },
   '33': { summary: 'Luz branca regulável, controlada pela voz' },
@@ -232,9 +252,7 @@ export const MERCHANDISING: Record<string, Merchandising> = {
   '36': { summary: 'Sete portas com interruptores individuais' },
   '37': {
     summary: 'Silicone suave com ímanes MagSafe',
-    finishes: [
-      { name: 'Azul-ardósia', hex: '#53637a', images: ['1711033312367-247626a984d1'] },
-    ],
+    finishes: [{ name: 'Azul-ardósia', hex: '#53637a', images: ['1711033312367-247626a984d1'] }],
   },
   '14': {
     finishes: [
@@ -243,13 +261,9 @@ export const MERCHANDISING: Record<string, Merchandising> = {
     ],
   },
   '15': {
-    finishes: [
-      { name: 'Black', hex: '#1d1d1f', images: ['1615663245857-ac93bb7c39e7'] },
-    ],
+    finishes: [{ name: 'Black', hex: '#1d1d1f', images: ['1615663245857-ac93bb7c39e7'] }],
   },
   '17': {
-    finishes: [
-      { name: 'Black', hex: '#1d1d1f', images: ['1679533662345-b321cf2d8792', '1548030415-e1eb1c684c9b'] },
-    ],
+    finishes: [{ name: 'Black', hex: '#1d1d1f', images: ['1679533662345-b321cf2d8792', '1548030415-e1eb1c684c9b'] }],
   },
 };

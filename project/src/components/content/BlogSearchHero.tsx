@@ -54,7 +54,9 @@ interface BlogSearchHeroProps {
 
 const BlogSearchHero = ({ query, onQueryChange, results, onShowAll }: BlogSearchHeroProps) => {
   const sectionRef = useRef<HTMLElement>(null);
-  const [geometry, setGeometry] = useState(() => layout(typeof window === 'undefined' ? 1440 : window.innerWidth, typeof window === 'undefined' ? 900 : window.innerHeight));
+  const [geometry, setGeometry] = useState(() =>
+    layout(typeof window === 'undefined' ? 1440 : window.innerWidth, typeof window === 'undefined' ? 900 : window.innerHeight),
+  );
   const [loaded, setLoaded] = useState(false);
   const [focused, setFocused] = useState(false);
 
@@ -80,7 +82,11 @@ const BlogSearchHero = ({ query, onQueryChange, results, onShowAll }: BlogSearch
   };
 
   return (
-    <section ref={sectionRef} className="relative isolate h-[100svh] min-h-[600px] overflow-hidden bg-ink text-paper" aria-labelledby="blog-titulo">
+    <section
+      ref={sectionRef}
+      className="relative isolate h-[100svh] min-h-[600px] overflow-hidden bg-ink text-paper"
+      aria-labelledby="blog-titulo"
+    >
       <img
         src={`/images/blog/pesquisa-${PHOTO.sizes[0]}.jpg`}
         alt=""
@@ -169,8 +175,15 @@ const BlogSearchHero = ({ query, onQueryChange, results, onShowAll }: BlogSearch
                     <ul>
                       {results.slice(0, 4).map((article) => (
                         <li key={article.slug}>
-                          <Link to={`/blog/${article.slug}`} className="flex items-center gap-3 rounded-xl p-2 transition-colors hover:bg-paper">
-                            <img src={unsplash(article.cover.src, 200)} alt="" className="h-11 w-11 shrink-0 rounded-lg object-cover" />
+                          <Link
+                            to={`/blog/${article.slug}`}
+                            className="flex items-center gap-3 rounded-xl p-2 transition-colors hover:bg-paper"
+                          >
+                            <img
+                              src={unsplash(article.cover.src, 200)}
+                              alt=""
+                              className="h-11 w-11 shrink-0 rounded-lg object-cover"
+                            />
                             <span className="min-w-0">
                               <span className="block truncate text-sm font-medium">{article.title}</span>
                               <span className="block text-xs text-ink/50">
@@ -181,7 +194,11 @@ const BlogSearchHero = ({ query, onQueryChange, results, onShowAll }: BlogSearch
                         </li>
                       ))}
                     </ul>
-                    <button type="button" onMouseDown={onShowAll} className="mt-1 w-full rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-colors hover:bg-paper">
+                    <button
+                      type="button"
+                      onMouseDown={onShowAll}
+                      className="mt-1 w-full rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-colors hover:bg-paper"
+                    >
                       Ver {results.length === 1 ? 'o resultado' : `os ${results.length} resultados`} na biblioteca
                     </button>
                   </>

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import { STORE } from '../data/store';
-import { ClockIcon, MailIcon, PhoneIcon, StoreIcon } from './ui/Icons';
-import SocialLinks from './ui/SocialLinks';
+import { STORE } from '../../data/store';
+import { ClockIcon, MailIcon, PhoneIcon, StoreIcon } from '../ui/Icons';
+import SocialLinks from '../ui/SocialLinks';
 
 const iconClass = 'mt-0.5 h-4 w-4 shrink-0 text-ink/40';
 
