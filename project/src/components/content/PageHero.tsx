@@ -5,6 +5,10 @@ import { easeOutExpo } from '../../lib/motion';
 
 interface PageHeroProps {
   image: string;
+  /** Portrait crop for phones, so the subject is not cut off on narrow screens. */
+  mobileImage?: string;
+  /** Object-position classes for the photo, e.g. to keep the subject clear of the header. */
+  imagePosition?: string;
   alt: string;
   eyebrow: string;
   title: string;
@@ -20,7 +24,7 @@ interface PageHeroProps {
  * Full-screen opening banner for content pages: edge-to-edge photo under the floating header,
  * title at the bottom. The photo drifts and the copy fades as the page scrolls away.
  */
-const PageHero = ({ image, alt, eyebrow, title, lead, aside, nextId }: PageHeroProps) => {
+const PageHero = ({ image, mobileImage, imagePosition = '', alt, eyebrow, title, lead, aside, nextId }: PageHeroProps) => {
   const ref = useRef<HTMLElement>(null);
   const photoRef = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(false);
@@ -45,21 +49,25 @@ const PageHero = ({ image, alt, eyebrow, title, lead, aside, nextId }: PageHeroP
           aria-hidden="true"
           className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl"
         />
-        <motion.img
-          ref={photoRef}
-          src={unsplash(image, 1600)}
-          srcSet={unsplashSrcSet(image)}
-          sizes="100vw"
-          alt={alt}
-          onLoad={() => setLoaded(true)}
-          className="relative h-full w-full object-cover"
-          initial={{ scale: 1.08, opacity: 0 }}
-          animate={loaded ? { scale: 1, opacity: 1 } : { scale: 1.08, opacity: 0 }}
-          transition={{ duration: 1.6, ease: easeOutExpo }}
-        />
+        <picture className="relative block h-full w-full">
+          {mobileImage && <source media="(max-width: 767px)" srcSet={unsplashSrcSet(mobileImage)} sizes="100vw" />}
+          <motion.img
+            ref={photoRef}
+            src={unsplash(image, 1600)}
+            srcSet={unsplashSrcSet(image)}
+            sizes="100vw"
+            alt={alt}
+            onLoad={() => setLoaded(true)}
+            className={`h-full w-full object-cover ${imagePosition}`}
+            initial={{ scale: 1.08, opacity: 0 }}
+            animate={loaded ? { scale: 1, opacity: 1 } : { scale: 1.08, opacity: 0 }}
+            transition={{ duration: 1.6, ease: easeOutExpo }}
+          />
+        </picture>
       </motion.div>
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink/85 via-ink/25 to-ink/30" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/55 via-transparent to-transparent" />
+      {/* Shade only where the copy sits, so the sky keeps its colour */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink/85 via-ink/30 via-35% to-transparent to-70%" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/45 via-transparent to-transparent" />
 
       <motion.div
         className="container-site flex h-full flex-col justify-end gap-10 pb-14 pt-32 lg:flex-row lg:items-end lg:justify-between lg:pb-32"

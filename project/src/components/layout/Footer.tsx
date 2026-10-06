@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { STORE } from '../../data/store';
+import { easeOutExpo } from '../../lib/motion';
 import { ClockIcon, MailIcon, PhoneIcon, StoreIcon } from '../ui/Icons';
 import SocialLinks from '../ui/SocialLinks';
 
@@ -31,7 +33,7 @@ const COLUMNS = [
 const Footer = () => (
   <footer className="border-t border-ink/10 bg-paper">
     <div className="container-site grid gap-12 py-20 md:grid-cols-12 lg:py-24">
-      <div className="md:col-span-5">
+      <div className="md:col-span-12 lg:col-span-5">
         <Link to="/" className="font-display text-2xl font-semibold tracking-tight">
           Rhulany<span className="text-ink/40">Tech</span>
         </Link>
@@ -41,7 +43,7 @@ const Footer = () => (
       </div>
 
       {COLUMNS.map((column) => (
-        <div key={column.title} className="md:col-span-2">
+        <div key={column.title} className="md:col-span-4 lg:col-span-2">
           <h2 className="eyebrow text-ink/45">{column.title}</h2>
           <ul className="mt-5 space-y-3 text-sm">
             {column.links.map((link) => (
@@ -55,7 +57,7 @@ const Footer = () => (
         </div>
       ))}
 
-      <div className="md:col-span-3">
+      <div className="md:col-span-4 lg:col-span-3">
         <h2 className="eyebrow text-ink/45">Contacto</h2>
         <ul className="mt-5 space-y-3 text-sm">
           <li className="flex gap-3">
@@ -83,11 +85,30 @@ const Footer = () => (
       </div>
     </div>
 
-    <div className="container-site flex flex-col gap-2 border-t border-ink/10 py-6 text-xs text-ink/50 sm:flex-row sm:justify-between">
-      <p>© {new Date().getFullYear()} Rhulany Tech. Todos os direitos reservados.</p>
-      <p>Todos os preços em Meticais (MT).</p>
+    <div className="container-site flex flex-col gap-5 border-t border-ink/10 py-7 text-xs text-ink/50 md:flex-row md:items-center md:justify-between">
+      <p>
+        © {new Date().getFullYear()} Rhulany Tech. Todos os direitos reservados.
+        <span className="mt-1 block sm:ml-1 sm:mt-0 sm:inline">Preços em Meticais (MT).</span>
+      </p>
+      <Signature />
     </div>
   </footer>
+);
+
+/** The developer's credit: a quiet label and the name, crossed once by a sweep of light as it comes into view. */
+const Signature = () => (
+  <p className="flex items-baseline gap-3">
+    <span className="eyebrow text-[10px] text-ink/40">Desenvolvido por</span>
+    <motion.span
+      className="bg-[linear-gradient(110deg,#0C0C0D_42%,rgba(12,12,13,0.3)_50%,#0C0C0D_58%)] bg-[length:300%_100%] bg-clip-text font-display text-sm font-medium tracking-tight text-transparent"
+      initial={{ backgroundPositionX: '100%' }}
+      whileInView={{ backgroundPositionX: '0%' }}
+      viewport={{ once: true }}
+      transition={{ duration: 1.8, ease: easeOutExpo, delay: 0.4 }}
+    >
+      Eclésio Pembelane
+    </motion.span>
+  </p>
 );
 
 export default Footer;

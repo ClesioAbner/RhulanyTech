@@ -7,7 +7,9 @@ import { unsplash } from '../lib/images';
 import { easeOutExpo, inViewOnce } from '../lib/motion';
 import PageHero from '../components/content/PageHero';
 
-const HERO_IMAGE = '1650876095496-e01d50a6c874';
+// Maputo bay at sunset (Unsplash), kept locally with the lens flare removed and a portrait crop for phones.
+const HERO_IMAGE = '/images/sobre/baia-maputo';
+const HERO_IMAGE_PORTRAIT = '/images/sobre/baia-maputo-vertical';
 const CITY_IMAGE = '1684777310271-22ab048239bd';
 const BRANDS = [...new Set(CATALOG.map((product) => product.brand))].sort((a, b) => a.localeCompare(b));
 
@@ -104,9 +106,30 @@ const About = () => {
     <div className="pb-28 lg:pb-36">
       <PageHero
         image={HERO_IMAGE}
+        mobileImage={HERO_IMAGE_PORTRAIT}
+        imagePosition="object-[68%_0%] lg:object-top"
         alt="Barco à vela na baía de Maputo ao pôr do sol, com a cidade ao fundo"
         eyebrow="Sobre a Rhulany Tech"
         title="Tecnologia original, de Maputo para todo o país"
+        lead="Smartphones, computadores, consolas e acessórios originais, com a garantia oficial de cada marca"
+        aside={
+          <div className="flex flex-wrap gap-3">
+            <Link
+              to="/loja"
+              className="inline-flex h-12 items-center rounded-full bg-paper px-7 text-sm font-medium text-ink transition-colors duration-300 hover:bg-mist"
+            >
+              Entrar na loja
+            </Link>
+            <a
+              href={STORE.mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-12 items-center rounded-full border border-paper/25 px-7 text-sm font-medium text-paper backdrop-blur-sm transition-colors duration-300 hover:border-paper/60"
+            >
+              Como chegar
+            </a>
+          </div>
+        }
         nextId="quem-somos"
       />
 

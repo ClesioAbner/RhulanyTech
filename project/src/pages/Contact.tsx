@@ -11,7 +11,8 @@ import PageHero from '../components/content/PageHero';
 import SocialLinks from '../components/ui/SocialLinks';
 import { ClockIcon, MailIcon, PhoneIcon, StoreIcon, WhatsAppIcon } from '../components/ui/Icons';
 
-const HERO_IMAGE = '1526998758291-f87c4c1a8fff';
+// Maputo at sunset (Unsplash), kept locally so the banner does not wait on their CDN.
+const HERO_IMAGE = '/images/contacto/maputo-fim-de-tarde';
 const STORE_IMAGE = '1684777238927-1134cca28473';
 
 interface Channel {
