@@ -1,12 +1,8 @@
-import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { unsplash, unsplashSrcSet } from '../../lib/images';
+import { motion } from 'framer-motion';
 import { easeOutExpo, inViewOnce } from '../../lib/motion';
 import SectionHeading from '../ui/SectionHeading';
-
-const MAIN_IMAGE = '1593305841991-05c297ba4575';
-const DETAIL_IMAGE = '1670535787435-63a39a5b8d32';
+import GamingStage from './GamingStage';
 
 const HIGHLIGHTS = [
   { label: 'Consoles', detail: 'PlayStation, Xbox e Nintendo' },
@@ -14,18 +10,7 @@ const HIGHLIGHTS = [
   { label: 'Monitores', detail: 'Alta frequência para jogar sem atrasos' },
 ];
 
-const GamingFeature = () => {
-  const sceneRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: sceneRef, offset: ['start end', 'end start'] });
-
-  // The main photo opens from a narrow window and drifts slowly; the detail card floats against it.
-  const reveal = useTransform(scrollYProgress, [0, 0.45], ['inset(18% 12% 18% 12% round 28px)', 'inset(0% 0% 0% 0% round 20px)']);
-  const mainScale = useTransform(scrollYProgress, [0, 1], [1.25, 1.02]);
-  const mainY = useTransform(scrollYProgress, [0, 1], ['-4%', '4%']);
-  const detailY = useTransform(scrollYProgress, [0, 1], [120, -120]);
-  const detailRotate = useTransform(scrollYProgress, [0, 1], [-10, 6]);
-
-  return (
+const GamingFeature = () => (
     <section className="overflow-hidden border-t border-ink/10" aria-labelledby="gaming-titulo">
       <div className="container-site grid items-center gap-16 py-28 lg:grid-cols-12 lg:gap-12 lg:py-40">
         <div className="lg:col-span-5">
@@ -79,34 +64,11 @@ const GamingFeature = () => {
           </div>
         </div>
 
-        <div ref={sceneRef} className="relative lg:col-span-7">
-          <motion.div className="relative aspect-[4/5] overflow-hidden bg-ink sm:aspect-[5/4]" style={{ clipPath: reveal }}>
-            <motion.img
-              src={unsplash(MAIN_IMAGE, 1600)}
-              srcSet={unsplashSrcSet(MAIN_IMAGE)}
-              sizes="(min-width: 1024px) 55vw, 100vw"
-              alt="Sala de gaming iluminada a roxo com monitor e consolas"
-              loading="lazy"
-              className="h-full w-full object-cover"
-              style={{ scale: mainScale, y: mainY }}
-            />
-          </motion.div>
-
-          <motion.div
-            className="absolute -bottom-12 -right-3 w-[36%] overflow-hidden rounded-xl border-[6px] border-paper bg-ink shadow-[0_40px_80px_-30px_rgba(12,12,13,0.6)] sm:-right-6 lg:-right-8"
-            style={{ y: detailY, rotate: detailRotate }}
-          >
-            <img
-              src={unsplash(DETAIL_IMAGE, 700)}
-              alt="Comando DualSense branco sobre madeira"
-              loading="lazy"
-              className="aspect-[4/5] w-full object-cover"
-            />
-          </motion.div>
+        <div className="relative lg:col-span-7">
+          <GamingStage />
         </div>
       </div>
     </section>
-  );
-};
+);
 
 export default GamingFeature;
