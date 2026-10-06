@@ -43,9 +43,9 @@ const ART: Record<string, TileArt> = {
     shape: 'lg:aspect-auto lg:h-[600px]',
     tint: '#f2eee5',
     pieces: [
-      { src: `${P}imac-24-m4-amarelo`, left: 26, top: 19, width: 50, rotate: 0, spread: 0 },
-      { src: `${P}macbook-air-13-m4-azul-ceu`, left: 5, top: 53, width: 46, rotate: -4, spread: -14 },
-      { src: `${P}mac-mini-m4`, left: 70, top: 61, width: 20, rotate: 3, spread: 12 },
+      { src: `${P}lenovo-thinkpad-x1-carbon-gen-12`, left: 50, top: 21, width: 42, rotate: 2, spread: 12 },
+      { src: `${P}microsoft-surface-laptop-7-edicao-platina`, left: 8, top: 31, width: 52, rotate: -2, spread: -14 },
+      { src: `${P}mac-mini-m4`, left: 68, top: 61, width: 19, rotate: 4, spread: 16 },
     ],
   },
   gaming: {
