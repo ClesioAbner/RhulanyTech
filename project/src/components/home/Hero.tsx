@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import { introRemaining } from '../../lib/bootLoader';
 import { easeOutExpo } from '../../lib/motion';
 
 const HERO_VIDEO = '/videos/hero-circuit.mp4';
@@ -10,6 +11,8 @@ const Hero = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const prefersReducedMotion = useReducedMotion();
+  // On the first visit the entrance waits for the intro to lift, so it is seen rather than played behind it.
+  const [wait] = useState(introRemaining);
 
   // Scroll: the stage tilts back and settles into a framed card as the page moves on.
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
@@ -36,7 +39,7 @@ const Hero = () => {
           className="absolute inset-0 overflow-hidden bg-ink [transform-origin:50%_100%]"
           initial={{ rotateX: 38, y: 160, scale: 0.72, borderRadius: 40, opacity: 0 }}
           animate={{ rotateX: 0, y: 0, scale: 1, borderRadius: 0, opacity: 1 }}
-          transition={{ duration: 1.8, ease: easeOutExpo }}
+          transition={{ duration: 1.8, ease: easeOutExpo, delay: wait }}
         >
           <video
             ref={videoRef}
@@ -61,7 +64,7 @@ const Hero = () => {
             className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, ease: easeOutExpo, delay: 1 }}
+            transition={{ duration: 1.1, ease: easeOutExpo, delay: 1 + wait }}
           >
             <p className="max-w-sm text-base leading-relaxed text-paper/75 sm:text-lg">
               Smartphones, computadores, consoles e periféricos originais, com garantia e entrega em todo Moçambique

@@ -31,8 +31,19 @@
       Loader: a processor chip with light running round its outline and pins lighting in turn.
       Styled here so it works before the app's CSS and JS arrive; the chip in the app
       (src/components/ui/TechChip.tsx) reuses these classes, so keep the two in step.
-      It only fades in after a moment, so fast loads never see it.
+      It only fades in after a moment, so fast loads never see it. The first visit of a session
+      plays it as a short intro instead (.rt-intro), which leaves as a curtain rising.
     -->
+    <script>
+      try {
+        if (!sessionStorage.getItem('rt-intro') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          document.documentElement.classList.add('rt-intro');
+          sessionStorage.setItem('rt-intro', '1');
+        }
+      } catch (error) {
+        // Storage can be blocked; the site simply opens without the intro.
+      }
+    </script>
     <style>
       .rt-boot {
         position: fixed;
@@ -142,6 +153,74 @@
           color: #0c0c0d;
         }
       }
+      /* Intro: the chip draws itself, pins appear one by one, the name rises, then the light runs */
+      .rt-intro .rt-boot {
+        clip-path: inset(0 0 0 0);
+        transition: clip-path 0.85s cubic-bezier(0.76, 0, 0.24, 1);
+      }
+      .rt-intro .rt-boot--done {
+        opacity: 1;
+        visibility: visible;
+        clip-path: inset(0 0 100% 0);
+      }
+      .rt-intro .rt-boot .rt-loader {
+        opacity: 1;
+        animation: none;
+        transition:
+          transform 0.85s cubic-bezier(0.76, 0, 0.24, 1),
+          opacity 0.4s ease;
+      }
+      .rt-intro .rt-boot--done .rt-loader {
+        transform: translateY(-48px);
+        opacity: 0;
+      }
+      .rt-intro .rt-boot .rt-chip-base {
+        stroke-dasharray: 100;
+        stroke-dashoffset: 100;
+        animation: rt-draw 0.8s cubic-bezier(0.65, 0, 0.35, 1) 0.1s forwards;
+      }
+      .rt-intro .rt-boot .rt-pin {
+        opacity: 0;
+        animation:
+          rt-show 0.35s ease forwards,
+          rt-pin 1.8s ease-in-out infinite;
+        animation-delay: calc(0.3s + var(--i) * 45ms), calc(1s + var(--i) * 150ms);
+      }
+      .rt-intro .rt-boot .rt-chip-core {
+        animation:
+          rt-core-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both,
+          rt-core 1.8s ease-in-out 1.15s infinite;
+      }
+      .rt-intro .rt-boot .rt-chip-trace {
+        opacity: 0;
+        animation:
+          rt-trace 1.8s linear 0.9s infinite,
+          rt-show 0.3s ease 0.9s forwards;
+      }
+      .rt-intro .rt-boot .rt-wordmark {
+        opacity: 0;
+        animation: rt-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
+      }
+      @keyframes rt-draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      @keyframes rt-show {
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes rt-core-in {
+        from {
+          opacity: 0;
+          transform: scale(0.4);
+        }
+        to {
+          opacity: 0.85;
+          transform: scale(0.9);
+        }
+      }
       @media (prefers-reduced-motion: reduce) {
         .rt-chip-trace,
         .rt-pin {
@@ -212,7 +291,7 @@
             <line x1="20" y1="28" x2="12" y2="28" />
             <circle cx="10" cy="28" r="1.6" />
           </g>
-          <rect class="rt-chip-base" x="20" y="20" width="32" height="32" rx="7" />
+          <rect class="rt-chip-base" x="20" y="20" width="32" height="32" rx="7" pathLength="100" />
           <rect class="rt-chip-trace" x="20" y="20" width="32" height="32" rx="7" pathLength="100" />
           <rect class="rt-chip-core" x="29" y="29" width="14" height="14" rx="3" />
         </svg>
