@@ -146,12 +146,12 @@ const ProductView = ({ product }: { product: CatalogProduct }) => {
               />
             </div>
 
-            <div ref={ctaRef} className="mt-10 flex flex-col gap-3 sm:flex-row">
+            <div ref={ctaRef} data-keep-clear className="mt-10 flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"
                 onClick={handleAdd}
                 disabled={!product.inStock}
-                className="h-14 flex-1 rounded-full bg-ink text-sm font-medium text-paper transition-[background-color,transform] duration-300 hover:bg-ink-soft active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-ink/30"
+                className="h-14 rounded-full bg-ink text-sm font-medium text-paper transition-[background-color,transform] duration-300 hover:bg-ink-soft active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-ink/30 sm:flex-1"
               >
                 Adicionar ao carrinho
               </button>
@@ -159,7 +159,7 @@ const ProductView = ({ product }: { product: CatalogProduct }) => {
                 type="button"
                 onClick={handleBuyNow}
                 disabled={!product.inStock}
-                className="h-14 flex-1 rounded-full border border-ink/20 text-sm font-medium transition-[border-color,transform] duration-300 hover:border-ink active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+                className="h-14 rounded-full border border-ink/20 text-sm font-medium transition-[border-color,transform] duration-300 hover:border-ink active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 sm:flex-1"
               >
                 Comprar agora
               </button>
@@ -199,6 +199,7 @@ const ProductView = ({ product }: { product: CatalogProduct }) => {
       <AnimatePresence>
         {!ctaVisible && product.inStock && (
           <motion.div
+            data-buy-bar
             className="fixed inset-x-3 bottom-3 z-40 flex items-center gap-3 rounded-full border border-ink/10 bg-paper/90 py-2 pl-5 pr-2 shadow-[0_20px_40px_-20px_rgba(12,12,13,0.4)] backdrop-blur-xl lg:hidden"
             initial={{ y: 90, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}

@@ -38,6 +38,7 @@ src/
     payments/             animação dos pagamentos da página inicial
       screens/            ecrãs desenhados em canvas (bloqueio, checkout, carteiras, cartão, PayPal)
     checkout/             passos, formulários, confirmação e recibo da encomenda
+    assistant/            chat do assistente (o cérebro fica no backend)
     cart/                 gaveta, linhas e quantidades do carrinho
     account/              formulário de entrada e registo
     content/              blog, sobre e contacto
@@ -45,12 +46,24 @@ src/
       chat/               telefones com conversas do blog
   data/                   catálogo, artigos do blog e dados da loja
   lib/                    lógica sem interface (preços, checkout, recibo em PDF, animações, cores)
+    assistant/            contrato e cliente do backend do assistente
   stores/                 estado global com zustand (carrinho, encomendas, utilizador)
+dev/                      só para `npm run dev` (respostas de demonstração do chat)
 public/
   images/produtos/        fotografias de estúdio em WebP (600 e 1200 px)
   images/blog/            imagens dos artigos
   videos/                 vídeo do banner da página inicial
 ```
+
+## Assistente (chat)
+
+O chat no canto do ecrã é só a interface: quem responde é um backend, que recebe um `POST` por mensagem e
+responde em streaming (`application/x-ndjson`) ou de uma vez (`application/json`). O contrato está em
+`src/lib/assistant/types.ts`.
+
+- Em `npm run dev`, `dev/assistantMock.ts` responde com exemplos para se poder testar o visual (escreva "erro"
+  para ver uma falha).
+- No site publicado, o chat só aparece quando `VITE_ASSISTANT_URL` aponta para o backend.
 
 ## Estado atual
 

@@ -4,6 +4,7 @@ import { MotionConfig } from 'framer-motion';
 import Home from './pages/Home';
 import Footer from './components/layout/Footer';
 import Header from './components/layout/Header';
+import Assistant from './components/assistant/Assistant';
 import CartDrawer from './components/cart/CartDrawer';
 import PageLoader from './components/ui/PageLoader';
 import { LEGACY_CATEGORY_PATHS, getProductById, productPath } from './lib/catalog';
@@ -125,6 +126,7 @@ function App() {
         )}
       </div>
       <CartDrawer />
+      <Assistant />
     </MotionConfig>
   );
 }

@@ -83,3 +83,31 @@ export const SearchIcon = (props: IconProps) => (
     <path d="M15.5 15.5L20 20" />
   </Line>
 );
+
+/** The brand's processor chip, for the assistant. */
+export const ChipIcon = (props: IconProps) => (
+  <Line {...props}>
+    <rect x="6.5" y="6.5" width="11" height="11" rx="2.5" />
+    <rect x="9.75" y="9.75" width="4.5" height="4.5" rx="1" fill="currentColor" stroke="none" />
+    <path d="M9.75 6.5V3.5M14.25 6.5V3.5M9.75 20.5v-3M14.25 20.5v-3M6.5 9.75h-3M6.5 14.25h-3M20.5 9.75h-3M20.5 14.25h-3" />
+  </Line>
+);
+
+export const CloseIcon = (props: IconProps) => (
+  <Line {...props}>
+    <path d="M6 6l12 12M18 6L6 18" />
+  </Line>
+);
+
+export const ArrowUpIcon = (props: IconProps) => (
+  <Line {...props}>
+    <path d="M12 19V5M6 11l6-6 6 6" />
+  </Line>
+);
+
+export const RestartIcon = (props: IconProps) => (
+  <Line {...props}>
+    <path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3" />
+    <path d="M4.5 4.5v4h4" />
+  </Line>
+);
