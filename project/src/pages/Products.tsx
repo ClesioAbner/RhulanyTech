@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { products } from '../data/products';
 import { useCartStore } from '../stores/cartStore';
 import Product360Viewer from '../components/Product360Viewer';
@@ -8,11 +8,16 @@ import { motion } from 'framer-motion';
 
 const Products = () => {
   const { addToCart } = useCartStore();
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(searchParams.get('category'));
   const [show360Viewer, setShow360Viewer] = useState(false);
   const [selected360Product, setSelected360Product] = useState<any>(null);
   const [sortBy, setSortBy] = useState('name');
   const [priceRange, setPriceRange] = useState([0, 500000]);
+
+  useEffect(() => {
+    setSelectedCategory(searchParams.get('category'));
+  }, [searchParams]);
 
   const filteredProducts = products
     .filter(p => selectedCategory ? p.category === selectedCategory : true)
