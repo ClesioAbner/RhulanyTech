@@ -107,9 +107,10 @@ const FeaturedProductCard = ({ product, mediaSlotRef, size = 'regular' }: Produc
         </h3>
         <p className="mt-1 line-clamp-1 text-sm text-ink/55">{product.summary}</p>
 
-        <div className="mt-3 flex items-center justify-between gap-4">
+        {/* Phones: colours above the price, so the price never breaks across lines */}
+        <div className="mt-3 flex flex-col-reverse items-start gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
           <p className="flex flex-wrap items-baseline gap-x-2 text-sm tabular-nums">
-            <span>
+            <span className="whitespace-nowrap">
               {hasOptions && <span className="text-ink/50">Desde </span>}
               {formatPrice(priceFrom(product))}
             </span>

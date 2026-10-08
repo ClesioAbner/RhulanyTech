@@ -32,8 +32,8 @@ const COLUMNS = [
 
 const Footer = () => (
   <footer className="border-t border-ink/10 bg-paper">
-    <div className="container-site grid gap-12 py-20 md:grid-cols-12 lg:py-24">
-      <div className="md:col-span-12 lg:col-span-5">
+    <div className="container-site grid grid-cols-2 gap-x-6 gap-y-12 py-16 md:grid-cols-12 md:gap-12 md:py-20 lg:py-24">
+      <div className="col-span-2 md:col-span-12 lg:col-span-5">
         <Link to="/" className="font-display text-2xl font-semibold tracking-tight">
           Rhulany<span className="text-ink/40">Tech</span>
         </Link>
@@ -57,7 +57,7 @@ const Footer = () => (
         </div>
       ))}
 
-      <div className="md:col-span-4 lg:col-span-3">
+      <div className="col-span-2 md:col-span-4 lg:col-span-3">
         <h2 className="eyebrow text-ink/45">Contacto</h2>
         <ul className="mt-5 space-y-3 text-sm">
           <li className="flex gap-3">

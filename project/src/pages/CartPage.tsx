@@ -158,7 +158,7 @@ const CartPage = () => {
       {/* Mobile: the summary sits below the list, so the total and checkout stay within reach */}
       <div
         data-buy-bar
-        className="fixed inset-x-3 bottom-3 z-40 flex items-center gap-3 rounded-full border border-ink/10 bg-paper/90 py-2 pl-5 pr-2 shadow-[0_20px_40px_-20px_rgba(12,12,13,0.4)] backdrop-blur-xl lg:hidden"
+        className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 flex items-center gap-3 rounded-full border border-ink/10 bg-paper/90 py-2 pl-5 pr-2 shadow-[0_20px_40px_-20px_rgba(12,12,13,0.4)] backdrop-blur-xl lg:hidden"
       >
         <div className="min-w-0 flex-1">
           <p className="text-xs text-ink/55">Total, {itemCountLabel(count)}</p>

@@ -93,7 +93,7 @@ const ProductView = ({ product }: { product: CatalogProduct }) => {
       <div className="container-site pt-10 lg:pt-14">
         <Breadcrumb product={product} />
 
-        <div className="mt-8 grid gap-10 lg:grid-cols-12 lg:gap-14">
+        <div className="mt-5 grid gap-8 sm:mt-8 sm:gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="lg:col-span-7">
             <div className="lg:sticky lg:top-28">
               <ProductGallery product={product} views={views} finish={finish} />
@@ -200,7 +200,7 @@ const ProductView = ({ product }: { product: CatalogProduct }) => {
         {!ctaVisible && product.inStock && (
           <motion.div
             data-buy-bar
-            className="fixed inset-x-3 bottom-3 z-40 flex items-center gap-3 rounded-full border border-ink/10 bg-paper/90 py-2 pl-5 pr-2 shadow-[0_20px_40px_-20px_rgba(12,12,13,0.4)] backdrop-blur-xl lg:hidden"
+            className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 flex items-center gap-3 rounded-full border border-ink/10 bg-paper/90 py-2 pl-5 pr-2 shadow-[0_20px_40px_-20px_rgba(12,12,13,0.4)] backdrop-blur-xl lg:hidden"
             initial={{ y: 90, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 90, opacity: 0 }}

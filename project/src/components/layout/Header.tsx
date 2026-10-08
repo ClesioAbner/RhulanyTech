@@ -38,8 +38,10 @@ const Header = () => {
 
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+    document.documentElement.toggleAttribute('data-menu-open', isMenuOpen);
     return () => {
       document.body.style.overflow = '';
+      document.documentElement.removeAttribute('data-menu-open');
     };
   }, [isMenuOpen]);
 

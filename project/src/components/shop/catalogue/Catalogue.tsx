@@ -431,7 +431,7 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
                 </button>
               </div>
               <div className="flex-1 overflow-y-auto pb-6">{renderFilters('sheet')}</div>
-              <div className="flex gap-3 border-t border-ink/[0.08] p-4">
+              <div className="flex gap-3 border-t border-ink/[0.08] p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
                 {activeCount > 0 && (
                   <button
                     type="button"

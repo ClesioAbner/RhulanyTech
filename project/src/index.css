@@ -4,6 +4,7 @@
 
 @layer base {
   html {
+    -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -17,12 +18,26 @@
     @apply bg-ink text-paper;
   }
 
+  /* Touch screens: form fields at 16px at least, or iPhone Safari zooms the page when one is focused. */
+  @media (pointer: coarse) {
+    input,
+    textarea,
+    select {
+      font-size: 16px !important;
+    }
+  }
+
   :focus-visible {
     @apply outline outline-2 outline-offset-4 outline-current;
   }
 }
 
 @layer components {
+  /* The chat button steps aside while the phone menu is open. */
+  html[data-menu-open] .assistant-launcher {
+    visibility: hidden;
+  }
+
   .container-site {
     @apply mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-12;
   }

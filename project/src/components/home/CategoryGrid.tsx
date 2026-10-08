@@ -101,7 +101,7 @@ const CategoryGrid = () => (
     />
 
     <motion.ul
-      className="mt-12 grid gap-4 [perspective:1600px] sm:grid-cols-2 lg:mt-16 lg:grid-cols-12 lg:gap-5"
+      className="mt-10 grid grid-cols-2 gap-3 [perspective:1600px] sm:mt-12 sm:gap-4 lg:mt-16 lg:grid-cols-12 lg:gap-5"
       variants={stagger(0.08)}
       initial="hidden"
       whileInView="visible"
@@ -112,44 +112,53 @@ const CategoryGrid = () => (
         if (!art) return null;
         const wide = art.span !== 'lg:col-span-3';
         return (
-          <motion.li key={category.slug} variants={riseIn3d} className={`${art.span} [transform-origin:50%_100%]`}>
+          // Phones: the two wide tiles span the row, the four others sit in pairs.
+          <motion.li
+            key={category.slug}
+            variants={riseIn3d}
+            className={`${wide ? 'col-span-2 sm:col-span-1' : ''} ${art.span} [transform-origin:50%_100%]`}
+          >
             <motion.div initial="rest" animate="rest" whileHover="hover" className="h-full">
               <Link
                 to={categoryPath(category.slug)}
-                className={`group relative block aspect-[4/5] overflow-hidden rounded-[28px] ring-1 ring-ink/[0.05] sm:aspect-[4/3] ${art.shape}`}
+                className={`group relative block overflow-hidden rounded-[22px] ring-1 ring-ink/[0.05] sm:aspect-[4/3] sm:rounded-[28px] ${wide ? 'aspect-[6/5]' : 'aspect-[4/5]'} ${art.shape}`}
                 style={{ background: `radial-gradient(120% 80% at 50% 0%, #ffffff 0%, ${art.tint} 72%)` }}
               >
-                {/* Still life */}
-                {art.pieces.map((piece, index) => (
-                  <motion.img
-                    key={piece.src}
-                    src={resolveImage(piece.src, wide ? 1200 : 600)}
-                    alt=""
-                    loading="lazy"
-                    draggable={false}
-                    className="stage-shadow absolute select-none"
-                    style={{ left: `${piece.left}%`, top: `${piece.top}%`, width: `${piece.width}%`, zIndex: index }}
-                    variants={{
-                      rest: { x: 0, y: 0, rotate: piece.rotate, scale: 1 },
-                      hover: { x: piece.spread, y: -10 - index * 3, rotate: piece.rotate * 1.35, scale: 1.03 },
-                    }}
-                    transition={{ duration: 0.8, ease: easeOutExpo }}
-                  />
-                ))}
+                {/* Still life; on phones the small tiles lower it so the name stays clear */}
+                <div className={`absolute inset-0 ${wide ? '' : 'max-sm:translate-y-[9%]'}`}>
+                  {art.pieces.map((piece, index) => (
+                    <motion.img
+                      key={piece.src}
+                      src={resolveImage(piece.src, wide ? 1200 : 600)}
+                      alt=""
+                      loading="lazy"
+                      draggable={false}
+                      className="stage-shadow absolute select-none"
+                      style={{ left: `${piece.left}%`, top: `${piece.top}%`, width: `${piece.width}%`, zIndex: index }}
+                      variants={{
+                        rest: { x: 0, y: 0, rotate: piece.rotate, scale: 1 },
+                        hover: { x: piece.spread, y: -10 - index * 3, rotate: piece.rotate * 1.35, scale: 1.03 },
+                      }}
+                      transition={{ duration: 0.8, ease: easeOutExpo }}
+                    />
+                  ))}
+                </div>
 
                 {/* Name, count and the way in */}
-                <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-4 p-6 lg:p-8">
+                <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-4 sm:gap-4 sm:p-6 lg:p-8">
                   <div>
                     <h3
-                      className={`font-display font-medium tracking-tight ${wide ? 'text-2xl lg:text-3xl' : 'text-xl lg:text-2xl'}`}
+                      className={`font-display font-medium tracking-tight ${wide ? 'text-2xl lg:text-3xl' : 'text-lg sm:text-xl lg:text-2xl'}`}
                     >
                       {category.name}
                     </h3>
-                    <p className="mt-1 text-sm tabular-nums text-ink/50">{productsIn(category.slug).length} produtos</p>
+                    <p className="mt-1 text-xs tabular-nums text-ink/50 sm:text-sm">
+                      {productsIn(category.slug).length} produtos
+                    </p>
                   </div>
                   <span
                     aria-hidden="true"
-                    className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/80 text-ink ring-1 ring-ink/[0.06] backdrop-blur transition-[background-color,color,transform] duration-500 ease-out-expo group-hover:-rotate-45 group-hover:bg-ink group-hover:text-paper"
+                    className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/80 text-ink ring-1 ring-ink/[0.06] backdrop-blur transition-[background-color,color,transform] duration-500 ease-out-expo group-hover:-rotate-45 group-hover:bg-ink group-hover:text-paper sm:h-10 sm:w-10"
                   >
                     <span className="relative block h-[1.5px] w-3.5 bg-current after:absolute after:-right-px after:-top-[3px] after:h-2 after:w-2 after:rotate-45 after:border-r-[1.5px] after:border-t-[1.5px] after:border-current after:content-['']" />
                   </span>

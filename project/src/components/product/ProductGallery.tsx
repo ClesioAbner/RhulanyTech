@@ -116,7 +116,7 @@ const ProductGallery = ({ product, views = product.gallery, finish }: ProductGal
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={() => (drag.current = null)}
-        className={`stage relative aspect-[4/5] touch-pan-y select-none overflow-hidden rounded-[28px] outline-offset-4 lg:aspect-auto lg:h-[min(78svh,780px)] ${
+        className={`stage relative aspect-square touch-pan-y select-none overflow-hidden rounded-[28px] outline-offset-4 sm:aspect-[4/5] lg:aspect-auto lg:h-[min(78svh,780px)] ${
           is3dView ? 'cursor-grab active:cursor-grabbing' : ''
         }`}
       >

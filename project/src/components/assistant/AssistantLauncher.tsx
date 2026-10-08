@@ -50,7 +50,7 @@ const AssistantLauncher = ({ hidden }: { hidden: boolean }) => {
       {!hidden && !stepAside && (
         <motion.div
           key="botao"
-          className="fixed bottom-4 right-4 z-[60] flex items-center gap-3 sm:bottom-6 sm:right-6 print:hidden"
+          className="assistant-launcher fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-[60] flex items-center gap-3 transition-opacity duration-300 sm:bottom-6 sm:right-6 print:hidden"
           initial={{ opacity: 0, y: 16, scale: 0.9 }}
           animate={{ opacity: 1, y: raised ? ABOVE_BAR : 0, scale: 1 }}
           exit={{ opacity: 0, y: 12, scale: 0.9, transition: { duration: 0.2 } }}
@@ -76,12 +76,12 @@ const AssistantLauncher = ({ hidden }: { hidden: boolean }) => {
             onClick={openChat}
             aria-label="Abrir o assistente"
             aria-haspopup="dialog"
-            className="group grid h-14 w-14 place-items-center rounded-full bg-ink text-paper shadow-[0_20px_40px_-16px_rgba(12,12,13,0.55)]"
+            className="group grid h-12 w-12 place-items-center rounded-full bg-ink text-paper shadow-[0_20px_40px_-16px_rgba(12,12,13,0.55)] sm:h-14 sm:w-14"
             whileHover={{ scale: 1.06 }}
             whileTap={{ scale: 0.94 }}
             transition={{ duration: 0.4, ease: easeOutExpo }}
           >
-            <ChipIcon className="h-6 w-6 transition-transform duration-700 ease-out-expo group-hover:rotate-90" />
+            <ChipIcon className="h-[22px] w-[22px] transition-transform duration-700 ease-out-expo group-hover:rotate-90 sm:h-6 sm:w-6" />
           </motion.button>
         </motion.div>
       )}

@@ -44,7 +44,7 @@ const Payments = ({
     <section
       id="pagamentos"
       ref={sectionRef}
-      className="relative h-[460vh] border-t border-ink/10"
+      className="relative h-[360vh] border-t border-ink/10 lg:h-[460vh]"
       aria-labelledby="pagamentos-titulo"
     >
       <ul className="sr-only">
