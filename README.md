@@ -15,6 +15,7 @@ E abrir http://localhost:5173 no browser.
 
 Feito por Eclésio Pembelane.
 Parceria com a Landora
+
 <img width="1920" height="912" alt="Captura de Ecrã (833)" src="https://github.com/user-attachments/assets/98336cc0-dc88-4e30-b11a-4bbda51e22a0" />
 <img width="1900" height="903" alt="Captura de Ecrã (834)" src="https://github.com/user-attachments/assets/ccbfca5d-5bfe-4e1e-bf60-be7af2ca6b28" />
 <img width="1895" height="906" alt="Captura de Ecrã (832)" src="https://github.com/user-attachments/assets/222b1b36-3711-40f4-8aa6-8760cb7df5c7" />
