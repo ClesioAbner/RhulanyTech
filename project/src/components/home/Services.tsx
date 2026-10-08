@@ -13,7 +13,7 @@ const REASONS = [
   },
   {
     title: 'Pagamento à sua medida',
-    body: 'M-Pesa, e-Mola, cartão ou PayPal. Escolha o método que lhe der mais jeito no checkout.',
+    body: 'M-Pesa, e-Mola, mKesh, cartão ou PayPal. Escolha o método que lhe der mais jeito no checkout.',
   },
   {
     title: 'Aconselhamento real',
@@ -26,10 +26,14 @@ const Services = () => (
     <div className="container-site grid gap-14 py-28 lg:grid-cols-12 lg:py-40">
       <div className="lg:col-span-5">
         <div className="lg:sticky lg:top-32">
-          <SectionHeading id="servicos-titulo" index="05" eyebrow="Porquê a Rhulany Tech" title="Comprar tecnologia devia ser simples" />
+          <SectionHeading
+            id="servicos-titulo"
+            index="05"
+            eyebrow="Porquê a Rhulany Tech"
+            title="Comprar tecnologia devia ser simples"
+          />
           <p className="mt-6 max-w-sm text-base leading-relaxed text-ink/60">
-            Somos uma equipa moçambicana que testa o que vende, explica sem jargão e continua consigo depois da
-            compra
+            Somos uma equipa moçambicana que testa o que vende, explica sem jargão e continua consigo depois da compra
           </p>
         </div>
       </div>
@@ -48,7 +52,7 @@ const Services = () => (
               {String(index + 1).padStart(2, '0')}
             </span>
             <div>
-              <h3 className="font-display text-2xl font-medium tracking-tight sm:text-[1.75rem]">{reason.title}</h3>
+              <h3 className="type-heading">{reason.title}</h3>
               <p className="mt-3 max-w-md text-base leading-relaxed text-ink/60">{reason.body}</p>
             </div>
           </motion.li>

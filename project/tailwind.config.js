@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -11,8 +8,13 @@ export default {
           DEFAULT: '#0C0C0D',
           soft: '#1C1C1E',
         },
-        paper: '#F5F4F1',
-        mist: '#EAE8E3',
+        paper: '#F5F5F7',
+        mist: '#E8E8ED',
+        // Rhulany orange: sparingly, for what is new, on offer or in progress.
+        accent: {
+          DEFAULT: '#EA5B0C',
+          deep: '#B8430A',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
@@ -27,4 +29,4 @@ export default {
     },
   },
   plugins: [],
-}
+};

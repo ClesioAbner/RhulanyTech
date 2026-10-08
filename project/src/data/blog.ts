@@ -1,337 +1,758 @@
-export interface BlogPost {
-  id: string;
+/*
+ * Blog: care guides for the equipment we sell, plus frequent questions.
+ * Bodies are structured blocks so the article page controls the typography.
+ * `cover` and image `src` are Unsplash ids; `products` are catalogue ids shown under the article.
+ */
+
+export type BlogTopic = 'telemoveis' | 'computadores' | 'gaming' | 'camaras' | 'audio' | 'energia' | 'seguranca';
+
+export const BLOG_TOPICS: { id: BlogTopic; label: string }[] = [
+  { id: 'telemoveis', label: 'Telemóveis' },
+  { id: 'computadores', label: 'Computadores' },
+  { id: 'gaming', label: 'Gaming' },
+  { id: 'camaras', label: 'Câmaras' },
+  { id: 'audio', label: 'Áudio' },
+  { id: 'energia', label: 'Energia' },
+  { id: 'seguranca', label: 'Segurança' },
+];
+
+export type ArticleBlock =
+  | { type: 'p'; text: string }
+  | { type: 'h2'; id: string; text: string }
+  | { type: 'list'; items: string[]; ordered?: boolean }
+  | { type: 'tip'; title: string; text: string }
+  | { type: 'image'; src: string; alt: string; caption?: string };
+
+export interface Article {
+  slug: string;
   title: string;
   excerpt: string;
-  content: string;
-  category: 'setup' | 'comparativo' | 'noticias' | 'guias' | 'reviews' | 'tutoriais';
-  author: string;
+  topic: BlogTopic;
+  /** ISO date of publication. */
   date: string;
-  readTime: string;
-  image: string;
-  tags: string[];
-  featured?: boolean;
-  views: number;
-  likes: number;
-  comments: Comment[];
-  aiGenerated?: boolean;
-  difficulty?: 'iniciante' | 'intermediario' | 'avancado';
-  relatedProducts?: string[];
+  /** `position` is the CSS object-position that keeps the subject in frame when cropped. */
+  cover: { src: string; alt: string; position?: string };
+  /** Key points, shown as the article's summary. */
+  summary: string[];
+  body: ArticleBlock[];
+  products?: string[];
 }
 
-export interface Comment {
-  id: string;
-  author: string;
-  avatar: string;
-  content: string;
-  date: string;
-  likes: number;
-  replies?: Comment[];
-}
-
-export const blogPosts: BlogPost[] = [
+const ARTICLES: Article[] = [
   {
-    id: '1',
-    title: 'Como Montar o Setup Gaming Perfeito em 2024',
-    excerpt: 'Guia completo para criar um setup gaming que impressiona e oferece máxima performance.',
-    content: `
-# Como Montar o Setup Gaming Perfeito em 2024
-
-## 🎮 Introdução
-
-Montar um setup gaming perfeito vai muito além de apenas comprar os componentes mais caros. É sobre criar um ambiente harmonioso que combine performance, estética e conforto para longas sessões de jogo.
-
-## 💻 Componentes Essenciais
-
-### 1. Computador Gaming
-- **Processador**: Intel i7/i9 ou AMD Ryzen 7/9
-- **Placa de Vídeo**: RTX 4070/4080/4090 para 4K
-- **RAM**: Mínimo 32GB DDR5 para gaming moderno
-- **Armazenamento**: SSD NVMe 2TB+ para jogos
-
-### 2. Monitor
-- **Resolução**: 1440p 144Hz ou 4K 120Hz
-- **Tecnologia**: IPS para cores ou TN para velocidade
-- **Tamanho**: 27" para competitivo, 32"+ para imersão
-
-### 3. Periféricos
-- **Mouse**: Sensor óptico 25K+ DPI, peso < 70g
-- **Teclado**: Mecânico com switches lineares
-- **Headset**: Audio espacial e microfone com cancelamento
-
-## 🎨 Design e Estética
-
-### Iluminação RGB
-- Sincronize todas as luzes com software único
-- Use cores que não cansem a vista
-- Considere iluminação ambiente atrás do monitor
-
-### Organização de Cabos
-- Use passadores e organizadores
-- Roteie cabos por baixo da mesa
-- Invista em cabos sleeved para visual premium
-
-## 🪑 Ergonomia e Conforto
-
-### Cadeira Gaming
-- Suporte lombar ajustável
-- Apoio de braços 4D
-- Material respirável
-
-### Mesa
-- Altura ajustável (68-76cm)
-- Profundidade mínima 60cm
-- Superfície lisa para mouse
-
-## 💡 Dicas Profissionais
-
-1. **Teste antes de comprar**: Sempre que possível
-2. **Invista em qualidade**: Periféricos duram anos
-3. **Planeje o upgrade**: Compre pensando no futuro
-4. **Considere o ambiente**: Ventilação e temperatura
-
-## 🛒 Lista de Compras Recomendada
-
-### Setup Iniciante (150.000 MT)
-- PC Gaming RTX 4060 + Ryzen 5
-- Monitor 1440p 144Hz
-- Periféricos básicos de qualidade
-
-### Setup Intermediário (300.000 MT)
-- PC Gaming RTX 4070 + Ryzen 7
-- Monitor 1440p 165Hz premium
-- Periféricos gaming avançados
-
-### Setup Profissional (500.000+ MT)
-- PC Gaming RTX 4080/4090 + i9/Ryzen 9
-- Monitor 4K 144Hz ou dual monitor
-- Periféricos top de linha
-
-## 🎯 Conclusão
-
-Um setup gaming perfeito é um investimento a longo prazo. Priorize qualidade sobre quantidade e monte gradualmente. Na Rhulany Tech, temos todos os componentes para realizar seu sonho gaming!
-    `,
-    category: 'setup',
-    author: 'Eclesio Pembelane',
-    date: '2024-01-15',
-    readTime: '8 min',
-    image: 'https://images.unsplash.com/photo-1587831990711-23ca6441447b?auto=format&fit=crop&w=800',
-    tags: ['gaming', 'setup', 'hardware', 'guia'],
-    featured: true,
-    views: 2847,
-    likes: 234,
-    comments: [],
-    difficulty: 'intermediario',
-    relatedProducts: ['6', '20', '14']
+    slug: 'como-reconhecer-burlas-por-sms-e-whatsapp',
+    title: 'Como reconhecer burlas por SMS, WhatsApp e chamadas',
+    excerpt: 'Falso dinheiro enviado por engano, códigos de verificação e falsos técnicos, e o que fazer se cair numa',
+    topic: 'seguranca',
+    date: '2026-10-04',
+    cover: {
+      src: '/images/blog/seguranca',
+      alt: 'Homem a analisar documentos e fotografias num quadro de investigação, ao lado de um portátil',
+      position: '50% 38%',
+    },
+    summary: [
+      'Nenhuma empresa séria pede o seu PIN, a palavra-passe ou o código que recebeu por SMS.',
+      'Confirme sempre o saldo no próprio M-Pesa ou e-Mola antes de devolver dinheiro.',
+      'Active a verificação em dois passos no WhatsApp.',
+      'Se cair numa burla, contacte de imediato a operadora e mude os seus códigos.',
+    ],
+    body: [
+      {
+        type: 'p',
+        text: 'As burlas por telemóvel estão cada vez mais convincentes. Usam o nome de bancos, operadoras e lojas, e contam com a pressa de quem as recebe. Conhecer os truques mais comuns é a melhor forma de não cair neles.',
+      },
+      { type: 'h2', id: 'dinheiro', text: 'O falso dinheiro enviado por engano' },
+      {
+        type: 'p',
+        text: 'Chega uma mensagem a dizer que recebeu dinheiro no M-Pesa ou no e-Mola e, logo a seguir, uma chamada de alguém aflito a pedir que devolva o valor porque se enganou no número. A mensagem é falsa e o dinheiro nunca entrou na sua conta.',
+      },
+      {
+        type: 'tip',
+        title: 'Confirme no próprio serviço',
+        text: 'Abra o menu do M-Pesa ou do e-Mola e veja o saldo e os últimos movimentos. Uma SMS com aspecto oficial não prova que recebeu dinheiro.',
+      },
+      { type: 'h2', id: 'codigos', text: 'Códigos de verificação' },
+      {
+        type: 'p',
+        text: 'Ninguém precisa do código de seis dígitos que o WhatsApp, o banco ou uma loja lhe enviam por SMS. Quem o pede, mesmo que pareça um amigo ou um familiar, está a tentar entrar na sua conta.',
+      },
+      {
+        type: 'list',
+        items: [
+          'Nunca partilhe códigos recebidos por SMS, com ninguém.',
+          'Active a verificação em dois passos no WhatsApp, em Definições, Conta.',
+          'Desconfie de mensagens de amigos a pedir dinheiro com urgência e confirme com uma chamada.',
+        ],
+      },
+      { type: 'h2', id: 'links', text: 'Links, prémios e promoções' },
+      {
+        type: 'p',
+        text: 'Mensagens com prémios, sorteios ou descontos bons demais levam a páginas que imitam lojas e bancos para roubar dados. Antes de tocar num link, veja o endereço com atenção e, na dúvida, procure o site oficial em vez de abrir o link.',
+      },
+      { type: 'h2', id: 'tecnicos', text: 'Falsos técnicos e falsas lojas' },
+      {
+        type: 'p',
+        text: 'Há quem ligue em nome de uma operadora ou de uma marca a dizer que o telemóvel tem um problema e peça para instalar uma aplicação. Essas aplicações dão a quem ligou o controlo do aparelho. Desligue e contacte a empresa pelos canais oficiais.',
+      },
+      {
+        type: 'p',
+        text: 'Na Rhulany Tech nunca pedimos o seu PIN nem códigos recebidos por SMS. Os nossos contactos oficiais estão na página de contacto.',
+      },
+      { type: 'h2', id: 'se-cair', text: 'Se cair numa burla' },
+      {
+        type: 'list',
+        ordered: true,
+        items: [
+          'Contacte de imediato o apoio ao cliente da sua operadora ou do seu banco.',
+          'Mude o PIN do M-Pesa ou do e-Mola e as palavras-passe que possa ter partilhado.',
+          'Avise os seus contactos se a sua conta de WhatsApp foi usada por outra pessoa.',
+          'Apresente queixa às autoridades com as mensagens e os números envolvidos.',
+        ],
+      },
+    ],
   },
   {
-    id: '2',
-    title: 'MacBook Pro M3 vs Dell XPS 17: Qual Escolher?',
-    excerpt: 'Comparativo detalhado entre os dois laptops premium mais desejados do mercado.',
-    content: `
-# MacBook Pro M3 vs Dell XPS 17: Qual Escolher?
-
-## 🔍 Visão Geral
-
-Dois gigantes do mercado de laptops premium se enfrentam: o revolucionário MacBook Pro M3 e o poderoso Dell XPS 17. Cada um com suas forças únicas.
-
-## 💻 Especificações Técnicas
-
-### MacBook Pro M3 Max 16"
-- **Processador**: Apple M3 Max (12-core CPU)
-- **GPU**: 40-core GPU integrada
-- **RAM**: Até 128GB unificada
-- **Tela**: 16.2" Liquid Retina XDR
-- **Bateria**: Até 22 horas
-- **Peso**: 2.16 kg
-
-### Dell XPS 17
-- **Processador**: Intel Core i9-13900H
-- **GPU**: NVIDIA RTX 4080 12GB
-- **RAM**: Até 64GB DDR5
-- **Tela**: 17" 4K OLED opcional
-- **Bateria**: Até 8 horas
-- **Peso**: 2.51 kg
-
-## ⚡ Performance
-
-### MacBook Pro M3
-- **Vantagens**: Eficiência energética excepcional, performance por watt líder
-- **Ideal para**: Edição de vídeo 4K/8K, desenvolvimento iOS, design gráfico
-- **Limitações**: Gaming limitado, compatibilidade com software Windows
-
-### Dell XPS 17
-- **Vantagens**: GPU dedicada poderosa, compatibilidade universal
-- **Ideal para**: Gaming, renderização 3D, desenvolvimento multiplataforma
-- **Limitações**: Menor autonomia, aquecimento sob carga
-
-## 🎨 Display e Design
-
-### MacBook Pro
-- **Tela**: Mini-LED com 1000 nits, cores P3
-- **Design**: Alumínio premium, acabamento impecável
-- **Conectividade**: Thunderbolt 4, MagSafe 3
-
-### Dell XPS
-- **Tela**: OLED 4K opcional, cores vibrantes
-- **Design**: Carbon fiber e alumínio
-- **Conectividade**: Thunderbolt 4, USB-A, SD card
-
-## 💰 Custo-Benefício
-
-### MacBook Pro M3 (450.000 MT)
-- **Prós**: Durabilidade, suporte longo, revenda alta
-- **Contras**: Preço premium, upgrades limitados
-
-### Dell XPS 17 (320.000 MT)
-- **Prós**: Preço mais acessível, upgrades possíveis
-- **Contras**: Depreciação mais rápida
-
-## 🎯 Veredicto
-
-### Escolha MacBook Pro se:
-- Trabalha com edição de vídeo profissional
-- Valoriza autonomia de bateria
-- Está no ecossistema Apple
-- Prioriza eficiência energética
-
-### Escolha Dell XPS 17 se:
-- Precisa de gaming ou GPU dedicada
-- Trabalha com software Windows específico
-- Quer melhor custo-benefício
-- Precisa de mais conectividade
-
-## 🛒 Onde Comprar
-
-Ambos disponíveis na Rhulany Tech com:
-- ✅ Garantia estendida
-- ✅ Suporte técnico especializado
-- ✅ Financiamento facilitado
-- ✅ Entrega em todo Moçambique
-    `,
-    category: 'comparativo',
-    author: 'Nelson Mombi',
-    date: '2024-01-12',
-    readTime: '6 min',
-    image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800',
-    tags: ['laptop', 'comparativo', 'macbook', 'dell'],
-    views: 1923,
-    likes: 187,
-    comments: [],
-    difficulty: 'intermediario',
-    relatedProducts: ['6', '8']
+    slug: 'como-limpar-o-telemovel',
+    title: 'Como limpar o telemóvel sem estragar o ecrã',
+    excerpt: 'O que usar no ecrã, nas entradas e na capa, e o que acaba com o revestimento',
+    topic: 'telemoveis',
+    date: '2026-10-02',
+    cover: {
+      src: '/images/blog/limpar-telemovel',
+      alt: 'Telemóvel sobre uma mesa de madeira com um pano branco e um frasco de spray',
+    },
+    summary: [
+      'Desligue o telemóvel e retire a capa antes de começar.',
+      'Use um pano de microfibra, seco ou ligeiramente humedecido.',
+      'Álcool isopropílico a 70% pode ser usado com moderação, sempre aplicado no pano.',
+      'Nunca use limpa-vidros, lixívia nem objectos metálicos nas entradas.',
+    ],
+    body: [
+      {
+        type: 'p',
+        text: 'Passamos o dia a tocar no telemóvel e a pousá-lo em todo o lado. O ecrã acumula gordura, as entradas enchem-se de pó e a capa ganha sujidade que acaba por riscar o aparelho. Uma limpeza simples, uma vez por semana, mantém tudo como novo.',
+      },
+      { type: 'h2', id: 'antes', text: 'Antes de começar' },
+      {
+        type: 'list',
+        ordered: true,
+        items: [
+          'Desligue o telemóvel e desligue o carregador.',
+          'Retire a capa e a película solta, se tiver.',
+          'Tenha à mão um pano de microfibra limpo e uma escova macia e seca.',
+        ],
+      },
+      { type: 'h2', id: 'ecra', text: 'O ecrã e a traseira' },
+      {
+        type: 'p',
+        text: 'Passe o pano de microfibra seco em movimentos suaves. Para gordura ou marcas mais teimosas, humedeça ligeiramente o pano com água ou com álcool isopropílico a 70% e volte a passar, sem pressionar. A traseira de vidro limpa-se da mesma forma.',
+      },
+      {
+        type: 'tip',
+        title: 'O revestimento do ecrã',
+        text: 'O ecrã tem uma camada que repele a gordura das dedadas. Limpa-vidros, lixívia, vinagre e produtos abrasivos desgastam essa camada e o ecrã passa a sujar-se mais depressa.',
+      },
+      { type: 'h2', id: 'entradas', text: 'Entradas e altifalantes' },
+      {
+        type: 'p',
+        text: 'Use uma escova macia e seca para soltar o pó da entrada de carregamento e das grelhas dos altifalantes. Não use alfinetes, clipes ou ar comprimido directamente nas entradas: podem danificar os contactos ou empurrar o pó para dentro.',
+      },
+      { type: 'h2', id: 'capa', text: 'A capa' },
+      {
+        type: 'p',
+        text: 'As capas de silicone lavam-se com água e um pouco de sabão neutro. Deixe secar por completo antes de voltar a colocar. As transparentes ganham um tom amarelado com o tempo por causa da luz do sol, e quando isso acontece a limpeza já não resolve.',
+      },
+      { type: 'h2', id: 'frequencia', text: 'Com que frequência' },
+      {
+        type: 'p',
+        text: 'Uma vez por semana para o ecrã e a capa chega para a maioria das pessoas. As entradas pedem atenção quando o cabo deixa de encaixar bem ou o carregamento começa a falhar.',
+      },
+    ],
+    products: ['90', '37', '88'],
   },
   {
-    id: '3',
-    title: 'RTX 4090 vs RTX 4080: Vale a Pena o Upgrade?',
-    excerpt: 'Análise completa das duas placas de vídeo mais poderosas da NVIDIA.',
-    content: `
-# RTX 4090 vs RTX 4080: Vale a Pena o Upgrade?
-
-## 🚀 Introdução
-
-A NVIDIA lançou suas placas de vídeo mais poderosas da série RTX 40. Mas será que a RTX 4090 justifica o preço premium sobre a RTX 4080?
-
-## 📊 Especificações Técnicas
-
-### RTX 4090
-- **CUDA Cores**: 16.384
-- **VRAM**: 24GB GDDR6X
-- **Memory Bus**: 384-bit
-- **TDP**: 450W
-- **Preço**: 220.000 MT
-
-### RTX 4080
-- **CUDA Cores**: 9.728
-- **VRAM**: 16GB GDDR6X
-- **Memory Bus**: 256-bit
-- **TDP**: 320W
-- **Preço**: 180.000 MT
-
-## 🎮 Performance Gaming
-
-### 4K Gaming
-- **RTX 4090**: 90-120 FPS (Ultra settings)
-- **RTX 4080**: 70-90 FPS (Ultra settings)
-- **Diferença**: ~25% a favor da 4090
-
-### 1440p Gaming
-- **RTX 4090**: 120+ FPS (todas as configurações)
-- **RTX 4080**: 100-120 FPS (Ultra settings)
-- **Diferença**: Ambas excelentes
-
-### Ray Tracing
-- **RTX 4090**: Performance superior em todos os jogos
-- **RTX 4080**: Ótima performance, mas limitada em alguns títulos
-
-## 🎨 Criação de Conteúdo
-
-### Renderização 3D
-- **RTX 4090**: 40-50% mais rápida
-- **24GB VRAM**: Crucial para cenas complexas
-- **RTX 4080**: Excelente para projetos médios
-
-### Edição de Vídeo
-- **RTX 4090**: Melhor para 8K e múltiplas streams
-- **RTX 4080**: Perfeita para 4K profissional
-
-## ⚡ Consumo e Temperatura
-
-### RTX 4090
-- **Consumo**: 450W (sistema 850W+ recomendado)
-- **Temperatura**: 70-80°C sob carga
-- **Ruído**: Moderado a alto
-
-### RTX 4080
-- **Consumo**: 320W (sistema 750W+ recomendado)
-- **Temperatura**: 65-75°C sob carga
-- **Ruído**: Moderado
-
-## 💰 Custo-Benefício
-
-### RTX 4090 (220.000 MT)
-- **Vantagens**: Performance máxima, futuro-prova
-- **Desvantagens**: Preço alto, consumo elevado
-
-### RTX 4080 (180.000 MT)
-- **Vantagens**: Excelente performance/preço
-- **Desvantagens**: Limitada para criação profissional
-
-## 🎯 Recomendações
-
-### Compre RTX 4090 se:
-- Joga em 4K com ray tracing máximo
-- Trabalha com renderização 3D profissional
-- Edita vídeo 8K regularmente
-- Quer a melhor placa por 3-4 anos
-
-### Compre RTX 4080 se:
-- Joga principalmente em 1440p
-- Trabalha com criação de conteúdo moderada
-- Tem orçamento mais limitado
-- Sistema com fonte menor
-
-## 🔮 Futuro
-
-Ambas as placas são "futuro-prova" para os próximos 3-4 anos. A RTX 4090 oferece mais margem para jogos futuros, enquanto a RTX 4080 é mais equilibrada.
-
-## 🛒 Disponibilidade
-
-Ambas disponíveis na Rhulany Tech com:
-- ✅ Garantia de 3 anos
-- ✅ Instalação gratuita
-- ✅ Teste de stress incluído
-- ✅ Suporte técnico vitalício
-    `,
-    category: 'comparativo',
-    author: 'Edilson Malache',
-    date: '2024-01-10',
-    readTime: '7 min',
-    image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=800',
-    tags: ['gpu', 'nvidia', 'gaming', 'comparativo'],
-    views: 3421,
-    likes: 298,
-    comments: [],
-    difficulty: 'avancado',
-    relatedProducts: ['20']
-  }
+    slug: 'sinais-de-que-o-computador-precisa-de-manutencao',
+    title: 'Sinais de que o computador precisa de manutenção',
+    excerpt: 'Ruído, calor e lentidão, o que pode resolver em casa e quando levar a um técnico',
+    topic: 'computadores',
+    date: '2026-09-30',
+    cover: { src: '/images/blog/tecnico-computador', alt: 'Técnico a abrir a caixa de um computador de secretária numa oficina' },
+    summary: [
+      'Ventoinha sempre alta e calor em tarefas simples costumam ser pó acumulado.',
+      'Lentidão ao arrancar pode ser falta de espaço, programas a mais ou um disco a falhar.',
+      'Faça uma cópia de segurança antes de qualquer reparação.',
+      'Limpeza interior e troca de pasta térmica são trabalho para um técnico.',
+    ],
+    body: [
+      {
+        type: 'p',
+        text: 'Um computador raramente avaria de um dia para o outro. Antes disso dá sinais: faz mais barulho, aquece, demora a abrir os programas. Reconhecer esses sinais cedo evita reparações caras e, sobretudo, a perda de ficheiros.',
+      },
+      { type: 'h2', id: 'ruido', text: 'Ruído e calor' },
+      {
+        type: 'list',
+        items: [
+          'A ventoinha acelera mesmo com o navegador aberto e pouco mais.',
+          'A base do portátil fica quente ao ponto de incomodar.',
+          'O desempenho cai depois de alguns minutos de trabalho.',
+        ],
+      },
+      {
+        type: 'p',
+        text: 'Quase sempre é pó acumulado nas grelhas e no dissipador, que impede o ar de circular. Em casas perto da estrada ou com muito pó, acontece mais depressa.',
+      },
+      { type: 'h2', id: 'lentidao', text: 'Lentidão' },
+      {
+        type: 'p',
+        text: 'Se o computador demora a arrancar ou a abrir programas, comece pelo que pode fazer em casa:',
+      },
+      {
+        type: 'list',
+        items: [
+          'Instale as actualizações pendentes do sistema.',
+          'Liberte espaço no disco, idealmente pelo menos 15% livre.',
+          'Desactive os programas que abrem sozinhos no arranque.',
+        ],
+      },
+      {
+        type: 'p',
+        text: 'Se nada disto ajudar, o disco pode estar a chegar ao fim da vida. Num computador com disco mecânico, trocar para um SSD é das melhorias que mais se notam.',
+      },
+      { type: 'h2', id: 'desligamentos', text: 'Desligamentos e ecrãs de erro' },
+      {
+        type: 'p',
+        text: 'Um computador que se desliga sozinho, reinicia sem aviso ou mostra ecrãs de erro com frequência precisa de ser visto. Pode ser sobreaquecimento, a fonte de alimentação ou a memória.',
+      },
+      {
+        type: 'tip',
+        title: 'Antes de levar o computador',
+        text: 'Faça uma cópia de segurança dos seus ficheiros, leve o carregador e anote a palavra-passe de acesso, para o técnico poder testar o sistema consigo.',
+      },
+      { type: 'h2', id: 'tecnico', text: 'Quando levar a um técnico' },
+      {
+        type: 'p',
+        text: 'A limpeza interior, a troca da pasta térmica do processador e a substituição de discos ou memória pedem ferramentas e experiência. Em ambientes com muito pó, uma limpeza interior a cada um ou dois anos prolonga bastante a vida do equipamento. Na loja ajudamos a perceber o que se passa e indicamos o melhor caminho.',
+      },
+    ],
+    products: ['22', '23', '35'],
+  },
+  {
+    slug: 'como-cuidar-da-bateria-do-telemovel',
+    title: 'Como cuidar da bateria do telemóvel',
+    excerpt: 'O que gasta a bateria mais depressa e os hábitos que a fazem durar mais anos',
+    topic: 'telemoveis',
+    date: '2026-09-24',
+    cover: { src: '1557767382-97b28f5488e7', alt: 'Telemóvel a carregar com o cabo ligado, sobre uma superfície escura' },
+    summary: [
+      'O calor desgasta a bateria mais do que qualquer outro factor.',
+      'Cargas entre 20% e 80% são as mais saudáveis. Active o carregamento optimizado.',
+      'Use carregadores certificados, de preferência USB-C Power Delivery.',
+      'Para guardar o telemóvel durante meses, deixe a bateria nos 50% e o aparelho desligado.',
+    ],
+    body: [
+      {
+        type: 'p',
+        text: 'As baterias de iões de lítio desgastam-se com o uso: cada ciclo de carga reduz um pouco a capacidade máxima. Não é possível evitar esse desgaste, mas é possível abrandá-lo muito. E em Maputo, onde o calor aperta boa parte do ano, a temperatura é o factor que mais pesa.',
+      },
+      { type: 'h2', id: 'calor', text: 'O calor é o maior inimigo' },
+      {
+        type: 'p',
+        text: 'A bateria funciona melhor entre os 16 e os 22 °C e, acima dos 35 °C, envelhece de forma acelerada. Deixar o telemóvel ao sol no tablier do carro ou a carregar debaixo da almofada são dois dos hábitos mais prejudiciais.',
+      },
+      {
+        type: 'list',
+        items: [
+          'Não deixe o telemóvel dentro do carro estacionado ao sol.',
+          'Retire capas grossas durante o carregamento rápido, sobretudo se notar que aquece.',
+          'Evite jogar ou gravar vídeo em 4K enquanto carrega.',
+          'Carregue sobre uma superfície dura e arejada, não na cama nem no sofá.',
+        ],
+      },
+      { type: 'h2', id: 'carga', text: 'Entre 20% e 80%, sempre que possível' },
+      {
+        type: 'p',
+        text: 'Não é preciso esperar que a bateria chegue a zero, nem mantê-la sempre nos 100%. As cargas parciais são as mais saudáveis. Os iPhone recentes e muitos Android têm carregamento optimizado: aprendem a sua rotina e terminam a carga pouco antes da hora a que costuma acordar.',
+      },
+      {
+        type: 'tip',
+        title: 'Onde activar',
+        text: 'No iPhone, em Definições, Bateria. Nos Samsung, em Definições, Bateria, Protecção da bateria. Noutros Android procure por carregamento adaptável. Os nomes podem variar com a versão do sistema.',
+      },
+      { type: 'h2', id: 'carregadores', text: 'Use carregadores certificados' },
+      {
+        type: 'p',
+        text: 'Um carregador barato sem certificação pode entregar uma tensão instável, aquecer mais e, nos piores casos, danificar o circuito de carga. Prefira o carregador do fabricante ou marcas reconhecidas com USB-C Power Delivery. A potência a mais não faz mal: o telemóvel só pede a corrente de que precisa.',
+      },
+      { type: 'h2', id: 'guardar', text: 'Se vai guardar um telemóvel durante meses' },
+      {
+        type: 'p',
+        text: 'Deixe a bateria por volta dos 50%, desligue o aparelho e guarde-o num local fresco e seco. Uma bateria guardada a 0% pode entrar em descarga profunda e deixar de carregar; guardada a 100% perde capacidade mais depressa.',
+      },
+      { type: 'h2', id: 'trocar', text: 'Quando trocar a bateria' },
+      {
+        type: 'p',
+        text: 'Quando a capacidade máxima desce abaixo dos 80%, a autonomia nota-se e o telemóvel pode ficar mais lento nos momentos de maior esforço. Se a bateria inchar, aquecer de forma anormal ou o ecrã começar a levantar, deixe de usar o aparelho e procure assistência técnica.',
+      },
+    ],
+    products: ['35', '88', '89', '90'],
+  },
+  {
+    slug: 'limpar-o-portatil-sem-o-danificar',
+    title: 'Limpar o portátil sem o danificar',
+    excerpt: 'Ecrã, teclado e entradas de ar, com os produtos certos e os que nunca deve usar',
+    topic: 'computadores',
+    date: '2026-09-17',
+    cover: {
+      src: '/images/blog/limpar-portatil',
+      alt: 'Mãos com luvas a limpar o teclado de um portátil com um toalhete',
+      position: '50% 62%',
+    },
+    summary: [
+      'Desligue o portátil por completo e retire o carregador antes de limpar.',
+      'Ecrã: pano de microfibra seco ou ligeiramente humedecido, nunca produto directamente no vidro.',
+      'Teclado e grelhas: ar comprimido em jactos curtos.',
+      'Use-o em superfícies duras para não tapar as entradas de ar.',
+    ],
+    body: [
+      {
+        type: 'p',
+        text: 'O pó nas entradas de ar obriga a ventoinha a trabalhar mais e o processador a aquecer. A gordura do teclado e do trackpad acaba por se infiltrar. Uma limpeza leve de quinze em quinze dias resolve quase tudo.',
+      },
+      { type: 'h2', id: 'antes', text: 'Antes de começar' },
+      {
+        type: 'list',
+        ordered: true,
+        items: [
+          'Desligue o portátil por completo, não apenas em suspensão.',
+          'Retire o carregador e todos os acessórios.',
+          'Tenha à mão um pano de microfibra limpo, um pincel macio e, se possível, ar comprimido.',
+        ],
+      },
+      { type: 'h2', id: 'ecra', text: 'O ecrã' },
+      {
+        type: 'p',
+        text: 'Passe o pano de microfibra seco em movimentos suaves, sem pressionar. Para marcas persistentes, humedeça ligeiramente o pano com água destilada ou álcool isopropílico a 70%, nunca o ecrã directamente. Evite limpa-vidros, lixívia, acetona e papel de cozinha, que riscam e estragam o revestimento anti-reflexo.',
+      },
+      { type: 'h2', id: 'teclado', text: 'Teclado e trackpad' },
+      {
+        type: 'p',
+        text: 'Incline o portátil e use ar comprimido em pequenos jactos para soltar migalhas e pó entre as teclas. Depois limpe as teclas com o pano ligeiramente humedecido em álcool isopropílico. No trackpad, o mesmo pano chega.',
+      },
+      {
+        type: 'tip',
+        title: 'Atenção aos líquidos',
+        text: 'Nunca borrife produto directamente sobre o teclado. O líquido escorre entre as teclas e pode chegar à placa principal.',
+      },
+      { type: 'h2', id: 'ventilacao', text: 'Entradas de ar e ventoinha' },
+      {
+        type: 'p',
+        text: 'Com o portátil desligado, use ar comprimido nas grelhas em jactos curtos, sem virar a lata ao contrário. Se a ventoinha estiver sempre em esforço ou o portátil aquecer muito em tarefas simples, pode ser altura de uma limpeza interior feita por um técnico.',
+      },
+      { type: 'h2', id: 'dia-a-dia', text: 'No dia-a-dia' },
+      {
+        type: 'list',
+        items: [
+          'Use o portátil em superfícies duras; almofadas e cobertores tapam as entradas de ar.',
+          'Não coma por cima do teclado.',
+          'Antes de fechar a tampa, confirme que não ficou nada sobre o teclado, como canetas ou auriculares.',
+          'Transporte-o numa capa ou mochila acolchoada.',
+        ],
+      },
+    ],
+    products: ['83', '85', '36', '14'],
+  },
+  {
+    slug: 'calor-e-po-como-proteger-a-consola',
+    title: 'Como proteger a consola do calor e do pó',
+    excerpt: 'Onde a colocar, como a limpar e os sinais de que algo não está bem',
+    topic: 'gaming',
+    date: '2026-09-09',
+    cover: {
+      src: '1709587797077-7a2c94411514',
+      alt: 'PlayStation 5 e comando DualSense ao lado de um candeeiro com os símbolos PlayStation em néon',
+    },
+    summary: [
+      'Deixe pelo menos 10 cm livres à volta da consola e evite móveis fechados.',
+      'Uma vez por mês, aspire ou escove as entradas de ar com a consola desligada.',
+      'Perto do mar, afaste-a de janelas e de humidade.',
+      'Ruído fora do normal ou desligamentos sozinhos pedem uma verificação.',
+    ],
+    body: [
+      {
+        type: 'p',
+        text: 'Uma consola actual é um computador potente num corpo pequeno. Numa sessão longa aquece bastante, e a ventoinha precisa de espaço para tirar esse calor. Quando o ar não circula, a consola fica mais ruidosa e, com o tempo, os componentes sofrem.',
+      },
+      { type: 'h2', id: 'espaco', text: 'Dê-lhe espaço' },
+      {
+        type: 'list',
+        items: [
+          'Deixe pelo menos 10 cm livres à volta da consola, sobretudo atrás e nos lados por onde sai o ar.',
+          'Evite móveis fechados e prateleiras estreitas.',
+          'Não a coloque em cima de outros aparelhos que aquecem, como o descodificador ou o amplificador.',
+          'Na vertical ou na horizontal, use a base ou os pés indicados pelo fabricante.',
+        ],
+      },
+      { type: 'h2', id: 'po', text: 'O pó acumula-se mais depressa do que pensa' },
+      {
+        type: 'p',
+        text: 'Em casas perto da estrada ou com as janelas abertas, o pó entra rapidamente nas grelhas. Uma vez por mês, com a consola desligada da tomada, passe um pincel macio ou um aspirador em potência baixa pelas entradas de ar. Alguns modelos da PlayStation 5 têm ainda orifícios de recolha de pó, acessíveis ao retirar as tampas laterais.',
+      },
+      { type: 'h2', id: 'humidade', text: 'Humidade e maresia' },
+      {
+        type: 'p',
+        text: 'Perto do mar, o ar húmido e salgado acelera a corrosão de contactos e conectores. Mantenha a consola longe de janelas abertas e de aparelhos de ar condicionado que pinguem, e não a ligue logo depois de a trazer de um ambiente frio para um quente, para evitar condensação.',
+      },
+      { type: 'h2', id: 'comandos', text: 'Comandos' },
+      {
+        type: 'p',
+        text: 'Limpe os comandos com um pano ligeiramente humedecido em álcool isopropílico e use ar comprimido à volta dos botões e dos manípulos. Se não os for usar durante semanas, guarde-os com cerca de metade da carga.',
+      },
+      {
+        type: 'tip',
+        title: 'Sinal de alerta',
+        text: 'Se a ventoinha passar a fazer muito mais barulho do que o normal ou a consola se desligar sozinha, desligue-a e peça uma verificação. Na maioria dos casos é pó acumulado no interior.',
+      },
+    ],
+    products: ['67', '68', '70', '71'],
+  },
+  {
+    slug: 'cortes-de-energia-e-picos-de-tensao',
+    title: 'Cortes de energia: como proteger os equipamentos',
+    excerpt: 'Protector contra sobretensões, UPS e o que fazer quando a luz volta',
+    topic: 'energia',
+    date: '2026-08-28',
+    cover: { src: '1788497079207-68aab17ff15c', alt: 'Tomada com protecção contra sobretensões numa secretária clara' },
+    summary: [
+      'O regresso da corrente, com picos de tensão, é o momento de maior risco.',
+      'Ligue computador, monitor, consola e router a um protector contra sobretensões.',
+      'Uma UPS dá tempo para guardar o trabalho e desligar em segurança.',
+      'Em trovoadas fortes, desligue os aparelhos da tomada.',
+    ],
+    body: [
+      {
+        type: 'p',
+        text: 'Os cortes de energia são incómodos, mas o que mais danifica os equipamentos é muitas vezes o regresso da corrente, acompanhado de picos de tensão. Fontes de alimentação, routers, televisores e computadores de secretária são os mais expostos.',
+      },
+      { type: 'h2', id: 'protector', text: 'Use um protector contra sobretensões' },
+      {
+        type: 'p',
+        text: 'Uma extensão comum apenas distribui a corrente; um protector contra sobretensões absorve os picos antes de chegarem aos aparelhos. Ligue-lhe o computador, o monitor, a consola e o router. Na embalagem, confirme a capacidade de absorção, indicada em joules: quanto mais alta, melhor.',
+      },
+      { type: 'h2', id: 'ups', text: 'Quando vale a pena uma UPS' },
+      {
+        type: 'p',
+        text: 'Uma UPS, ou unidade de alimentação ininterrupta, mantém o equipamento ligado durante alguns minutos após um corte, o tempo suficiente para guardar o trabalho e desligar em segurança. É especialmente útil em computadores de secretária, discos de rede e routers, que não têm bateria própria.',
+      },
+      { type: 'h2', id: 'regresso', text: 'Quando a luz volta' },
+      {
+        type: 'list',
+        ordered: true,
+        items: [
+          'Durante o corte, desligue da tomada os aparelhos mais sensíveis.',
+          'Quando a energia voltar, espere alguns minutos até a tensão estabilizar.',
+          'Volte a ligar um aparelho de cada vez.',
+        ],
+      },
+      { type: 'h2', id: 'trovoada', text: 'Em dia de trovoada' },
+      {
+        type: 'p',
+        text: 'Uma descarga eléctrica próxima pode provocar picos que nenhum protector doméstico trava por completo. Durante trovoadas fortes, desligue da tomada o computador, a televisão e o router, incluindo o cabo de antena ou de rede.',
+      },
+      {
+        type: 'tip',
+        title: 'Portáteis e telemóveis',
+        text: 'Têm bateria e ficam mais protegidos, mas o carregador continua exposto. Ligue-o também ao protector contra sobretensões.',
+      },
+    ],
+    products: ['89', '35'],
+  },
+  {
+    slug: 'guia-de-limpeza-para-a-camara',
+    title: 'Como limpar a lente e o sensor da câmara',
+    excerpt: 'Os passos certos, pela ordem certa, e como evitar fungos com a humidade',
+    topic: 'camaras',
+    date: '2026-08-14',
+    cover: {
+      src: '/images/blog/camara',
+      alt: 'Fotógrafo a segurar uma câmara Fujifilm com uma objectiva grande angular',
+      position: '50% 55%',
+    },
+    summary: [
+      'Comece sempre pela pêra de ar, depois o pincel, e só no fim o pano.',
+      'A limpeza manual do sensor é delicada; se as manchas persistirem, prefira um técnico.',
+      'Em clima húmido, guarde o equipamento com sílica gel para evitar fungos.',
+      'Troque de lente em local abrigado, com a câmara virada para baixo.',
+    ],
+    body: [
+      {
+        type: 'p',
+        text: 'Uma lente suja tira contraste às fotografias e cria reflexos em contraluz. O pó no sensor aparece como pequenas manchas escuras no céu e em fundos lisos, sobretudo com o diafragma fechado. Quase tudo se resolve com três ferramentas simples.',
+      },
+      { type: 'h2', id: 'kit', text: 'O kit essencial' },
+      {
+        type: 'list',
+        items: [
+          'Uma pêra de ar, para soprar o pó sem tocar no vidro.',
+          'Um pincel macio próprio para óptica.',
+          'Panos de microfibra limpos e líquido de limpeza para lentes.',
+        ],
+      },
+      { type: 'h2', id: 'lente', text: 'Limpar a lente pela ordem certa' },
+      {
+        type: 'list',
+        ordered: true,
+        items: [
+          'Sopre com a pêra de ar para retirar as partículas soltas.',
+          'Passe o pincel suavemente, do centro para as margens.',
+          'Só então use o pano com uma ou duas gotas de líquido, em movimentos circulares e sem pressão.',
+        ],
+      },
+      {
+        type: 'p',
+        text: 'Nunca comece pelo pano: um grão de areia arrastado pelo vidro pode riscar o revestimento da lente.',
+      },
+      {
+        type: 'image',
+        src: '1641556965043-5065273ad792',
+        alt: 'Objectivas, líquido de limpeza e toalhetes para lentes sobre uma mesa',
+        caption: 'Pêra de ar, pincel e panos próprios: o essencial para limpar lentes em segurança',
+      },
+      { type: 'h2', id: 'sensor', text: 'O sensor exige mais cuidado' },
+      {
+        type: 'p',
+        text: 'Use a função de limpeza do sensor, presente na maioria das câmaras mirrorless, e depois a pêra de ar com a câmara virada para baixo. Se as manchas persistirem, a limpeza com espátulas e líquido próprio é delicada e um erro pode riscar o filtro do sensor. Nesse caso, prefira um técnico.',
+      },
+      { type: 'h2', id: 'humidade', text: 'Humidade e fungos' },
+      {
+        type: 'p',
+        text: 'Em climas quentes e húmidos, podem crescer fungos no interior das lentes guardadas durante muito tempo. Guarde o equipamento numa mochila ou caixa com saquetas de sílica gel, troque-as regularmente e use as lentes com frequência: a luz e a circulação de ar ajudam a prevenir o problema.',
+      },
+      {
+        type: 'tip',
+        title: 'Trocar de lente',
+        text: 'Faça-o num local abrigado do vento, com a câmara desligada e virada para baixo, e deixe o corpo sem objectiva o menor tempo possível.',
+      },
+    ],
+    products: ['74', '27', '75', '76'],
+  },
+  {
+    slug: 'auscultadores-higiene-e-cuidados',
+    title: 'Como cuidar dos auscultadores',
+    excerpt: 'Almofadas, bateria e actualizações para manterem o som e o conforto do primeiro dia',
+    topic: 'audio',
+    date: '2026-07-30',
+    cover: { src: '1755719401938-35c1b24f6d15', alt: 'Auscultadores Sony pretos ao lado de uns óculos sobre fundo claro' },
+    summary: [
+      'Limpe as almofadas todas as semanas com água e sabão neutro, sem álcool.',
+      'Evite descargas completas frequentes e o calor do carro.',
+      'Use sempre o estojo para transportar.',
+      'Mantenha o firmware actualizado através da aplicação do fabricante.',
+    ],
+    body: [
+      {
+        type: 'p',
+        text: 'Os auscultadores passam horas encostados à pele e apanham suor, calor e chapas cheias. Com alguns cuidados simples, mantêm o som e o conforto durante anos.',
+      },
+      { type: 'h2', id: 'almofadas', text: 'Almofadas e arco' },
+      {
+        type: 'p',
+        text: 'Limpe as almofadas uma vez por semana com um pano ligeiramente humedecido em água e sabão neutro e seque com um pano macio. Evite álcool nas almofadas de pele sintética, que acabam por estalar. Muitos modelos, como os AirPods Max e os Sony WH-1000XM5, permitem trocar as almofadas quando ficam gastas.',
+      },
+      { type: 'h2', id: 'bateria', text: 'Bateria' },
+      {
+        type: 'list',
+        items: [
+          'Evite deixá-los descarregar por completo com frequência.',
+          'Não os deixe ao sol nem dentro do carro.',
+          'Se não os for usar durante semanas, guarde-os com cerca de metade da carga.',
+        ],
+      },
+      { type: 'h2', id: 'transportar', text: 'Guardar e transportar' },
+      {
+        type: 'p',
+        text: 'Use sempre o estojo. Dobrar os auscultadores da forma errada ou levá-los soltos na mochila é a causa mais comum de articulações partidas.',
+      },
+      { type: 'h2', id: 'firmware', text: 'Mantenha o firmware actualizado' },
+      {
+        type: 'p',
+        text: 'As actualizações corrigem falhas de ligação, melhoram o cancelamento de ruído e, por vezes, a autonomia. Nos AirPods acontecem automaticamente com o iPhone por perto; nas outras marcas, use a aplicação do fabricante.',
+      },
+      {
+        type: 'tip',
+        title: 'Auriculares in-ear',
+        text: 'Limpe as grelhas com um pincel seco e macio. Nunca use objectos pontiagudos nem água: a cera acumulada é a principal causa de som abafado.',
+      },
+    ],
+    products: ['81', '80', '82', '34'],
+  },
+  {
+    slug: 'pelicula-e-capa-o-que-protege-o-telemovel',
+    title: 'Película e capa: o que protege mesmo o telemóvel',
+    excerpt: 'Vidro temperado ou plástico, capa fina ou reforçada, e o que evita mesmo um ecrã partido',
+    topic: 'telemoveis',
+    date: '2026-07-16',
+    cover: { src: '1636589150123-6d57c10527ce', alt: 'Telemóvel branco com o canto do ecrã partido sobre fundo branco' },
+    summary: [
+      'Vidro temperado absorve o impacto; o plástico só evita riscos.',
+      'Numa capa, o que mais importa são as quinas reforçadas e a borda elevada.',
+      'Com MagSafe, escolha capas com ímanes integrados.',
+      'Aplique a película num espaço sem pó nem correntes de ar.',
+    ],
+    body: [
+      {
+        type: 'p',
+        text: 'O ecrã partido é a reparação que mais vemos e uma das mais caras. Uma boa película e uma boa capa custam muito menos, mas nem todas protegem da mesma forma.',
+      },
+      { type: 'h2', id: 'pelicula', text: 'Película: vidro temperado' },
+      {
+        type: 'p',
+        text: 'As películas de vidro temperado absorvem o impacto e partem-se no lugar do ecrã. As de plástico evitam riscos, mas pouco fazem numa queda. Prefira vidro temperado com boa cobertura das margens e compatível com a capa que vai usar.',
+      },
+      { type: 'h2', id: 'capa', text: 'Capa: as quinas são o que importa' },
+      {
+        type: 'p',
+        text: 'A maioria das quedas atinge primeiro uma quina. Uma boa capa tem quinas reforçadas e uma borda ligeiramente elevada à volta do ecrã e das câmaras, para que o vidro não toque no chão quando o telemóvel cai virado para baixo.',
+      },
+      {
+        type: 'list',
+        items: [
+          'Silicone: agradável ao toque e com boa aderência, protege bem das quedas do dia-a-dia.',
+          'Transparente: mostra a cor do telemóvel; escolha uma com tratamento contra o amarelecimento.',
+          'Reforçada: para obras, desporto ou trabalho no exterior.',
+        ],
+      },
+      { type: 'h2', id: 'magsafe', text: 'MagSafe e carregamento sem fios' },
+      {
+        type: 'p',
+        text: 'Se usa carregadores MagSafe ou acessórios magnéticos, escolha capas com ímanes integrados. Capas grossas sem ímanes enfraquecem a ligação e fazem o telemóvel aquecer mais durante a carga sem fios.',
+      },
+      { type: 'h2', id: 'camaras', text: 'Proteger as câmaras' },
+      {
+        type: 'p',
+        text: 'As lentes das câmaras sobressaem cada vez mais. Uma capa com rebordo elevado à volta do módulo resolve a maioria dos casos. Os protectores individuais de lente são úteis, desde que sejam de vidro e fiquem bem alinhados, para não afectarem as fotografias.',
+      },
+      {
+        type: 'tip',
+        title: 'Antes de aplicar a película',
+        text: 'Limpe o ecrã com o pano incluído, retire o pó com o autocolante próprio e aplique-a num espaço sem correntes de ar, como a casa de banho depois de um duche quente.',
+      },
+    ],
+    products: ['90', '37', '88'],
+  },
+  {
+    slug: 'copias-de-seguranca-sem-complicacoes',
+    title: 'Cópias de segurança sem complicações',
+    excerpt: 'A regra 3-2-1 aplicada ao telemóvel e ao computador, em dez minutos',
+    topic: 'computadores',
+    date: '2026-07-02',
+    cover: { src: '1518547606470-00ac2ae882af', alt: 'Disco SSD portátil Samsung na palma da mão' },
+    summary: [
+      'Três cópias, em dois suportes diferentes, uma delas fora de casa.',
+      'No telemóvel, active a cópia na nuvem e a sincronização das fotografias.',
+      'No computador, Time Machine no Mac ou Histórico de Ficheiros no Windows.',
+      'Teste a recuperação de um ficheiro uma vez por mês.',
+    ],
+    body: [
+      {
+        type: 'p',
+        text: 'Um telemóvel perdido, um disco avariado ou um ficheiro apagado por engano podem levar anos de fotografias e de trabalho. Hoje quase tudo se pode copiar de forma automática, basta configurar uma vez.',
+      },
+      { type: 'h2', id: 'regra', text: 'A regra 3-2-1' },
+      {
+        type: 'list',
+        items: [
+          'Três cópias dos dados importantes: o original e mais duas.',
+          'Dois suportes diferentes, por exemplo o computador e um disco externo.',
+          'Uma cópia fora de casa, normalmente na nuvem.',
+        ],
+      },
+      { type: 'h2', id: 'telemovel', text: 'No telemóvel' },
+      {
+        type: 'p',
+        text: 'No iPhone, active a cópia em Definições, o seu nome, iCloud, e ligue também a sincronização das Fotografias. No Android, a cópia de segurança do Google e o Google Fotos guardam contactos, definições e imagens. Se o espaço gratuito não chegar, um plano pago de armazenamento costuma resolver para toda a família.',
+      },
+      { type: 'h2', id: 'computador', text: 'No computador' },
+      {
+        type: 'p',
+        text: 'No Mac, o Time Machine faz cópias automáticas para um disco externo a cada hora. No Windows, use o Histórico de Ficheiros ou a Cópia de Segurança do Windows. Um SSD externo é mais rápido e resiste melhor a quedas do que um disco mecânico.',
+      },
+      { type: 'h2', id: 'testar', text: 'Teste as suas cópias' },
+      {
+        type: 'p',
+        text: 'Uma cópia que nunca foi testada não garante nada. Uma vez por mês, recupere um ficheiro qualquer: se funcionar, sabe que está protegido.',
+      },
+      {
+        type: 'tip',
+        title: 'Antes de trocar de telemóvel',
+        text: 'Faça uma cópia completa e confirme que as conversas do WhatsApp também estão incluídas, em Definições, Conversas, Cópia de segurança. Na loja ajudamos a passar tudo para o aparelho novo.',
+      },
+    ],
+    products: ['57', '54', '22'],
+  },
 ];
+
+export interface Faq {
+  q: string;
+  a: string;
+}
+
+export const FAQ: Faq[] = [
+  {
+    q: 'Os produtos são originais e têm garantia?',
+    a: 'Sim. Vendemos apenas produtos originais, selados de fábrica, com a garantia do fabricante. O período de garantia de cada produto está indicado na respectiva página.',
+  },
+  {
+    q: 'Entregam fora de Maputo?',
+    a: 'Sim, entregamos em Maputo e em todas as províncias. O custo e o prazo de entrega são calculados no checkout, de acordo com a morada.',
+  },
+  {
+    q: 'Que métodos de pagamento aceitam?',
+    a: 'M-Pesa, e-Mola, mKesh, cartão Visa ou Mastercard e PayPal. Escolhe o método no checkout.',
+  },
+  {
+    q: 'Podem encomendar um produto que não encontro na loja?',
+    a: 'Sim. Envie-nos o modelo pelo WhatsApp ou pelo formulário de contacto e indicamos a disponibilidade e o preço.',
+  },
+  {
+    q: 'Ajudam a configurar o equipamento novo?',
+    a: 'Sim. Na loja ajudamos a configurar o equipamento e a passar os seus dados do aparelho antigo para o novo.',
+  },
+  {
+    q: 'O telemóvel aquece quando carrega. É normal?',
+    a: 'Algum calor é normal, sobretudo no carregamento rápido. Se aquecer ao ponto de incomodar ao toque, retire a capa, carregue numa superfície arejada e use um carregador certificado. Se continuar, fale connosco.',
+  },
+  {
+    q: 'Devo deixar o portátil sempre ligado à corrente?',
+    a: 'Os portáteis modernos gerem a carga, mas mantê-la sempre nos 100% desgasta a bateria mais depressa. Active a protecção da bateria do fabricante, que limita a carga quando o portátil passa muito tempo ligado à corrente.',
+  },
+  {
+    q: 'O que faço se o equipamento apanhar água?',
+    a: 'Desligue-o de imediato, não o carregue e não use secador. Esqueça o arroz: não retira a humidade do interior. Seque o exterior com um pano e traga-o para avaliação o mais depressa possível.',
+  },
+];
+
+// ---------- Helpers ----------
+
+const WORDS_PER_MINUTE = 200;
+
+export const readingMinutes = (article: Article) => {
+  const words = article.body
+    .map((block) => {
+      if (block.type === 'list') return block.items.join(' ');
+      if (block.type === 'image') return block.caption ?? '';
+      if (block.type === 'tip') return `${block.title} ${block.text}`;
+      return block.text;
+    })
+    .join(' ')
+    .split(/\s+/).length;
+  return Math.max(2, Math.round(words / WORDS_PER_MINUTE));
+};
+
+export const getArticle = (slug?: string) => ARTICLES.find((article) => article.slug === slug);
+export const topicLabel = (topic: BlogTopic) => BLOG_TOPICS.find((item) => item.id === topic)?.label ?? '';
+
+const dateFormatter = new Intl.DateTimeFormat('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' });
+export const formatArticleDate = (iso: string) => dateFormatter.format(new Date(`${iso}T12:00:00`));
+
+/** Every guide, newest first. */
+export const ARTICLES_BY_DATE = [...ARTICLES].sort((a, b) => b.date.localeCompare(a.date));

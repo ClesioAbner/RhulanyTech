@@ -4,6 +4,7 @@
 
 @layer base {
   html {
+    -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -17,18 +18,74 @@
     @apply bg-ink text-paper;
   }
 
+  /* Touch screens: form fields at 16px at least, or iPhone Safari zooms the page when one is focused. */
+  @media (pointer: coarse) {
+    input,
+    textarea,
+    select {
+      font-size: 16px !important;
+    }
+  }
+
   :focus-visible {
     @apply outline outline-2 outline-offset-4 outline-current;
   }
 }
 
 @layer components {
+  /* Touch screens: cards give way slightly under the finger, like an app. */
+  @media (hover: none) {
+    .tap-feedback {
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tap-feedback:active {
+      transform: scale(0.98);
+    }
+  }
+
+  /* The chat button steps aside while the phone menu is open. */
+  html[data-menu-open] .assistant-launcher {
+    visibility: hidden;
+  }
+
   .container-site {
     @apply mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-12;
   }
 
   .eyebrow {
     @apply text-xs font-medium uppercase tracking-[0.18em];
+  }
+
+  /*
+   * Type scale, shared by every page so headings read the same everywhere.
+   * display: page titles and banners (36 / 44 / 52px)
+   * title: section titles (28 / 32 / 36px)
+   * heading: card and sub-section titles (20 / 24px)
+   * lead: introductory paragraphs
+   */
+  .type-display {
+    @apply font-display text-[2.25rem] font-medium leading-[1.05] tracking-tightest [text-wrap:balance] sm:text-[2.75rem] lg:text-[3.25rem];
+  }
+
+  .type-title {
+    @apply font-display text-[1.75rem] font-medium leading-[1.12] tracking-tight [text-wrap:balance] sm:text-[2rem] lg:text-[2.25rem];
+  }
+
+  .type-heading {
+    @apply font-display text-xl font-medium leading-snug tracking-tight lg:text-2xl;
+  }
+
+  .type-lead {
+    @apply text-base leading-relaxed sm:text-[17px];
+  }
+
+  /* Product stage: soft light from above, as in a studio. Cut-outs sit on it with a drop shadow. */
+  .stage {
+    background: radial-gradient(120% 85% at 50% 18%, #ffffff 0%, #f3f4f6 55%, #e9ebef 100%);
+  }
+
+  .stage-shadow {
+    filter: drop-shadow(0 18px 22px rgba(12, 12, 13, 0.16)) drop-shadow(0 4px 6px rgba(12, 12, 13, 0.08));
   }
 
   .link-underline {

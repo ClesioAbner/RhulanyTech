@@ -1,15 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import {
-  motion,
-  useMotionValue,
-  useMotionValueEvent,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from 'framer-motion';
-import RealisticPhone from '../payments/LazyRealisticPhone';
-import type { ScreenKey } from '../payments/screenTexture';
+import { motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
+import ShowcasePhone from '../payments/ShowcasePhone';
+import type { ScreenKey } from '../payments/screens';
 import { useMediaQuery } from '../../lib/useMediaQuery';
 import {
   INTRO_END,
@@ -80,6 +72,10 @@ const ShopToPayments = () => {
   const hasSlot = useMotionValue(1);
   const endX = useMotionValue(0); // payments target centre, relative to the pinned payments viewport
   const endY = useMotionValue(0);
+  // Bumped after every measurement. MotionValue.set ignores unchanged numbers, and React StrictMode's
+  // effect replay cancels the update the first measurement scheduled, so without this the phone could
+  // keep its pre-measurement position (the shop's top corner) until the page scrolled past the shop.
+  const layoutVersion = useMotionValue(0);
 
   const { scrollY } = useScroll();
 
@@ -89,22 +85,28 @@ const ShopToPayments = () => {
   const releaseAt = useTransform([startY, viewportHeight], ([sy, vh]: number[]) => Math.max(0, sy - vh * RELEASE_LINE));
 
   // Fall progress: 0 while on display, 1 the moment the payments section pins.
-  const fall = useTransform([pastShopTop, releaseAt, shopHeight], ([past, release, height]: number[]) =>
+  const fall = useTransform([pastShopTop, releaseAt, shopHeight, layoutVersion], ([past, release, height]: number[]) =>
     past <= release ? 0 : Math.min(1, (past - release) / Math.max(1, height - release)),
   );
 
-  const x = useTransform([fall, startX, endX], ([f, from, to]: number[]) => from + (to - from) * easeInOutCubic(f));
-  const y = useTransform([fall, pastShopTop, releaseAt, startY, endY], ([f, past, release, from, to]: number[]) => {
-    if (f <= 0) return from - past; // riding along with its card
-    const releasedAt = from - release;
-    const { drop, rise } = fallTravel(f);
-    return releasedAt + (to - releasedAt) * drop - rise * 48;
-  });
+  const x = useTransform(
+    [fall, startX, endX, layoutVersion],
+    ([f, from, to]: number[]) => from + (to - from) * easeInOutCubic(f),
+  );
+  const y = useTransform(
+    [fall, pastShopTop, releaseAt, startY, endY, layoutVersion],
+    ([f, past, release, from, to]: number[]) => {
+      if (f <= 0) return from - past; // riding along with its card
+      const releasedAt = from - release;
+      const { drop, rise } = fallTravel(f);
+      return releasedAt + (to - releasedAt) * drop - rise * 48;
+    },
+  );
   const scale = useTransform(
-    [fall, startScale],
+    [fall, startScale, layoutVersion],
     ([f, from]: number[]) => (from + (1 - from) * easeInOutCubic(f)) * fallLiftScale(f),
   );
-  const opacity = useTransform([fall, hasSlot], ([f, slotted]: number[]) => (slotted ? 1 : Math.min(f / 0.2, 1)));
+  const opacity = useTransform([fall, hasSlot, layoutVersion], ([f, slotted]: number[]) => (slotted ? 1 : Math.min(f / 0.2, 1)));
 
   // Payments: progress through the pinned section.
   const { scrollYProgress: paymentsRaw } = useScroll({ target: paymentsRef, offset: ['start start', 'end end'] });
@@ -183,6 +185,7 @@ const ShopToPayments = () => {
         startScale.set(0.7);
         hasSlot.set(0);
       }
+      layoutVersion.set(layoutVersion.get() + 1);
     };
 
     measure();
@@ -196,7 +199,7 @@ const ShopToPayments = () => {
       mutations.disconnect();
       window.removeEventListener('resize', measure);
     };
-  }, [shopTop, shopHeight, viewportHeight, startX, startY, startScale, hasSlot, endX, endY]);
+  }, [shopTop, shopHeight, viewportHeight, startX, startY, startScale, hasSlot, endX, endY, layoutVersion]);
 
   return (
     <div className="relative">
@@ -210,9 +213,7 @@ const ShopToPayments = () => {
         headingOpacity={isDesktop ? headingOpacity : undefined}
         listOpacity={listOpacity}
         listY={listY}
-        mobilePhone={
-          isDesktop ? null : { rotateX: phoneRotateXMobile, rotateY: phoneRotateYMobile, rotateZ: phoneRotateZMobile }
-        }
+        mobilePhone={isDesktop ? null : { rotateX: phoneRotateXMobile, rotateY: phoneRotateYMobile, rotateZ: phoneRotateZMobile }}
       />
 
       {/* Shared phone layer (desktop) */}
@@ -221,10 +222,10 @@ const ShopToPayments = () => {
           <motion.div className="absolute left-0 top-0 h-0 w-0" style={{ x, y, opacity }}>
             <div
               ref={phoneRef}
-              className="absolute left-0 top-0 h-[calc(var(--phone-w)*2.1)] w-[var(--phone-w)] -translate-x-1/2 -translate-y-1/2 [--phone-w:clamp(190px,26vh,250px)]"
+              className="absolute left-0 top-0 h-[calc(var(--phone-w)*2.1)] w-[var(--phone-w)] -translate-x-1/2 -translate-y-1/2 [--phone-w:clamp(190px,26vh,250px)] [perspective:1600px]"
             >
               {isDesktop && (
-                <RealisticPhone
+                <ShowcasePhone
                   rotateX={rotateX}
                   rotateY={rotateY}
                   rotateZ={rotateZ}

@@ -2,8 +2,8 @@ import type { RefObject } from 'react';
 import { AnimatePresence, motion, type MotionValue } from 'framer-motion';
 import { easeOutExpo } from '../../lib/motion';
 import { PAYMENT_METHODS } from '../payments/methods';
-import RealisticPhone from '../payments/LazyRealisticPhone';
-import type { ScreenKey } from '../payments/screenTexture';
+import ShowcasePhone from '../payments/ShowcasePhone';
+import type { ScreenKey } from '../payments/screens';
 import SectionHeading from '../ui/SectionHeading';
 
 const ROW_HEIGHT = 64; // px — height of one entry in the method wheel
@@ -41,7 +41,12 @@ const Payments = ({
   const method = PAYMENT_METHODS[current];
 
   return (
-    <section id="pagamentos" ref={sectionRef} className="relative h-[460vh] border-t border-ink/10" aria-labelledby="pagamentos-titulo">
+    <section
+      id="pagamentos"
+      ref={sectionRef}
+      className="relative h-[360vh] border-t border-ink/10 lg:h-[460vh]"
+      aria-labelledby="pagamentos-titulo"
+    >
       <ul className="sr-only">
         {PAYMENT_METHODS.map((item) => (
           <li key={item.name}>
@@ -52,7 +57,7 @@ const Payments = ({
 
       <div ref={stickyRef} className="sticky top-0 flex h-[100svh] flex-col overflow-hidden pt-24 lg:pt-28">
         <motion.div className="container-site" style={{ opacity: headingOpacity }}>
-          <SectionHeading id="pagamentos-titulo" index="03" eyebrow="Pagamentos" title="Pague como já paga todos os dias" />
+          <SectionHeading id="pagamentos-titulo" index="03" eyebrow="Pagamentos" title="Pague de forma fácil" />
         </motion.div>
 
         <div
@@ -66,8 +71,8 @@ const Payments = ({
               className="hidden h-[calc(var(--phone-w)*2.1)] w-[var(--phone-w)] [--phone-w:clamp(190px,26vh,250px)] lg:block"
             />
             {mobilePhone && (
-              <div className="relative [--phone-w:clamp(160px,23vh,250px)] lg:hidden">
-                <RealisticPhone
+              <div className="relative h-[calc(var(--phone-w)*2.1)] w-[var(--phone-w)] [--phone-w:clamp(160px,23vh,250px)] lg:hidden">
+                <ShowcasePhone
                   rotateX={mobilePhone.rotateX}
                   rotateY={mobilePhone.rotateY}
                   rotateZ={mobilePhone.rotateZ}

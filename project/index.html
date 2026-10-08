@@ -2,21 +2,266 @@
 <html lang="pt">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Rhulany Tech: smartphones, computadores, consoles e periféricos originais com garantia oficial e entrega em todo Moçambique." />
-    <meta name="theme-color" content="#F5F4F1" />
+    <!-- Icons: the chip. SVG for current browsers, PNG for older ones, home-screen icons for iPhone and Android -->
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="Rhulany Tech: smartphones, computadores, consoles e periféricos originais com garantia oficial e entrega em todo Moçambique."
+    />
+    <meta name="theme-color" content="#F5F5F7" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://images.unsplash.com" />
     <link rel="preload" as="image" href="/videos/hero-circuit-poster.jpg" />
+    <script>
+      // First visit of the session: the loader plays as an intro. Its letters wait for the logo's
+      // typeface (at most 0.9s), so they don't change shape halfway through; rtIntroStart marks
+      // when they start, for the curtain and the homepage banner to time themselves from.
+      (function () {
+        try {
+          if (sessionStorage.getItem('rt-intro') || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          var root = document.documentElement;
+          root.classList.add('rt-intro');
+          sessionStorage.setItem('rt-intro', '1');
+          window.rtStartIntro = function () {
+            if (root.classList.contains('rt-ready')) return;
+            root.classList.add('rt-ready');
+            window.rtIntroStart = performance.now();
+          };
+          setTimeout(window.rtStartIntro, 900);
+        } catch (error) {
+          // Storage can be blocked; the site simply opens without the intro.
+        }
+      })();
+    </script>
+    <!-- Fonts load without blocking the first paint, so the loader shows at once on slow connections -->
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600&display=swap"
+      media="print"
+      onload="
+        this.media = 'all';
+        window.rtStartIntro &amp;&amp; document.fonts.load('600 1em &quot;Inter Tight&quot;').then(rtStartIntro, rtStartIntro);
+      "
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600&display=swap"
+      />
+    </noscript>
     <title>Rhulany Tech | Tecnologia original em Maputo</title>
+    <!--
+      Loader: the RhulanyTech logo, with a soft wave running through its letters and a thin progress
+      line underneath. Styled here so it works before the app's CSS and JS arrive; the app's loader
+      (src/components/ui/BrandLoader.tsx) reuses these classes, so keep the two in step.
+      It only fades in after a moment, so fast loads never see it. The first visit of a session plays
+      it as a short intro instead (.rt-intro): the letters rise one by one, then the screen lifts.
+    -->
+    <style>
+      .rt-boot {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: grid;
+        place-items: center;
+        background: #f5f5f7;
+        transition:
+          opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+          visibility 0s linear 0.45s;
+      }
+      .rt-boot--done {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      .rt-loader {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        gap: calc(var(--rt-size, 20px) * 0.75);
+        opacity: 0;
+        animation: rt-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
+      }
+      /* Immediate feedback (buttons, the chat): no waiting period. */
+      .rt-loader--now {
+        opacity: 1;
+        animation: none;
+      }
+      .rt-logo {
+        display: inline-flex;
+        margin: 0;
+        font:
+          600 var(--rt-size, 20px) / 1 'Inter Tight',
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          sans-serif;
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+        color: #0c0c0d;
+      }
+      .rt-logo > span {
+        display: inline-block;
+        animation: rt-wave 1.8s ease-in-out infinite;
+        animation-delay: calc(var(--i) * 70ms);
+      }
+      .rt-logo > .rt-logo-tech {
+        color: rgba(12, 12, 13, 0.4);
+      }
+      .rt-progress {
+        position: relative;
+        display: block;
+        width: calc(var(--rt-size, 20px) * 5.5);
+        height: 1.5px;
+        overflow: hidden;
+        border-radius: 2px;
+        background: rgba(12, 12, 13, 0.1);
+      }
+      .rt-progress::after {
+        content: '';
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 38%;
+        border-radius: inherit;
+        background: #0c0c0d;
+        animation: rt-progress 1.5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+      }
+      /* On dark backgrounds, such as a button that is busy. */
+      .rt-loader--paper .rt-logo {
+        color: #f5f5f7;
+      }
+      .rt-loader--paper .rt-logo > .rt-logo-tech {
+        color: rgba(245, 245, 247, 0.5);
+      }
+      .rt-loader--paper .rt-progress {
+        background: rgba(245, 245, 247, 0.2);
+      }
+      .rt-loader--paper .rt-progress::after {
+        background: #f5f5f7;
+      }
+      @keyframes rt-in {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes rt-wave {
+        0%,
+        55%,
+        100% {
+          opacity: 1;
+          transform: none;
+        }
+        22% {
+          opacity: 0.3;
+          transform: translateY(-0.08em);
+        }
+      }
+      @keyframes rt-progress {
+        from {
+          transform: translateX(-100%);
+        }
+        to {
+          transform: translateX(270%);
+        }
+      }
+      /* Intro: the letters rise one by one, the line appears, then the screen lifts like a curtain */
+      .rt-intro .rt-boot {
+        clip-path: inset(0 0 0 0);
+        transition: clip-path 0.85s cubic-bezier(0.76, 0, 0.24, 1);
+      }
+      .rt-intro .rt-boot--done {
+        opacity: 1;
+        visibility: visible;
+        clip-path: inset(0 0 100% 0);
+      }
+      .rt-intro .rt-boot .rt-loader {
+        opacity: 1;
+        animation: none;
+        transition:
+          transform 0.85s cubic-bezier(0.76, 0, 0.24, 1),
+          opacity 0.4s ease;
+      }
+      .rt-intro .rt-boot--done .rt-loader {
+        transform: translateY(-48px);
+        opacity: 0;
+      }
+      .rt-intro .rt-boot .rt-logo {
+        overflow: hidden;
+        padding: 0.12em 0.04em 0.2em;
+      }
+      .rt-intro .rt-boot .rt-logo > span {
+        opacity: 0;
+        transform: translateY(110%);
+        animation:
+          rt-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+          rt-wave 1.8s ease-in-out infinite;
+        animation-delay: calc(0.15s + var(--i) * 45ms), calc(1.15s + var(--i) * 70ms);
+      }
+      .rt-intro .rt-boot .rt-progress {
+        opacity: 0;
+        animation: rt-show 0.4s ease 0.75s forwards;
+      }
+      .rt-intro:not(.rt-ready) .rt-boot .rt-logo > span,
+      .rt-intro:not(.rt-ready) .rt-boot .rt-progress {
+        animation-play-state: paused;
+      }
+      @keyframes rt-rise {
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes rt-show {
+        to {
+          opacity: 1;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .rt-logo > span {
+          animation: none;
+        }
+        .rt-progress::after {
+          animation-duration: 3s;
+        }
+      }
+    </style>
+    <noscript
+      ><style>
+        .rt-boot {
+          display: none;
+        }
+      </style></noscript
+    >
   </head>
   <body>
+    <div id="boot" class="rt-boot" role="status" aria-label="A carregar a Rhulany Tech">
+      <div class="rt-loader" style="--rt-size: 26px">
+        <p class="rt-logo" aria-hidden="true">
+          <span style="--i: 0">R</span>
+          <span style="--i: 1">h</span>
+          <span style="--i: 2">u</span>
+          <span style="--i: 3">l</span>
+          <span style="--i: 4">a</span>
+          <span style="--i: 5">n</span>
+          <span style="--i: 6">y</span>
+          <span class="rt-logo-tech" style="--i: 7">T</span>
+          <span class="rt-logo-tech" style="--i: 8">e</span>
+          <span class="rt-logo-tech" style="--i: 9">c</span>
+          <span class="rt-logo-tech" style="--i: 10">h</span>
+        </p>
+        <span class="rt-progress"></span>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

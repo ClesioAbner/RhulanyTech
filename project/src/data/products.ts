@@ -1,3 +1,5 @@
+import { INVENTORY_PRODUCTS } from './catalog/inventory';
+
 export interface Product {
   id: string;
   name: string;
@@ -5,7 +7,8 @@ export interface Product {
   originalPrice?: number;
   images: string[];
   description: string;
-  category: 'computadores' | 'perifericos' | 'componentes' | 'celulares' | 'consoles' | 'acessorios';
+  category:
+    'computadores' | 'perifericos' | 'componentes' | 'celulares' | 'consoles' | 'acessorios' | 'cameras' | 'casa-inteligente';
   specs: string[];
   inStock: boolean;
   stockQuantity: number;
@@ -22,7 +25,7 @@ export interface Product {
   tags: string[];
 }
 
-export const products: Product[] = [
+const LEGACY_PRODUCTS: Product[] = [
   // Celulares Premium
   {
     id: '1',
@@ -34,7 +37,7 @@ export const products: Product[] = [
       'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&angle=45',
       'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&angle=90',
       'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&angle=135',
-      'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&angle=180'
+      'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&angle=180',
     ],
     description: 'O iPhone mais avançado, com chip A18 Pro, ecrã de 6,9 polegadas, câmara Fusion de 48MP e design em titânio',
     category: 'celulares',
@@ -51,7 +54,7 @@ export const products: Product[] = [
     dimensions: '163 x 77.6 x 8.25 mm',
     weight: '227g',
     colors: ['Titânio Deserto', 'Titânio Natural', 'Titânio Branco', 'Titânio Preto'],
-    tags: ['premium', 'flagship', 'camera', 'gaming', 'professional']
+    tags: ['premium', 'flagship', 'camera', 'gaming', 'professional'],
   },
   {
     id: '2',
@@ -62,7 +65,7 @@ export const products: Product[] = [
       'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800&angle=45',
       'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800&angle=90',
-      'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800&angle=135'
+      'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800&angle=135',
     ],
     description: 'Smartphone premium com S Pen integrada, câmera de 200MP e IA avançada',
     category: 'celulares',
@@ -79,16 +82,16 @@ export const products: Product[] = [
     dimensions: '162.3 x 79.0 x 8.6 mm',
     weight: '232g',
     colors: ['Phantom Black', 'Phantom Silver', 'Phantom Violet'],
-    tags: ['premium', 'productivity', 'camera', 's-pen', 'ai']
+    tags: ['premium', 'productivity', 'camera', 's-pen', 'ai'],
   },
   {
     id: '3',
     name: 'Google Pixel 8 Pro 256GB',
     price: 145000,
     images: [
-      'https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?auto=format&fit=crop&w=800',
-      'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&angle=45',
-      'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&angle=90'
+      'https://images.unsplash.com/photo-1697355360151-2866de32ad4d?auto=format&fit=crop&w=800',
+      'https://images.unsplash.com/photo-1706412703794-d944cd3625b3?auto=format&fit=crop&w=800&angle=45',
+      'https://images.unsplash.com/photo-1706412703794-d944cd3625b3?auto=format&fit=crop&w=800&angle=90',
     ],
     description: 'IA avançada do Google, fotografia computacional de última geração',
     category: 'celulares',
@@ -104,15 +107,15 @@ export const products: Product[] = [
     dimensions: '162.6 x 76.5 x 8.8 mm',
     weight: '213g',
     colors: ['Obsidian', 'Porcelain', 'Bay'],
-    tags: ['ai', 'camera', 'pure-android', 'computational-photography']
+    tags: ['ai', 'camera', 'pure-android', 'computational-photography'],
   },
   {
     id: '4',
     name: 'OnePlus 12 256GB',
     price: 125000,
     images: [
-      'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=800',
-      'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=800&angle=45'
+      'https://images.unsplash.com/photo-1655384851782-89b0e119ab55?auto=format&fit=crop&w=800',
+      'https://images.unsplash.com/photo-1655384851782-89b0e119ab55?auto=format&fit=crop&w=800&angle=45',
     ],
     description: 'Performance flagship com carregamento ultra-rápido 100W',
     category: 'celulares',
@@ -128,15 +131,13 @@ export const products: Product[] = [
     dimensions: '164.3 x 75.8 x 9.15 mm',
     weight: '220g',
     colors: ['Flowy Emerald', 'Silky Black'],
-    tags: ['flagship', 'fast-charging', 'hasselblad', 'performance', '5g']
+    tags: ['flagship', 'fast-charging', 'hasselblad', 'performance', '5g'],
   },
   {
     id: '5',
     name: 'Xiaomi 14 Ultra 512GB',
     price: 115000,
-    images: [
-      'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800'
-    ],
+    images: ['https://images.unsplash.com/photo-1770274813875-346bfaf0ee11?auto=format&fit=crop&w=800'],
     description: 'Câmera profissional Leica em smartphone com zoom periscópico',
     category: 'celulares',
     specs: ['Snapdragon 8 Gen 3', 'Tela 6.73" AMOLED', 'Câmera Leica 50MP', '512GB', 'IP68'],
@@ -151,7 +152,7 @@ export const products: Product[] = [
     dimensions: '161.4 x 75.3 x 9.2 mm',
     weight: '229g',
     colors: ['Black', 'White'],
-    tags: ['camera', 'leica', 'zoom', 'flagship', 'photography']
+    tags: ['camera', 'leica', 'zoom', 'flagship', 'photography'],
   },
 
   // Computadores Gaming
@@ -164,7 +165,7 @@ export const products: Product[] = [
       'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&angle=45',
       'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&angle=90',
-      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&angle=135'
+      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&angle=135',
     ],
     description: 'O mais poderoso MacBook Pro com chip M3 Max para profissionais criativos',
     category: 'computadores',
@@ -181,7 +182,7 @@ export const products: Product[] = [
     dimensions: '35.57 x 24.81 x 1.68 cm',
     weight: '2.16 kg',
     colors: ['Space Gray', 'Silver'],
-    tags: ['professional', 'creative', 'video-editing', 'development', 'premium']
+    tags: ['professional', 'creative', 'video-editing', 'development', 'premium'],
   },
   {
     id: '8',
@@ -189,7 +190,7 @@ export const products: Product[] = [
     price: 320000,
     images: [
       'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=800',
-      'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&angle=45'
+      'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=800&angle=45',
     ],
     description: 'Workstation premium com tela 4K OLED e RTX 4080 para criadores',
     category: 'computadores',
@@ -205,7 +206,7 @@ export const products: Product[] = [
     dimensions: '37.45 x 24.8 x 1.99 cm',
     weight: '2.51 kg',
     colors: ['Platinum Silver', 'Graphite'],
-    tags: ['workstation', 'creative', '4k', 'oled', 'professional']
+    tags: ['workstation', 'creative', '4k', 'oled', 'professional'],
   },
   {
     id: '9',
@@ -213,7 +214,7 @@ export const products: Product[] = [
     price: 280000,
     images: [
       'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?auto=format&fit=crop&w=800',
-      'https://images.unsplash.com/photo-1587831990711-23ca6441447b?auto=format&fit=crop&w=800&angle=45'
+      'https://images.unsplash.com/photo-1587831990711-23ca6441447b?auto=format&fit=crop&w=800&angle=45',
     ],
     description: 'Desktop gaming premium com design futurista e performance extrema',
     category: 'computadores',
@@ -229,19 +230,19 @@ export const products: Product[] = [
     dimensions: '48.1 x 21.8 x 43.9 cm',
     weight: '18.6 kg',
     colors: ['Lunar Light', 'Dark Side of the Moon'],
-    tags: ['gaming', 'desktop', 'rgb', 'high-performance', 'vr-ready']
+    tags: ['gaming', 'desktop', 'rgb', 'high-performance', 'vr-ready'],
   },
 
   // Consoles Gaming
   {
     id: '10',
     name: 'PlayStation 5 Pro 2TB',
-    price: 450000,
-    originalPrice: 480000,
+    price: 105000,
+    originalPrice: 115000,
     images: [
       'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&w=800&angle=45',
-      'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&w=800&angle=90'
+      'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&w=800&angle=90',
     ],
     description: 'Console de nova geração com ray tracing avançado e gaming em 8K',
     category: 'consoles',
@@ -258,15 +259,15 @@ export const products: Product[] = [
     dimensions: '39 x 26 x 10.4 cm',
     weight: '4.5 kg',
     colors: ['White'],
-    tags: ['next-gen', 'ray-tracing', '8k', 'exclusive-games', 'vr-ready']
+    tags: ['next-gen', 'ray-tracing', '8k', 'exclusive-games', 'vr-ready'],
   },
   {
     id: '11',
     name: 'Xbox Series X 1TB',
-    price: 420000,
+    price: 90000,
     images: [
       'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?auto=format&fit=crop&w=800',
-      'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?auto=format&fit=crop&w=800&angle=45'
+      'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?auto=format&fit=crop&w=800&angle=45',
     ],
     description: 'O Xbox mais poderoso de todos os tempos com Game Pass Ultimate',
     category: 'consoles',
@@ -282,15 +283,15 @@ export const products: Product[] = [
     dimensions: '30.1 x 15.1 x 15.1 cm',
     weight: '4.45 kg',
     colors: ['Matte Black'],
-    tags: ['powerful', 'game-pass', '4k-120fps', 'quick-resume', 'backwards-compatible']
+    tags: ['powerful', 'game-pass', '4k-120fps', 'quick-resume', 'backwards-compatible'],
   },
   {
     id: '12',
     name: 'Nintendo Switch OLED 64GB',
-    price: 280000,
+    price: 52000,
     images: [
       'https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?auto=format&fit=crop&w=800',
-      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=800&angle=45'
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=800&angle=45',
     ],
     description: 'Console híbrido com tela OLED vibrante e exclusivos Nintendo',
     category: 'consoles',
@@ -306,15 +307,13 @@ export const products: Product[] = [
     dimensions: '24.2 x 13.9 x 2.8 cm',
     weight: '420g',
     colors: ['White', 'Neon Red/Blue'],
-    tags: ['portable', 'oled', 'family-friendly', 'exclusive-games', 'hybrid']
+    tags: ['portable', 'oled', 'family-friendly', 'exclusive-games', 'hybrid'],
   },
   {
     id: '13',
     name: 'Steam Deck OLED 1TB',
-    price: 380000,
-    images: [
-      'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?auto=format&fit=crop&w=800'
-    ],
+    price: 97000,
+    images: ['https://images.unsplash.com/photo-1656662962127-d8344d924d74?auto=format&fit=crop&w=800'],
     description: 'Console portátil PC gaming com tela OLED e acesso à biblioteca Steam',
     category: 'consoles',
     specs: ['AMD Zen 2 APU', 'Tela OLED 7.4"', '1TB NVMe SSD', 'Steam OS', 'Controles integrados'],
@@ -329,7 +328,7 @@ export const products: Product[] = [
     dimensions: '29.8 x 11.7 x 4.9 cm',
     weight: '640g',
     colors: ['Black'],
-    tags: ['portable', 'pc-gaming', 'steam', 'oled', 'handheld']
+    tags: ['portable', 'pc-gaming', 'steam', 'oled', 'handheld'],
   },
 
   // Periféricos Gaming
@@ -338,8 +337,8 @@ export const products: Product[] = [
     name: 'Logitech MX Master 3S Wireless',
     price: 12000,
     images: [
-      'https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=800',
-      'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=800&angle=45'
+      'https://images.unsplash.com/photo-1647755814392-fd071a3fcb4b?auto=format&fit=crop&w=800',
+      'https://images.unsplash.com/photo-1586349906319-48d20e9d17e5?auto=format&fit=crop&w=800&angle=45',
     ],
     description: 'Mouse wireless premium para produtividade com scroll MagSpeed',
     category: 'perifericos',
@@ -355,7 +354,7 @@ export const products: Product[] = [
     dimensions: '12.4 x 8.4 x 5.1 cm',
     weight: '141g',
     colors: ['Graphite', 'Pale Gray', 'Rose'],
-    tags: ['productivity', 'wireless', 'ergonomic', 'multi-device', 'professional']
+    tags: ['productivity', 'wireless', 'ergonomic', 'multi-device', 'professional'],
   },
   {
     id: '15',
@@ -363,7 +362,7 @@ export const products: Product[] = [
     price: 15000,
     images: [
       'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=800',
-      'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=800&angle=45'
+      'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=800&angle=45',
     ],
     description: 'Mouse gaming wireless de alta performance para esports',
     category: 'perifericos',
@@ -379,7 +378,7 @@ export const products: Product[] = [
     dimensions: '12.8 x 6.8 x 4.3 cm',
     weight: '59g',
     colors: ['Black', 'White'],
-    tags: ['gaming', 'esports', 'wireless', 'high-dpi', 'lightweight']
+    tags: ['gaming', 'esports', 'wireless', 'high-dpi', 'lightweight'],
   },
   {
     id: '16',
@@ -387,7 +386,7 @@ export const products: Product[] = [
     price: 25000,
     images: [
       'https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?auto=format&fit=crop&w=800',
-      'https://images.unsplash.com/photo-1541140532154-b024d705b90a?auto=format&fit=crop&w=800&angle=45'
+      'https://images.unsplash.com/photo-1541140532154-b024d705b90a?auto=format&fit=crop&w=800&angle=45',
     ],
     description: 'Teclado mecânico premium com switches ópticos e RGB avançado',
     category: 'perifericos',
@@ -403,15 +402,15 @@ export const products: Product[] = [
     dimensions: '46.1 x 16.6 x 3.9 cm',
     weight: '1.2 kg',
     colors: ['Black'],
-    tags: ['mechanical', 'rgb', 'premium', 'optical-switches', 'gaming']
+    tags: ['mechanical', 'rgb', 'premium', 'optical-switches', 'gaming'],
   },
   {
     id: '17',
     name: 'SteelSeries Arctis Nova Pro Wireless',
     price: 35000,
     images: [
-      'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&w=800',
-      'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=800&angle=45'
+      'https://images.unsplash.com/photo-1679533662345-b321cf2d8792?auto=format&fit=crop&w=800',
+      'https://images.unsplash.com/photo-1548030415-e1eb1c684c9b?auto=format&fit=crop&w=800&angle=45',
     ],
     description: 'Headset gaming premium com cancelamento de ruído ativo',
     category: 'perifericos',
@@ -427,7 +426,7 @@ export const products: Product[] = [
     dimensions: '19.3 x 17.8 x 9.2 cm',
     weight: '338g',
     colors: ['Black', 'White'],
-    tags: ['wireless', 'anc', 'gaming', 'premium', 'dual-wireless']
+    tags: ['wireless', 'anc', 'gaming', 'premium', 'dual-wireless'],
   },
   {
     id: '18',
@@ -435,7 +434,7 @@ export const products: Product[] = [
     price: 85000,
     images: [
       'https://images.unsplash.com/photo-1593640495253-23196b27a87f?auto=format&fit=crop&w=800',
-      'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&angle=45'
+      'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&angle=45',
     ],
     description: 'Monitor gaming 4K 144Hz com HDR600 e G-SYNC Compatible',
     category: 'perifericos',
@@ -451,15 +450,13 @@ export const products: Product[] = [
     dimensions: '61.3 x 56.8 x 29.0 cm',
     weight: '6.1 kg',
     colors: ['Black'],
-    tags: ['4k', '144hz', 'gaming', 'hdr', 'g-sync']
+    tags: ['4k', '144hz', 'gaming', 'hdr', 'g-sync'],
   },
   {
     id: '19',
     name: 'Logitech BRIO 4K Ultra HD',
     price: 35000,
-    images: [
-      'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=800'
-    ],
+    images: ['https://images.unsplash.com/photo-1629429407756-446d66f5b24e?auto=format&fit=crop&w=800'],
     description: 'Webcam 4K para streaming profissional e videoconferência',
     category: 'perifericos',
     specs: ['4K 30fps / 1080p 60fps', 'HDR', 'Campo de visão ajustável', 'Windows Hello', 'Microfones duplos'],
@@ -474,7 +471,7 @@ export const products: Product[] = [
     dimensions: '10.2 x 2.7 x 2.7 cm',
     weight: '63g',
     colors: ['Black'],
-    tags: ['4k', 'streaming', 'webcam', 'hdr', 'windows-hello']
+    tags: ['4k', 'streaming', 'webcam', 'hdr', 'windows-hello'],
   },
 
   // Componentes PC
@@ -486,7 +483,7 @@ export const products: Product[] = [
     images: [
       'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=800&angle=45',
-      'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=800&angle=90'
+      'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=800&angle=90',
     ],
     description: 'A placa de vídeo mais poderosa do mundo para gaming 4K e criação',
     category: 'componentes',
@@ -503,15 +500,13 @@ export const products: Product[] = [
     dimensions: '30.4 x 13.7 x 6.1 cm',
     weight: '2.2 kg',
     colors: ['Black/Silver'],
-    tags: ['flagship', '4k-gaming', 'ray-tracing', 'dlss', 'content-creation']
+    tags: ['flagship', '4k-gaming', 'ray-tracing', 'dlss', 'content-creation'],
   },
   {
     id: '21',
     name: 'Intel Core i9-14900KS',
     price: 85000,
-    images: [
-      'https://images.unsplash.com/photo-1555617981-dac3880eac6e?auto=format&fit=crop&w=800'
-    ],
+    images: ['https://images.unsplash.com/photo-1555617981-dac3880eac6e?auto=format&fit=crop&w=800'],
     description: 'Processador mais rápido para desktop gaming e criação de conteúdo',
     category: 'componentes',
     specs: ['24 núcleos (8P + 16E)', 'Até 6.2GHz Turbo', 'Cache 36MB', 'DDR5-5600', 'PCIe 5.0'],
@@ -526,15 +521,13 @@ export const products: Product[] = [
     dimensions: '4.5 x 3.7 x 0.1 cm',
     weight: '50g',
     colors: ['Silver'],
-    tags: ['flagship', 'overclocking', 'gaming', 'content-creation', 'high-performance']
+    tags: ['flagship', 'overclocking', 'gaming', 'content-creation', 'high-performance'],
   },
   {
     id: '22',
     name: 'Samsung 990 PRO 4TB NVMe',
     price: 95000,
-    images: [
-      'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=800'
-    ],
+    images: ['https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=800'],
     description: 'SSD NVMe PCIe 4.0 de alta velocidade para gaming e workstation',
     category: 'componentes',
     specs: ['4TB NVMe PCIe 4.0', '7450 MB/s leitura', '6900 MB/s escrita', 'V-NAND 3-bit MLC', '5 anos garantia'],
@@ -549,15 +542,13 @@ export const products: Product[] = [
     dimensions: '8.0 x 2.2 x 0.23 cm',
     weight: '8.5g',
     colors: ['Black'],
-    tags: ['nvme', 'pcie4', 'high-speed', 'gaming', 'workstation']
+    tags: ['nvme', 'pcie4', 'high-speed', 'gaming', 'workstation'],
   },
   {
     id: '23',
     name: 'Corsair Dominator Platinum RGB 64GB DDR5',
     price: 65000,
-    images: [
-      'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=800'
-    ],
+    images: ['https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=800'],
     description: 'Memória RAM DDR5 premium com RGB e overclock extremo',
     category: 'componentes',
     specs: ['64GB (2x32GB)', 'DDR5-5600', 'RGB Lighting', 'Aluminum Heat Spreader', 'XMP 3.0'],
@@ -572,6 +563,353 @@ export const products: Product[] = [
     dimensions: '13.3 x 0.7 x 5.1 cm',
     weight: '45g',
     colors: ['Black'],
-    tags: ['ddr5', 'rgb', 'overclocking', 'premium', 'high-capacity']
-  }
+    tags: ['ddr5', 'rgb', 'overclocking', 'premium', 'high-capacity'],
+  },
+  // Câmaras (demo: preços indicativos a confirmar)
+  {
+    id: '24',
+    name: 'Sony Alpha 7 IV',
+    price: 175000,
+    images: [
+      'https://images.unsplash.com/photo-1552233706-c3ff6a3da279?auto=format&fit=crop&w=1200',
+      'https://images.unsplash.com/photo-1538531048068-aef582996426?auto=format&fit=crop&w=1200',
+    ],
+    description: 'Câmara mirrorless full-frame de 33MP para fotografia e vídeo 4K 60p',
+    category: 'cameras',
+    specs: [
+      'Sensor full-frame 33MP',
+      'Vídeo 4K 60p 10-bit',
+      'Estabilização de 5 eixos',
+      'Autofoco com reconhecimento de olhos',
+      'Montagem Sony E',
+    ],
+    inStock: true,
+    stockQuantity: 4,
+    rating: 4.8,
+    reviews: 612,
+    brand: 'Sony',
+    model: 'Alpha 7 IV',
+    warranty: '2 anos Sony',
+    features: ['Full-frame 33MP', 'Vídeo 4K 60p', 'Estabilização IBIS', 'Dois cartões'],
+    weight: '658g',
+    colors: ['Preto'],
+    tags: ['camara', 'mirrorless', 'full-frame', 'video', 'fotografia'],
+  },
+  {
+    id: '25',
+    name: 'Canon EOS R6 Mark II',
+    price: 170000,
+    images: [
+      'https://images.unsplash.com/photo-1599664223843-9349c75196bc?auto=format&fit=crop&w=1200',
+      'https://images.unsplash.com/photo-1613483187285-e84c582608f9?auto=format&fit=crop&w=1200',
+    ],
+    description: 'Full-frame de 24MP com rajadas até 40 fps e excelente desempenho com pouca luz',
+    category: 'cameras',
+    specs: ['Sensor full-frame 24.2MP', 'Rajada até 40 fps', 'Vídeo 4K 60p', 'Estabilização até 8 stops', 'Montagem Canon RF'],
+    inStock: true,
+    stockQuantity: 3,
+    rating: 4.8,
+    reviews: 488,
+    brand: 'Canon',
+    model: 'EOS R6 Mark II',
+    warranty: '2 anos Canon',
+    features: ['Full-frame 24MP', '40 fps', 'Vídeo 4K 60p', 'Pouca luz'],
+    weight: '670g',
+    colors: ['Preto'],
+    tags: ['camara', 'mirrorless', 'full-frame', 'desporto', 'fotografia'],
+  },
+  {
+    id: '26',
+    name: 'Nikon Z6 III',
+    price: 175000,
+    images: [
+      'https://images.unsplash.com/photo-1742144107792-c72e2935218a?auto=format&fit=crop&w=1200',
+      'https://images.unsplash.com/photo-1742144179782-dbfdd94c897f?auto=format&fit=crop&w=1200',
+    ],
+    description: 'Full-frame híbrida com sensor parcialmente empilhado e vídeo 6K interno',
+    category: 'cameras',
+    specs: [
+      'Sensor full-frame 24.5MP',
+      'Vídeo 6K 60p RAW',
+      'Visor EVF brilhante',
+      'Estabilização de 5 eixos',
+      'Montagem Nikon Z',
+    ],
+    inStock: true,
+    stockQuantity: 2,
+    rating: 4.7,
+    reviews: 203,
+    brand: 'Nikon',
+    model: 'Z6 III',
+    warranty: '2 anos Nikon',
+    features: ['Full-frame 24.5MP', 'Vídeo 6K', 'Visor brilhante', 'IBIS'],
+    weight: '760g',
+    colors: ['Preto'],
+    tags: ['camara', 'mirrorless', 'full-frame', 'video', 'fotografia'],
+  },
+  {
+    id: '27',
+    name: 'Fujifilm X-T5',
+    price: 115000,
+    images: [
+      'https://images.unsplash.com/photo-1653272540691-4c99012227ae?auto=format&fit=crop&w=1200',
+      'https://images.unsplash.com/photo-1610825469504-242e3b7069e1?auto=format&fit=crop&w=1200',
+    ],
+    description: 'Clássica nos comandos, moderna no sensor: 40MP num corpo compacto',
+    category: 'cameras',
+    specs: [
+      'Sensor APS-C 40MP',
+      'Simulações de filme Fujifilm',
+      'Vídeo 6.2K 30p',
+      'Estabilização de 7 stops',
+      'Montagem Fujifilm X',
+    ],
+    inStock: true,
+    stockQuantity: 5,
+    rating: 4.8,
+    reviews: 351,
+    brand: 'Fujifilm',
+    model: 'X-T5',
+    warranty: '2 anos Fujifilm',
+    features: ['40MP APS-C', 'Simulações de filme', 'Comandos físicos', 'Compacta'],
+    weight: '557g',
+    colors: ['Prateado', 'Preto'],
+    tags: ['camara', 'mirrorless', 'aps-c', 'retro', 'fotografia'],
+  },
+  {
+    id: '28',
+    name: 'GoPro HERO13 Black',
+    price: 30000,
+    images: [
+      'https://images.unsplash.com/photo-1604942177421-df466b7410f6?auto=format&fit=crop&w=1200',
+      'https://images.unsplash.com/photo-1643104444614-292853865f54?auto=format&fit=crop&w=1200',
+    ],
+    description: 'Câmara de acção à prova de água com vídeo 5.3K e estabilização HyperSmooth',
+    category: 'cameras',
+    specs: [
+      'Vídeo 5.3K 60fps',
+      'Estabilização HyperSmooth',
+      'À prova de água até 10 m',
+      'Ecrã frontal e traseiro',
+      'Bateria Enduro',
+    ],
+    inStock: true,
+    stockQuantity: 12,
+    rating: 4.6,
+    reviews: 1180,
+    brand: 'GoPro',
+    model: 'HERO13 Black',
+    warranty: '1 ano GoPro',
+    features: ['Vídeo 5.3K', 'À prova de água', 'HyperSmooth', 'Dois ecrãs'],
+    weight: '159g',
+    colors: ['Preto'],
+    tags: ['camara', 'accao', 'desporto', 'aventura', 'video'],
+  },
+
+  // Casa inteligente (demo)
+  {
+    id: '29',
+    name: 'Apple HomePod',
+    price: 22000,
+    images: [
+      'https://images.unsplash.com/photo-1586078875290-c22eb791ad5d?auto=format&fit=crop&w=1200',
+      'https://images.unsplash.com/photo-1529359744902-86b2ab9edaea?auto=format&fit=crop&w=1200',
+    ],
+    description: 'Coluna inteligente com som espacial e controlo da casa com a Siri',
+    category: 'casa-inteligente',
+    specs: [
+      'Áudio computacional',
+      'Som espacial',
+      'Siri integrada',
+      'Hub de casa inteligente',
+      'Sensor de temperatura e humidade',
+    ],
+    inStock: true,
+    stockQuantity: 6,
+    rating: 4.6,
+    reviews: 640,
+    brand: 'Apple',
+    model: 'HomePod (2.ª geração)',
+    warranty: '1 ano Apple',
+    features: ['Som espacial', 'Siri', 'Hub Matter', 'Sensores'],
+    weight: '2.3 kg',
+    colors: ['Branco', 'Meia-noite'],
+    tags: ['coluna', 'casa-inteligente', 'audio', 'siri'],
+  },
+  {
+    id: '30',
+    name: 'Google Nest Mini',
+    price: 4500,
+    images: ['https://images.unsplash.com/photo-1519558260268-cde7e03a0152?auto=format&fit=crop&w=1200'],
+    description: 'Coluna compacta com o Google Assistant para música e controlo por voz',
+    category: 'casa-inteligente',
+    specs: ['Google Assistant', 'Som 40% mais forte que a geração anterior', 'Três microfones', 'Montagem na parede'],
+    inStock: true,
+    stockQuantity: 20,
+    rating: 4.5,
+    reviews: 2210,
+    brand: 'Google',
+    model: 'Nest Mini (2.ª geração)',
+    warranty: '1 ano Google',
+    features: ['Google Assistant', 'Compacta', 'Montagem na parede'],
+    weight: '181g',
+    colors: ['Carvão', 'Giz'],
+    tags: ['coluna', 'casa-inteligente', 'google', 'voz'],
+  },
+  {
+    id: '31',
+    name: 'Google Nest Hub',
+    price: 8500,
+    images: ['https://images.unsplash.com/photo-1650682009477-52fd77302b78?auto=format&fit=crop&w=1200'],
+    description: 'Ecrã inteligente de 7 polegadas para controlar a casa, ver a agenda e as fotografias',
+    category: 'casa-inteligente',
+    specs: ['Ecrã tátil de 7"', 'Google Assistant', 'Controlo de dispositivos da casa', 'Moldura de fotografias'],
+    inStock: true,
+    stockQuantity: 9,
+    rating: 4.5,
+    reviews: 970,
+    brand: 'Google',
+    model: 'Nest Hub (2.ª geração)',
+    warranty: '1 ano Google',
+    features: ['Ecrã 7"', 'Google Assistant', 'Centro de controlo'],
+    weight: '558g',
+    colors: ['Giz', 'Carvão'],
+    tags: ['ecra', 'casa-inteligente', 'google', 'voz'],
+  },
+  {
+    id: '32',
+    name: 'Xiaomi Smart Camera C300',
+    price: 3500,
+    images: ['https://images.unsplash.com/photo-1730967693281-c114d9930860?auto=format&fit=crop&w=1200'],
+    description: 'Câmara de interior 2K com rotação de 360° e visão nocturna',
+    category: 'casa-inteligente',
+    specs: ['Resolução 2K', 'Rotação horizontal 360°', 'Visão nocturna', 'Detecção de pessoas', 'Áudio bidireccional'],
+    inStock: true,
+    stockQuantity: 25,
+    rating: 4.4,
+    reviews: 1530,
+    brand: 'Xiaomi',
+    model: 'Smart Camera C300',
+    warranty: '1 ano Xiaomi',
+    features: ['2K', '360°', 'Visão nocturna', 'Áudio bidireccional'],
+    weight: '293g',
+    colors: ['Branco'],
+    tags: ['camara', 'seguranca', 'casa-inteligente', 'xiaomi'],
+  },
+  {
+    id: '33',
+    name: 'Philips Hue White Ambiance E27',
+    price: 3800,
+    images: ['https://images.unsplash.com/photo-1532007271951-c487760934ae?auto=format&fit=crop&w=1200'],
+    description: 'Lâmpada inteligente com luz branca regulável, do quente ao frio',
+    category: 'casa-inteligente',
+    specs: ['Casquilho E27', 'Branco quente a frio', 'Bluetooth e Zigbee', 'Controlo por voz e app'],
+    inStock: true,
+    stockQuantity: 40,
+    rating: 4.6,
+    reviews: 3120,
+    brand: 'Philips Hue',
+    model: 'White Ambiance E27',
+    warranty: '2 anos Philips',
+    features: ['Luz regulável', 'Controlo por voz', 'Rotinas'],
+    weight: '79g',
+    colors: ['Branco'],
+    tags: ['iluminacao', 'casa-inteligente', 'lampada'],
+  },
+
+  // Acessórios (demo)
+  {
+    id: '34',
+    name: 'AirPods Pro (2.ª geração)',
+    price: 18000,
+    images: [
+      'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?auto=format&fit=crop&w=1200',
+      'https://images.unsplash.com/photo-1606841837239-c5a1a4a07af7?auto=format&fit=crop&w=1200',
+    ],
+    description: 'Cancelamento activo de ruído, modo transparência e caixa de carregamento USB-C',
+    category: 'acessorios',
+    specs: [
+      'Cancelamento activo de ruído',
+      'Modo transparência adaptativo',
+      'Áudio espacial personalizado',
+      'Caixa USB-C com MagSafe',
+      'Até 6 h de autonomia',
+    ],
+    inStock: true,
+    stockQuantity: 18,
+    rating: 4.8,
+    reviews: 5200,
+    brand: 'Apple',
+    model: 'AirPods Pro 2',
+    warranty: '1 ano Apple',
+    features: ['ANC', 'Transparência', 'Áudio espacial', 'USB-C'],
+    weight: '50.8g (caixa)',
+    colors: ['Branco'],
+    tags: ['auriculares', 'audio', 'apple', 'anc'],
+  },
+  {
+    id: '35',
+    name: 'Baseus Carregador GaN 70W',
+    price: 3900,
+    images: ['https://images.unsplash.com/photo-1763161786687-43d0c9babdf0?auto=format&fit=crop&w=1200'],
+    description: 'Carregador de viagem GaN de 70 W com fichas intercambiáveis para vários países',
+    category: 'acessorios',
+    specs: ['Potência total 70 W', 'Tecnologia GaN', 'USB-C e USB-A', 'Fichas EU, UK, US e AU'],
+    inStock: true,
+    stockQuantity: 30,
+    rating: 4.6,
+    reviews: 410,
+    brand: 'Baseus',
+    model: 'EnerGeek GaN 70W',
+    warranty: '1 ano Baseus',
+    features: ['70 W', 'GaN', 'Viagem'],
+    weight: '160g',
+    colors: ['Preto'],
+    tags: ['carregador', 'gan', 'usb-c', 'viagem'],
+  },
+  {
+    id: '36',
+    name: 'Hub USB 3.0 de 7 portas',
+    price: 2500,
+    images: [
+      'https://images.unsplash.com/photo-1760376789487-994070337c76?auto=format&fit=crop&w=1200',
+      'https://images.unsplash.com/photo-1760376789478-c1023d2dc007?auto=format&fit=crop&w=1200',
+    ],
+    description: 'Sete portas USB 3.0 com interruptores individuais e alimentação externa',
+    category: 'acessorios',
+    specs: ['7 portas USB 3.0', 'Interruptor por porta', 'Até 5 Gbps', 'Fonte de alimentação incluída'],
+    inStock: true,
+    stockQuantity: 22,
+    rating: 4.4,
+    reviews: 260,
+    brand: 'Rhulany Essentials',
+    model: 'HUB-7U3',
+    warranty: '1 ano Rhulany Tech',
+    features: ['7 portas', 'Interruptores', '5 Gbps'],
+    weight: '210g',
+    colors: ['Preto'],
+    tags: ['hub', 'usb', 'secretaria'],
+  },
+  {
+    id: '37',
+    name: 'Capa de silicone com MagSafe para iPhone 16 Pro Max',
+    price: 3900,
+    images: ['https://images.unsplash.com/photo-1711033312367-247626a984d1?auto=format&fit=crop&w=1200'],
+    description: 'Silicone suave ao toque, interior em microfibra e ímanes MagSafe alinhados',
+    category: 'acessorios',
+    specs: ['Compatível com MagSafe', 'Silicone e microfibra', 'Botões revestidos', 'Protege a câmara'],
+    inStock: true,
+    stockQuantity: 35,
+    rating: 4.5,
+    reviews: 890,
+    brand: 'Apple',
+    model: 'Silicone Case MagSafe',
+    warranty: '1 ano Apple',
+    features: ['MagSafe', 'Silicone', 'Microfibra'],
+    colors: ['Azul-ardósia', 'Preto', 'Pedra'],
+    tags: ['capa', 'iphone', 'magsafe', 'proteccao'],
+  },
 ];
+
+// Everything the store sells: the original catalogue plus the additions in data/catalog/inventory.ts.
+export const products: Product[] = [...LEGACY_PRODUCTS, ...INVENTORY_PRODUCTS];

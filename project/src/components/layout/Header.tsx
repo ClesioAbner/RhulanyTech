@@ -3,31 +3,30 @@ import { Link, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { useCartStore } from '../../stores/cartStore';
 import { useUserStore } from '../../stores/userStore';
+import { useCartUi } from '../../stores/cartUi';
 import { easeOutExpo } from '../../lib/motion';
+import { CartIcon } from '../ui/Icons';
 
 const NAV_ITEMS = [
-  { to: '/products', label: 'Loja' },
-  { to: '/#pagamentos', label: 'Pagamentos' },
+  { to: '/', label: 'Início' },
+  { to: '/loja', label: 'Loja' },
   { to: '/blog', label: 'Blog' },
-  { to: '/about', label: 'Sobre' },
-  { to: '/academy', label: 'Academia' },
+  { to: '/sobre', label: 'Sobre' },
+  { to: '/contacto', label: 'Contacto' },
 ];
 
-// Hash links point at homepage sections, so they never claim the active route.
-const isNavItemActive = (to: string, pathname: string) => !to.includes('#') && pathname.startsWith(to);
+// "Início" is only active on the homepage; product pages belong to the shop.
+const isNavItemActive = (to: string, pathname: string) =>
+  to === '/' ? pathname === '/' : pathname.startsWith(to) || (to === '/loja' && pathname.startsWith('/produto/'));
 
 const COMPACT_AFTER = 48; // px scrolled before the bar contracts
 // Minimal contraction on scroll: the bar stays full-featured, it just tightens and lifts.
 const barTransition = { duration: 0.5, ease: easeOutExpo };
 
-interface HeaderProps {
-  onSignIn: () => void;
-  onOpenProfile: () => void;
-}
-
-const Header = ({ onSignIn, onOpenProfile }: HeaderProps) => {
+const Header = () => {
   const { currentUser, logout } = useUserStore();
   const itemCount = useCartStore((state) => state.items.reduce((sum, item) => sum + item.quantity, 0));
+  const openCart = useCartUi((state) => state.open);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCompact, setIsCompact] = useState(false);
   const { pathname, hash } = useLocation();
@@ -39,8 +38,10 @@ const Header = ({ onSignIn, onOpenProfile }: HeaderProps) => {
 
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+    document.documentElement.toggleAttribute('data-menu-open', isMenuOpen);
     return () => {
       document.body.style.overflow = '';
+      document.documentElement.removeAttribute('data-menu-open');
     };
   }, [isMenuOpen]);
 
@@ -60,7 +61,11 @@ const Header = ({ onSignIn, onOpenProfile }: HeaderProps) => {
         }}
         transition={barTransition}
       >
-        <Link to="/" className="shrink-0 font-display text-[17px] font-semibold tracking-tight" aria-label="Rhulany Tech, página inicial">
+        <Link
+          to="/"
+          className="shrink-0 font-display text-[17px] font-semibold tracking-tight"
+          aria-label="Rhulany Tech, página inicial"
+        >
           Rhulany<span className="text-ink/40">Tech</span>
         </Link>
 
@@ -90,20 +95,30 @@ const Header = ({ onSignIn, onOpenProfile }: HeaderProps) => {
         </nav>
 
         <div className="flex shrink-0 items-center gap-1 text-[13.5px]">
-          <button
-            type="button"
-            onClick={currentUser ? onOpenProfile : onSignIn}
+          <Link
+            to={currentUser ? '/conta' : `/entrar?voltar=${encodeURIComponent(pathname)}`}
             className="hidden h-10 items-center rounded-full px-4 transition-colors hover:bg-ink/[0.05] sm:inline-flex"
           >
             {currentUser ? currentUser.name.split(' ')[0] : 'Entrar'}
-          </button>
+          </Link>
 
-          <Link
-            to="/cart"
-            className="inline-flex h-10 items-center gap-2.5 rounded-full bg-ink pl-4 pr-2 text-paper transition-colors duration-300 hover:bg-ink-soft"
-            aria-label={`Carrinho, ${itemCount} artigos`}
+          <button
+            type="button"
+            onClick={() => openCart()}
+            aria-haspopup="dialog"
+            className="inline-flex h-10 items-center gap-2 rounded-full bg-ink pl-3.5 pr-2 text-paper transition-colors duration-300 hover:bg-ink-soft"
+            aria-label={`Carrinho, ${itemCount} ${itemCount === 1 ? 'artigo' : 'artigos'}`}
           >
-            Carrinho
+            {/* Re-keyed on every change so the cart gives a small nudge when something is added */}
+            <motion.span
+              key={itemCount}
+              className="block"
+              initial={{ scale: 0.82, rotate: -8 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: 'spring', stiffness: 520, damping: 14 }}
+            >
+              <CartIcon className="h-[19px] w-[19px]" />
+            </motion.span>
             <span className="grid h-6 min-w-[1.5rem] place-items-center overflow-hidden rounded-full bg-paper/15 px-1.5 text-xs tabular-nums">
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.span
@@ -117,7 +132,7 @@ const Header = ({ onSignIn, onOpenProfile }: HeaderProps) => {
                 </motion.span>
               </AnimatePresence>
             </span>
-          </Link>
+          </button>
 
           <button
             type="button"
@@ -170,17 +185,13 @@ const Header = ({ onSignIn, onOpenProfile }: HeaderProps) => {
               <div className="flex gap-6 border-t border-ink/10 pt-6 text-base">
                 {currentUser ? (
                   <>
-                    <button type="button" onClick={() => { setIsMenuOpen(false); onOpenProfile(); }}>
-                      A minha conta
-                    </button>
+                    <Link to="/conta">A minha conta</Link>
                     <button type="button" onClick={logout} className="text-ink/60">
                       Sair
                     </button>
                   </>
                 ) : (
-                  <button type="button" onClick={() => { setIsMenuOpen(false); onSignIn(); }}>
-                    Entrar ou criar conta
-                  </button>
+                  <Link to={`/entrar?voltar=${encodeURIComponent(pathname)}`}>Entrar ou criar conta</Link>
                 )}
               </div>
             </motion.nav>
