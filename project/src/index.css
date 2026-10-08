@@ -33,6 +33,16 @@
 }
 
 @layer components {
+  /* Touch screens: cards give way slightly under the finger, like an app. */
+  @media (hover: none) {
+    .tap-feedback {
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tap-feedback:active {
+      transform: scale(0.98);
+    }
+  }
+
   /* The chat button steps aside while the phone menu is open. */
   html[data-menu-open] .assistant-launcher {
     visibility: hidden;

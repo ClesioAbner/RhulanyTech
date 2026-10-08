@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, type Variants } from 'framer-motion';
 import { getProductById, priceFrom, productPath, resolveImage, type CatalogProduct } from '../../lib/catalog';
 import { formatPrice } from '../../lib/format';
-import { easeOutExpo } from '../../lib/motion';
+import { easeOutExpo, isPhone } from '../../lib/motion';
 import { useImageReady } from '../../lib/useImageReady';
-import TechChip from '../ui/TechChip';
+import BrandLoader from '../ui/BrandLoader';
 import Phone3D, { type PhoneShape } from './Phone3D';
 
 // Phones on show, with their real proportions (body, corners, thickness, front camera).
@@ -180,22 +180,20 @@ const Showroom = () => {
                 exit={{ opacity: 0, scale: 0.92, transition: { duration: 0.35 } }}
                 aria-hidden="true"
               >
-                <span className="rt-loader">
-                  <TechChip size={64} />
-                </span>
+                <BrandLoader size={20} progress />
               </motion.div>
             ) : (
               <motion.div
                 key={product.id}
                 className="absolute inset-0 flex items-center justify-center [transform-style:preserve-3d]"
-                initial={{ opacity: 0, x: 260, y: 30, scale: 0.82, rotateZ: 8 }}
+                initial={{ opacity: 0, x: isPhone ? 120 : 260, y: 30, scale: 0.82, rotateZ: isPhone ? 5 : 8 }}
                 animate={{ opacity: 1, x: 0, y: 0, scale: 1, rotateZ: 0 }}
                 exit={{
                   opacity: 0,
-                  x: -300,
+                  x: isPhone ? -140 : -300,
                   y: 20,
                   scale: 0.82,
-                  rotateZ: -8,
+                  rotateZ: isPhone ? -5 : -8,
                   transition: { duration: 0.7, ease: [0.55, 0, 0.75, 0.2] },
                 }}
                 transition={{ duration: 1.5, ease: easeOutExpo }}

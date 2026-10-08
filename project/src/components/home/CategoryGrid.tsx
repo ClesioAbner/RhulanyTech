@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CATEGORIES, categoryPath, productsIn, resolveImage } from '../../lib/catalog';
-import { easeOutExpo, inViewOnce, riseIn3d, stagger } from '../../lib/motion';
+import { easeOutExpo, inViewOnce, isTouch, riseIn3d, stagger } from '../../lib/motion';
 import SectionHeading from '../ui/SectionHeading';
 
 interface Piece {
@@ -118,7 +118,12 @@ const CategoryGrid = () => (
             variants={riseIn3d}
             className={`${wide ? 'col-span-2 sm:col-span-1' : ''} ${art.span} [transform-origin:50%_100%]`}
           >
-            <motion.div initial="rest" animate="rest" whileHover="hover" className="h-full">
+            <motion.div
+              className="h-full"
+              {...(isTouch
+                ? { initial: 'scattered', whileInView: 'rest', viewport: { once: true, amount: 0.5 }, whileTap: { scale: 0.98 } }
+                : { initial: 'rest', animate: 'rest', whileHover: 'hover' })}
+            >
               <Link
                 to={categoryPath(category.slug)}
                 className={`group relative block overflow-hidden rounded-[22px] ring-1 ring-ink/[0.05] sm:aspect-[4/3] sm:rounded-[28px] ${wide ? 'aspect-[6/5]' : 'aspect-[4/5]'} ${art.shape}`}
@@ -136,8 +141,23 @@ const CategoryGrid = () => (
                       className="stage-shadow absolute select-none"
                       style={{ left: `${piece.left}%`, top: `${piece.top}%`, width: `${piece.width}%`, zIndex: index }}
                       variants={{
-                        rest: { x: 0, y: 0, rotate: piece.rotate, scale: 1 },
+                        rest: {
+                          x: 0,
+                          y: 0,
+                          rotate: piece.rotate,
+                          scale: 1,
+                          opacity: 1,
+                          // Touch: the pieces settle one after another as the tile comes into view.
+                          transition: { duration: 0.9, ease: easeOutExpo, delay: isTouch ? 0.15 + index * 0.09 : 0 },
+                        },
                         hover: { x: piece.spread, y: -10 - index * 3, rotate: piece.rotate * 1.35, scale: 1.03 },
+                        scattered: {
+                          x: piece.spread * 2.5,
+                          y: 36 + index * 10,
+                          rotate: piece.rotate * 2,
+                          scale: 0.92,
+                          opacity: 0,
+                        },
                       }}
                       transition={{ duration: 0.8, ease: easeOutExpo }}
                     />

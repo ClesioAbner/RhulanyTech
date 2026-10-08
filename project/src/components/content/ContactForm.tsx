@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { STORE } from '../../data/store';
 import { EMAIL_PATTERN, sendContactMessage, type ContactMessage } from '../../lib/contact';
 import { easeOutExpo } from '../../lib/motion';
+import { ButtonLoader } from '../ui/BrandLoader';
 
 const MESSAGE_MAX = 1000;
 const MESSAGE_MIN = 10;
@@ -275,18 +276,9 @@ const ContactForm = () => {
                   exit={{ y: -14, opacity: 0 }}
                   transition={{ duration: 0.25 }}
                 >
-                  {status === 'sending' ? 'A enviar' : 'Enviar mensagem'}
+                  {status === 'sending' ? <ButtonLoader label="A enviar" /> : 'Enviar mensagem'}
                 </motion.span>
               </AnimatePresence>
-              {status === 'sending' && (
-                <motion.span
-                  aria-hidden="true"
-                  className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-paper/60"
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 0.9 }}
-                  transition={{ duration: 2.4, ease: 'easeOut' }}
-                />
-              )}
             </button>
           </motion.form>
         )}

@@ -5,6 +5,7 @@ import { formatMobile, isMobile, localNumber } from '../../lib/checkout';
 import { easeOutExpo } from '../../lib/motion';
 import { useUserStore, type UserProfile } from '../../stores/userStore';
 import { TextField } from '../ui/Field';
+import { ButtonLoader } from '../ui/BrandLoader';
 
 export type AuthMode = 'entrar' | 'criar';
 
@@ -205,7 +206,7 @@ const AuthForm = ({ mode, onModeChange, onSuccess }: AuthFormProps) => {
           disabled={busy}
           className="!mt-6 h-14 w-full rounded-full bg-ink text-sm font-medium text-paper transition-[background-color,transform] duration-300 hover:bg-ink-soft active:scale-[0.99] disabled:cursor-progress disabled:opacity-80"
         >
-          {busy ? 'Um momento' : mode === 'entrar' ? 'Entrar' : 'Criar conta'}
+          {busy ? <ButtonLoader label="Um momento" /> : mode === 'entrar' ? 'Entrar' : 'Criar conta'}
         </button>
       </form>
 

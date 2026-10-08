@@ -26,7 +26,7 @@ const ArticleCard = ({ article, layout = 'stack' }: ArticleCardProps) => {
     return (
       <Link
         to={href}
-        className="group -mx-4 grid grid-cols-[1fr_auto] items-center gap-5 rounded-[28px] p-4 transition-colors duration-500 hover:bg-white sm:-mx-6 sm:gap-10 sm:p-6"
+        className="tap-feedback group -mx-4 grid grid-cols-[1fr_auto] items-center gap-5 rounded-[28px] p-4 transition-colors duration-500 hover:bg-white sm:-mx-6 sm:gap-10 sm:p-6"
       >
         <div className="min-w-0">
           <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
@@ -54,7 +54,7 @@ const ArticleCard = ({ article, layout = 'stack' }: ArticleCardProps) => {
 
   const row = layout === 'row';
   return (
-    <Link to={href} className={`group ${row ? 'flex items-center gap-5' : 'block'}`}>
+    <Link to={href} className={`tap-feedback group ${row ? 'flex items-center gap-5' : 'block'}`}>
       <div
         className={`overflow-hidden bg-mist ${row ? 'aspect-square w-28 shrink-0 rounded-2xl sm:w-36' : 'aspect-[4/3] rounded-[22px]'}`}
       >

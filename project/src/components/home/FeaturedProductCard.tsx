@@ -53,7 +53,7 @@ const FeaturedProductCard = ({ product, mediaSlotRef, size = 'regular' }: Produc
   const handleQuickAdd = () => addToCart(product, product.finishes[0], product.option?.choices[0]);
 
   return (
-    <article className="group [perspective:1000px]">
+    <article className="tap-feedback group [perspective:1000px]">
       <motion.div
         ref={cardRef}
         onPointerMove={handlePointerMove}

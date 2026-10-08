@@ -2,7 +2,7 @@ import type { RefObject } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getProductById, type CatalogProduct } from '../../lib/catalog';
-import { easeOutExpo } from '../../lib/motion';
+import { easeOutExpo, isPhone } from '../../lib/motion';
 import FeaturedProductCard from './FeaturedProductCard';
 import SectionHeading from '../ui/SectionHeading';
 
@@ -37,10 +37,10 @@ const ShopSection = ({ sectionRef, phoneSlotRef }: ShopSectionProps) => (
         {FAVORITES.map((product, index) => (
           <motion.li
             key={product.id}
-            initial={{ opacity: 0, y: 40, rotateX: 18 }}
+            initial={isPhone ? { opacity: 0, y: 24 } : { opacity: 0, y: 40, rotateX: 18 }}
             whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
             viewport={{ once: true, margin: '0px 0px -10% 0px' }}
-            transition={{ duration: 0.9, ease: easeOutExpo, delay: (index % 3) * 0.07 }}
+            transition={{ duration: isPhone ? 0.7 : 0.9, ease: easeOutExpo, delay: (index % (isPhone ? 2 : 3)) * 0.07 }}
             className="[transform-origin:50%_100%]"
           >
             <FeaturedProductCard product={product} mediaSlotRef={product.id === PHONE_PRODUCT_ID ? phoneSlotRef : undefined} />

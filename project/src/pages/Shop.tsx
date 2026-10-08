@@ -49,7 +49,7 @@ const Shop = () => (
             >
               <Link
                 to={categoryPath(category.slug)}
-                className="group block overflow-hidden rounded-[22px] bg-white ring-1 ring-ink/[0.06] transition-[box-shadow,transform] duration-500 ease-out-expo hover:-translate-y-1 hover:shadow-[0_28px_50px_-32px_rgba(12,12,13,0.32)]"
+                className="tap-feedback group block overflow-hidden rounded-[22px] bg-white ring-1 ring-ink/[0.06] transition-[box-shadow,transform] duration-500 ease-out-expo hover:-translate-y-1 hover:shadow-[0_28px_50px_-32px_rgba(12,12,13,0.32)]"
               >
                 <div className="stage relative aspect-square">
                   {face && (

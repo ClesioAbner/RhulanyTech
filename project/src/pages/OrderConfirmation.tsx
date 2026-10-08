@@ -12,6 +12,7 @@ import Check from '../components/checkout/CheckMark';
 import StatusTrack from '../components/checkout/StatusTrack';
 import ReceiptCard from '../components/checkout/ReceiptCard';
 import { WhatsAppIcon } from '../components/ui/Icons';
+import { ButtonLoader } from '../components/ui/BrandLoader';
 
 /** /encomenda/:number */
 const OrderConfirmation = () => {
@@ -129,7 +130,7 @@ const OrderConfirmation = () => {
                   disabled={downloading}
                   className="h-14 w-full rounded-full bg-ink text-sm font-medium text-paper transition-colors hover:bg-ink-soft disabled:cursor-progress disabled:opacity-80"
                 >
-                  {downloading ? 'A preparar o PDF' : 'Descarregar recibo em PDF'}
+                  {downloading ? <ButtonLoader label="A preparar o PDF" /> : 'Descarregar recibo em PDF'}
                 </button>
                 <a
                   href={orderWhatsappUrl(order)}

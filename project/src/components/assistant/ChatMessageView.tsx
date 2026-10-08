@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { easeOutExpo } from '../../lib/motion';
 import type { ChatMessage } from '../../stores/assistantStore';
 import { ChipIcon } from '../ui/Icons';
-import TechChip from '../ui/TechChip';
+import BrandLoader from '../ui/BrandLoader';
 import ProductSuggestion from './ProductSuggestion';
 
 const bubble = 'max-w-[86%] whitespace-pre-wrap break-words px-4 py-2.5 text-[15px] leading-relaxed';
@@ -74,11 +74,11 @@ const ChatMessageView = ({ message, isLast, onSuggestion, onRetry, onFollow, han
           </div>
         ) : thinking ? (
           <div
-            className="inline-flex items-center gap-2.5 rounded-[22px] rounded-tl-md bg-white py-2 pl-2.5 pr-4 ring-1 ring-ink/[0.05]"
+            className="inline-flex items-center rounded-[22px] rounded-tl-md bg-white px-4 py-3 ring-1 ring-ink/[0.05]"
             role="status"
           >
-            <TechChip size={26} />
-            <span className="text-[13px] text-ink/50">A escrever</span>
+            <BrandLoader size={13} timing="now" />
+            <span className="sr-only">A escrever</span>
           </div>
         ) : (
           <p className={`${bubble} w-fit rounded-[22px] rounded-tl-md bg-white text-ink ring-1 ring-ink/[0.05]`}>

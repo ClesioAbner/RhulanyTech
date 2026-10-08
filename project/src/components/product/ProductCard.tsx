@@ -24,7 +24,7 @@ const ProductCard = ({ product }: { product: CatalogProduct }) => {
   const saving = product.originalPrice && !hasOptions ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-[22px] bg-white ring-1 ring-ink/[0.06] transition-[box-shadow,transform] duration-500 ease-out-expo hover:-translate-y-1 hover:shadow-[0_32px_60px_-34px_rgba(12,12,13,0.32)] sm:rounded-[26px]">
+    <article className="tap-feedback group relative flex h-full flex-col overflow-hidden rounded-[22px] bg-white ring-1 ring-ink/[0.06] transition-[box-shadow,transform] duration-500 ease-out-expo hover:-translate-y-1 hover:shadow-[0_32px_60px_-34px_rgba(12,12,13,0.32)] sm:rounded-[26px]">
       <div className="stage relative aspect-[5/6] overflow-hidden">
         {(isNewArrival(product) || saving > 0) && (
           <p className="absolute inset-x-3.5 top-3 z-10 flex justify-between text-[10px] font-semibold uppercase tracking-[0.14em] text-accent-deep sm:inset-x-5 sm:top-4 sm:text-[11px]">

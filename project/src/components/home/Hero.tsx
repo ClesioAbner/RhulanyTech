@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { introRemaining } from '../../lib/bootLoader';
+import { INTRO_LIFT, introPending } from '../../lib/bootLoader';
 import { easeOutExpo } from '../../lib/motion';
 
 const HERO_VIDEO = '/videos/hero-circuit.mp4';
@@ -11,8 +11,14 @@ const Hero = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const prefersReducedMotion = useReducedMotion();
-  // On the first visit the entrance waits for the intro to lift, so it is seen rather than played behind it.
-  const [wait] = useState(introRemaining);
+  // On the first visit the entrance waits for the intro's curtain, so it is seen rather than played behind it.
+  const [waiting, setWaiting] = useState(introPending);
+  useEffect(() => {
+    if (!waiting) return;
+    const lift = () => setWaiting(false);
+    window.addEventListener(INTRO_LIFT, lift);
+    return () => window.removeEventListener(INTRO_LIFT, lift);
+  }, [waiting]);
 
   // Scroll: the stage tilts back and settles into a framed card as the page moves on.
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
@@ -38,8 +44,8 @@ const Hero = () => {
         <motion.div
           className="absolute inset-0 overflow-hidden bg-ink [transform-origin:50%_100%]"
           initial={{ rotateX: 38, y: 160, scale: 0.72, borderRadius: 40, opacity: 0 }}
-          animate={{ rotateX: 0, y: 0, scale: 1, borderRadius: 0, opacity: 1 }}
-          transition={{ duration: 1.8, ease: easeOutExpo, delay: wait }}
+          animate={waiting ? undefined : { rotateX: 0, y: 0, scale: 1, borderRadius: 0, opacity: 1 }}
+          transition={{ duration: 1.8, ease: easeOutExpo }}
         >
           <video
             ref={videoRef}
@@ -63,8 +69,8 @@ const Hero = () => {
           <motion.div
             className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, ease: easeOutExpo, delay: 1 + wait }}
+            animate={waiting ? undefined : { opacity: 1, y: 0 }}
+            transition={{ duration: 1.1, ease: easeOutExpo, delay: 1 }}
           >
             <p className="max-w-sm text-base leading-relaxed text-paper/75 sm:text-lg">
               Smartphones, computadores, consoles e periféricos originais, com garantia e entrega em todo Moçambique

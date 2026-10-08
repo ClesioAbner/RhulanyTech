@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState, type ImgHTMLAttributes, type SyntheticEvent } from 'react';
 import { isCutout } from '../../lib/images';
 import { isImageReady } from '../../lib/useImageReady';
-import TechChip from '../ui/TechChip';
+import BrandLoader from '../ui/BrandLoader';
 
 interface ProductImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
   src: string;
   /** Inset around a cut-out, as a Tailwind padding class; photos always fill the frame. */
   inset?: string;
-  /** Show the loading chip until the photo arrives, then fade the photo in (shop pictures). */
+  /** Show the logo loader until the photo arrives, then fade the photo in (shop pictures). */
   loader?: boolean;
 }
 
@@ -70,11 +70,7 @@ const ProductImage = ({
     <>
       {loader && !loaded && (
         <span ref={holder} className="absolute inset-0 grid place-items-center" aria-hidden="true">
-          {onScreen && (
-            <span className="rt-loader">
-              <TechChip size={44} />
-            </span>
-          )}
+          {onScreen && <BrandLoader size={13} />}
         </span>
       )}
       {isCutout(src) ? (
