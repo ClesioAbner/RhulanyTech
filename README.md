@@ -1,4 +1,5 @@
 Rhulany Tech
+
 A Rhulany Tech é uma loja online de tecnologia aqui em Maputo, onde se pode comprar telemóveis, computadores e produtos gamer.
 
 Decidi actualizar o site todo para ficar mais moderno e mais fácil de usar. Refiz a página inicial com animações 3D, criei uma loja nova com filtros e páginas para cada produto, e melhorei o carrinho e o checkout. Agora o cliente pode criar conta, fazer a encomenda e descarregar o recibo em PDF. Os pagamentos aparecem com M-Pesa, e-Mola, mKesh, cartão e PayPal, mas por enquanto ainda são só simulação. Também juntei um blog e uma página de contacto com o mapa da loja, e tive o cuidado de deixar tudo a funcionar bem no telemóvel.
