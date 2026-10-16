@@ -50,6 +50,21 @@ const TickMarks = ({ value }: { value: Ticks }) => {
   );
 };
 
+/** iPhone status bar: time and icons either side of the Dynamic Island. Shared by every phone screen. */
+export const StatusBar = () => (
+  <div className="relative grid h-[13.6cqw] shrink-0 grid-cols-[1fr_32cqw_1fr] items-center pt-[0.6cqw] text-[4.2cqw] font-semibold tabular-nums tracking-tight">
+    <span className="justify-self-center pl-[2cqw]">{clock()}</span>
+    <span aria-hidden="true" className="h-[9.4cqw] rounded-full bg-black shadow-[inset_0_0_0_0.3cqw_rgba(255,255,255,0.04)]">
+      <span className="ml-auto mr-[3.2cqw] mt-[3.2cqw] block h-[3cqw] w-[3cqw] rounded-full bg-[radial-gradient(circle_at_35%_35%,#2a3550_0%,#0b0d14_60%)]" />
+    </span>
+    <span className="flex items-center gap-[1.2cqw] justify-self-center pr-[2cqw]">
+      <Signal />
+      <span className="text-[3.1cqw] font-semibold">4G</span>
+      <Battery />
+    </span>
+  </div>
+);
+
 // Chat wallpaper: tech line drawings (phone, headphones, gamepad, laptop, camera, watch, chip, bolt).
 const WALLPAPER_TILE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="rgba(30,41,59,0.11)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
 <rect x="10" y="8" width="16" height="28" rx="4"/><path d="M15 11h6"/>
@@ -86,18 +101,7 @@ const BusinessCard = () => (
 
 const ChatScreen = ({ state }: { state: ChatState }) => (
   <div className="flex h-full flex-col bg-white font-sans text-ink">
-    {/* Status bar: time and icons either side of the Dynamic Island */}
-    <div className="relative grid h-[13.6cqw] shrink-0 grid-cols-[1fr_32cqw_1fr] items-center pt-[0.6cqw] text-[4.2cqw] font-semibold tabular-nums tracking-tight">
-      <span className="justify-self-center pl-[2cqw]">{clock()}</span>
-      <span aria-hidden="true" className="h-[9.4cqw] rounded-full bg-black shadow-[inset_0_0_0_0.3cqw_rgba(255,255,255,0.04)]">
-        <span className="ml-auto mr-[3.2cqw] mt-[3.2cqw] block h-[3cqw] w-[3cqw] rounded-full bg-[radial-gradient(circle_at_35%_35%,#2a3550_0%,#0b0d14_60%)]" />
-      </span>
-      <span className="flex items-center gap-[1.2cqw] justify-self-center pr-[2cqw]">
-        <Signal />
-        <span className="text-[3.1cqw] font-semibold">4G</span>
-        <Battery />
-      </span>
-    </div>
+    <StatusBar />
 
     {/* Conversation header */}
     <div className="flex shrink-0 items-center gap-[2.4cqw] border-b border-ink/[0.08] px-[3.5cqw] pb-[2.4cqw] pt-[1cqw]">

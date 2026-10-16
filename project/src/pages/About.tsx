@@ -6,6 +6,7 @@ import { STORE } from '../data/store';
 import { unsplash } from '../lib/images';
 import { easeOutExpo, inViewOnce } from '../lib/motion';
 import PageHero from '../components/content/PageHero';
+import AdvicePhone from '../components/content/chat/AdvicePhone';
 
 // Maputo bay at sunset (Unsplash), kept locally with the lens flare removed and a portrait crop for phones.
 const HERO_IMAGE = '/images/sobre/baia-maputo';
@@ -23,8 +24,8 @@ const PRINCIPLES = [
   {
     title: 'Aconselhamento honesto',
     body: 'Perguntamos para que vai usar o equipamento antes de sugerir um modelo. Muitas vezes a melhor escolha não é a mais cara, e é essa que recomendamos.',
-    image: '1639413665566-2f75adf7b7ca',
-    alt: 'Secretária clara com monitor, teclado e uma garrafa',
+    // A live WhatsApp conversation on a phone in hand, instead of a photo.
+    scene: 'conversa',
   },
   {
     title: 'Presentes depois da compra',
@@ -54,12 +55,11 @@ const Principle = ({ item, index }: { item: (typeof PRINCIPLES)[number]; index: 
         viewport={{ once: true, margin: '0px 0px -15% 0px' }}
         transition={{ duration: 1.1, ease: easeOutExpo }}
       >
-        <img
-          src={unsplash(item.image, 1400)}
-          alt={item.alt}
-          loading="lazy"
-          className="aspect-[4/3] w-full object-cover lg:aspect-[3/2]"
-        />
+        {'scene' in item ? (
+          <AdvicePhone />
+        ) : (
+          <img src={unsplash(item.image, 1400)} alt={item.alt} loading="lazy" className="aspect-[4/3] w-full object-cover" />
+        )}
       </motion.div>
       <motion.div
         className={`lg:col-span-5 ${flipped ? 'lg:order-1' : ''}`}

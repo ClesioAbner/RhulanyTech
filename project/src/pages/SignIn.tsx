@@ -1,24 +1,35 @@
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { unsplash, unsplashSrcSet } from '../lib/images';
 import { easeOutExpo } from '../lib/motion';
 import { useUserStore } from '../stores/userStore';
 import AuthForm, { type AuthMode } from '../components/account/AuthForm';
+import PhotoScreen from '../components/content/PhotoScreen';
+import { FRONT } from '../components/content/chat/photos';
+import AccountScreen from '../components/content/screens/AccountScreen';
+import SavedCheckoutScreen from '../components/content/screens/SavedCheckoutScreen';
 
-// One photo per mode; switching tabs crossfades between them.
-const PHOTOS: Record<AuthMode, { id: string; alt: string; caption: string }> = {
-  entrar: {
-    id: '1616440347437-b1c73416efc2',
-    alt: 'Secretária de trabalho com monitor, colunas e plantas',
-    caption: 'As suas encomendas, recibos e dados de entrega num só lugar',
-  },
-  criar: {
-    id: '1603025832572-c5ba1fb6be8b',
-    alt: 'Secretária clara com portátil, monitor e plantas',
-    caption: 'Compre mais depressa, com a morada e o contacto já preenchidos',
-  },
+// One hand and phone for both tabs; only the screen changes: the account, or a checkout already filled in.
+const SCREENS: Record<AuthMode, { caption: string; screen: () => JSX.Element }> = {
+  entrar: { caption: 'As suas encomendas, recibos e dados de entrega num só lugar', screen: AccountScreen },
+  criar: { caption: 'Compre mais depressa, com a morada e o contacto já preenchidos', screen: SavedCheckoutScreen },
+};
+
+/** Width over height of an element, kept up to date, so a photo can be framed to fill it. */
+const useAspect = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [aspect, setAspect] = useState(0);
+  useLayoutEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    const measure = () => setAspect(element.clientHeight ? element.clientWidth / element.clientHeight : 0);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+  return [ref, aspect] as const;
 };
 
 // Only follow redirects inside the site.
@@ -32,7 +43,8 @@ const SignIn = () => {
   const mode: AuthMode = params.get('modo') === 'criar' ? 'criar' : 'entrar';
   const back = safeReturn(params.get('voltar'));
   const leave = params.get('voltar') && back !== '/conta' ? back : '/';
-  const photo = PHOTOS[mode];
+  const { caption, screen: Screen } = SCREENS[mode];
+  const [panelRef, aspect] = useAspect();
 
   useEffect(() => {
     document.title = `${mode === 'entrar' ? 'Entrar' : 'Criar conta'} | Rhulany Tech`;
@@ -52,31 +64,50 @@ const SignIn = () => {
 
   return (
     <div className="grid min-h-[100svh] lg:grid-cols-2">
-      <div className="relative hidden overflow-hidden bg-ink lg:block">
+      {/* The photo stays in view while a longer form scrolls beside it */}
+      <div
+        ref={panelRef}
+        className="relative hidden overflow-hidden bg-[#ece9e4] lg:sticky lg:top-0 lg:block lg:h-[100svh] lg:self-start"
+      >
         <Link
           to="/"
-          className="absolute left-12 top-10 z-10 font-display text-xl font-semibold tracking-tight text-paper xl:left-16"
+          className="absolute left-12 top-10 z-10 font-display text-xl font-semibold tracking-tight xl:left-16"
           aria-label="Rhulany Tech, página inicial"
         >
-          Rhulany<span className="text-paper/55">Tech</span>
+          Rhulany<span className="text-ink/40">Tech</span>
         </Link>
-        {/* Both photos load up front and crossfade, so switching tabs never shows an empty frame */}
-        {(Object.keys(PHOTOS) as AuthMode[]).map((key) => (
-          <motion.img
-            key={key}
-            src={unsplash(PHOTOS[key].id, 1600)}
-            srcSet={unsplashSrcSet(PHOTOS[key].id)}
-            sizes="50vw"
-            alt={key === mode ? PHOTOS[key].alt : ''}
-            aria-hidden={key !== mode}
-            className="absolute inset-0 h-full w-full object-cover"
-            initial={false}
-            animate={{ opacity: key === mode ? 1 : 0, scale: key === mode ? 1 : 1.06 }}
-            transition={{ duration: 1.1, ease: easeOutExpo }}
-          />
-        ))}
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/10 to-ink/20" />
-        <div className="absolute inset-x-0 bottom-0 p-12 text-paper xl:p-16">
+        {aspect > 0 && (
+          <div className="absolute inset-0">
+            <PhotoScreen
+              src="/images/telemovel/mao-frente-960.jpg"
+              srcSet="/images/telemovel/mao-frente-600.jpg 600w, /images/telemovel/mao-frente-960.jpg 960w"
+              sizes="50vw"
+              alt="Mão a segurar um telemóvel com a conta da Rhulany Tech no ecrã"
+              photo={FRONT}
+              aspect={aspect}
+              // Never narrower than the panel, whatever its shape.
+              zoom={Math.max(1, FRONT.width / FRONT.height / aspect)}
+              focus={{ x: 0.5, y: 0.395 }}
+              target={{ x: 0.5, y: 0.42 }}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={mode}
+                  className="h-full"
+                  aria-hidden="true"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.35 }}
+                >
+                  <Screen />
+                </motion.div>
+              </AnimatePresence>
+            </PhotoScreen>
+          </div>
+        )}
+        <div className="absolute inset-x-0 bottom-0 h-[42%] bg-gradient-to-t from-[#ece9e4] via-[#ece9e4]/80 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 p-12 xl:p-16">
           <AnimatePresence mode="wait" initial={false}>
             <motion.p
               key={mode}
@@ -86,7 +117,7 @@ const SignIn = () => {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.6, ease: easeOutExpo }}
             >
-              {photo.caption}
+              {caption}
             </motion.p>
           </AnimatePresence>
         </div>
