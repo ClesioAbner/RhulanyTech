@@ -1,6 +1,14 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, type Variants } from 'framer-motion';
+import {
+  AnimatePresence,
+  animate,
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  useReducedMotion,
+  type Variants,
+} from 'framer-motion';
 import { getProductById, priceFrom, productPath, resolveImage, type CatalogProduct } from '../../lib/catalog';
 import { formatPrice } from '../../lib/format';
 import { easeOutExpo, isPhone } from '../../lib/motion';
@@ -15,7 +23,9 @@ const FEATURED: { id: string; shape: PhoneShape }[] = [
   { id: '51', shape: { aspect: 0.479, radius: 0.165, depth: 0.118, camera: 'punch' } },
   { id: '40', shape: { aspect: 0.488, radius: 0.17, depth: 0.075, camera: 'island' } },
 ];
-const SLIDE_SECONDS = 9;
+const SLIDE_SECONDS = 6;
+// Halfway through, the phone turns round to show its next colour on its own.
+const AUTO_TURN_AT = 0.5;
 
 const SLIDES = FEATURED.map(({ id, shape }) => ({ product: getProductById(id), shape })).filter(
   (slide): slide is { product: CatalogProduct; shape: PhoneShape } => Boolean(slide.product?.finishes[0]?.images?.length),
@@ -40,7 +50,7 @@ const fieldFor = (hex: string) => {
 
 const textVariants: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.07, delayChildren: 0.35 } },
+  show: { transition: { staggerChildren: 0.06, delayChildren: 0.2 } },
   exit: { transition: { staggerChildren: 0.025, staggerDirection: -1 } },
 };
 const line: Variants = {
@@ -57,13 +67,16 @@ const word: Variants = {
 /*
  * The shop's opening, full width. One phone at a time stands in a light of its own colour.
  * Choreography: the stage changes colour, the phone sweeps in screen first and turns to show its
- * back, the name rises word by word, then the details and colours follow. Colours turn the phone
- * all the way round; the tabs move between phones and show the time left on the current one.
+ * back, the name rises word by word, then the details and colours follow. Halfway through, the
+ * phone turns all the way round into its next colour; colours picked by hand do the same and keep
+ * it on show. The tabs move between phones and show the time left on the current one.
  */
 const Showroom = () => {
   const [slide, setSlide] = useState(0);
   const [finishIndex, setFinishIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  // A colour picked by hand keeps the phone on show; the automatic turn does not.
+  const [handPicked, setHandPicked] = useState(false);
   const [phoneHeight, setPhoneHeight] = useState(520);
   const stageRef = useRef<HTMLDivElement>(null);
   const progress = useMotionValue(0);
@@ -94,7 +107,12 @@ const Showroom = () => {
   const goTo = (index: number) => {
     setSlide((index + SLIDES.length) % SLIDES.length);
     setFinishIndex(0);
+    setHandPicked(false);
   };
+
+  useMotionValueEvent(progress, 'change', (value) => {
+    if (value >= AUTO_TURN_AT && finishIndex === 0 && !handPicked && product.finishes.length > 1) setFinishIndex(1);
+  });
 
   // The timer restarts with each phone; picking a colour or turning the phone pauses it.
   useEffect(() => {
@@ -111,15 +129,18 @@ const Showroom = () => {
     else controls.current?.play();
   }, [paused]);
 
-  // Warm the cache with every colour of the phone on show, so turning to a new one is instant.
+  // Warm the cache with every colour of the phone on show, so turning to a new one is instant, and
+  // with the next phone's first two colours, so it arrives without waiting for its photo.
   useEffect(() => {
-    product.finishes.forEach((item) => {
+    const next = SLIDES[(slide + 1) % SLIDES.length].product;
+    [...product.finishes, ...next.finishes.slice(0, 2)].forEach((item) => {
       if (item.images?.[0]) new Image().src = resolveImage(item.images[0], 1200);
     });
-  }, [product]);
+  }, [product, slide]);
 
   const pickFinish = (index: number) => {
     setFinishIndex(index);
+    setHandPicked(true);
     setPaused(true);
   };
 
@@ -129,7 +150,7 @@ const Showroom = () => {
     <section
       aria-label="Em destaque"
       className="relative isolate overflow-hidden bg-paper"
-      onPointerLeave={() => finishIndex === 0 && setPaused(false)}
+      onPointerLeave={() => !handPicked && setPaused(false)}
     >
       {/* Stage colour */}
       <AnimatePresence initial={false}>
@@ -186,17 +207,23 @@ const Showroom = () => {
               <motion.div
                 key={product.id}
                 className="absolute inset-0 flex items-center justify-center [transform-style:preserve-3d]"
-                initial={{ opacity: 0, x: isPhone ? 120 : 260, y: 30, scale: 0.82, rotateZ: isPhone ? 5 : 8 }}
-                animate={{ opacity: 1, x: 0, y: 0, scale: 1, rotateZ: 0 }}
+                // Like a turntable: the next phone comes in from the side and from further back, turned
+                // edge on, and swings round to face the visitor while the last one turns away into the
+                // distance. No filters here: they would flatten the phone's 3D body.
+                initial={{ opacity: 0, x: isPhone ? 150 : 340, z: -260, rotateY: 62, scale: 0.9 }}
+                animate={{ opacity: 1, x: 0, z: 0, rotateY: 0, scale: 1 }}
                 exit={{
                   opacity: 0,
-                  x: isPhone ? -140 : -300,
-                  y: 20,
-                  scale: 0.82,
-                  rotateZ: isPhone ? -5 : -8,
-                  transition: { duration: 0.7, ease: [0.55, 0, 0.75, 0.2] },
+                  x: isPhone ? -150 : -340,
+                  z: -260,
+                  rotateY: -62,
+                  scale: 0.9,
+                  transition: { duration: 0.8, ease: [0.45, 0, 0.7, 0.3] },
                 }}
-                transition={{ duration: 1.5, ease: easeOutExpo }}
+                transition={{
+                  default: { duration: 1.25, ease: easeOutExpo },
+                  opacity: { duration: 0.5, ease: 'easeOut' },
+                }}
               >
                 <motion.div
                   className="[transform-style:preserve-3d]"

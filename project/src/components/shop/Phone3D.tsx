@@ -111,7 +111,7 @@ const Phone3D = ({ image, alt, hex, shape, height, pointerX, pointerY, onGrab }:
   // Arrival: screen first, then a half turn to the back.
   useEffect(() => {
     if (prefersReducedMotion) return;
-    const controls = animate(turn, 180, { duration: 1.7, delay: 0.35, ease: [0.65, 0, 0.35, 1] });
+    const controls = animate(turn, 180, { duration: 1.3, delay: 0.2, ease: [0.65, 0, 0.35, 1] });
     return () => controls.stop();
   }, [turn, prefersReducedMotion]);
 
@@ -132,11 +132,11 @@ const Phone3D = ({ image, alt, hex, shape, height, pointerX, pointerY, onGrab }:
     }
     const from = turn.get();
     const target = Math.round((from - 180) / 360) * 360 + 180 + 360;
-    const controls = animate(turn, target, { duration: 1.5, ease: [0.65, 0, 0.35, 1] });
+    const controls = animate(turn, target, { duration: 1.3, ease: [0.65, 0, 0.35, 1] });
     const repaint = window.setTimeout(() => {
       setBack(image);
       setFrame(hex);
-    }, 420);
+    }, 360);
     return () => {
       controls.stop();
       window.clearTimeout(repaint);
