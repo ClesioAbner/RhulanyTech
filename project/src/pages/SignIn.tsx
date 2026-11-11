@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { easeOutExpo } from '../lib/motion';
+import { useMediaQuery } from '../lib/useMediaQuery';
 import { useUserStore } from '../stores/userStore';
 import AuthForm, { type AuthMode } from '../components/account/AuthForm';
 import PhotoScreen from '../components/content/PhotoScreen';
@@ -35,7 +36,7 @@ const useAspect = () => {
 // Only follow redirects inside the site.
 const safeReturn = (value: string | null) => (value && value.startsWith('/') && !value.startsWith('//') ? value : '/conta');
 
-/** /entrar: sign in or create an account, with a photo beside the form. */
+/** /entrar: sign in or create an account, with a photo beside the form (above it on phones and tablets). */
 const SignIn = () => {
   const [params, setParams] = useSearchParams();
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ const SignIn = () => {
   const leave = params.get('voltar') && back !== '/conta' ? back : '/';
   const { caption, screen: Screen } = SCREENS[mode];
   const [panelRef, aspect] = useAspect();
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   useEffect(() => {
     document.title = `${mode === 'entrar' ? 'Entrar' : 'Criar conta'} | Rhulany Tech`;
@@ -64,17 +66,23 @@ const SignIn = () => {
 
   return (
     <div className="grid min-h-[100svh] lg:grid-cols-2">
-      {/* The photo stays in view while a longer form scrolls beside it */}
+      {/* Desktop: the photo stays in view while a longer form scrolls beside it. Phones: a banner over the form. */}
       <div
         ref={panelRef}
-        className="relative hidden overflow-hidden bg-[#ece9e4] lg:sticky lg:top-0 lg:block lg:h-[100svh] lg:self-start"
+        className="relative h-[46svh] min-h-[360px] overflow-hidden bg-[#ece9e4] sm:h-[52svh] lg:sticky lg:top-0 lg:h-[100svh] lg:min-h-0 lg:self-start"
       >
         <Link
           to="/"
-          className="absolute left-12 top-10 z-10 font-display text-xl font-semibold tracking-tight xl:left-16"
+          className="absolute left-5 top-7 z-10 font-display text-lg font-semibold tracking-tight sm:left-10 lg:left-12 lg:top-10 lg:text-xl xl:left-16"
           aria-label="Rhulany Tech, página inicial"
         >
           Rhulany<span className="text-ink/40">Tech</span>
+        </Link>
+        <Link
+          to={leave}
+          className="absolute right-5 top-5 z-10 inline-flex h-10 items-center rounded-full bg-white/90 px-5 text-sm font-medium backdrop-blur sm:right-10 lg:hidden"
+        >
+          Voltar
         </Link>
         {aspect > 0 && (
           <div className="absolute inset-0">
@@ -85,10 +93,10 @@ const SignIn = () => {
               alt="Mão a segurar um telemóvel com a conta da Rhulany Tech no ecrã"
               photo={FRONT}
               aspect={aspect}
-              // Never narrower than the panel, whatever its shape.
-              zoom={Math.max(1, FRONT.width / FRONT.height / aspect)}
+              // Never narrower than the panel, whatever its shape; closer in on the shorter phone banner.
+              zoom={Math.max(isDesktop ? 1 : 1.15, FRONT.width / FRONT.height / aspect)}
               focus={{ x: 0.5, y: 0.395 }}
-              target={{ x: 0.5, y: 0.42 }}
+              target={{ x: 0.5, y: isDesktop ? 0.42 : 0.62 }}
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
@@ -106,8 +114,10 @@ const SignIn = () => {
             </PhotoScreen>
           </div>
         )}
-        <div className="absolute inset-x-0 bottom-0 h-[42%] bg-gradient-to-t from-[#ece9e4] via-[#ece9e4]/80 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 p-12 xl:p-16">
+        <div className="absolute inset-x-0 bottom-0 h-[42%] bg-gradient-to-t from-[#ece9e4] via-[#ece9e4]/80 to-transparent max-lg:hidden" />
+        {/* Phones: the photo melts into the page above the form */}
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-paper to-transparent lg:hidden" />
+        <div className="absolute inset-x-0 bottom-0 hidden p-12 lg:block xl:p-16">
           <AnimatePresence mode="wait" initial={false}>
             <motion.p
               key={mode}
@@ -123,8 +133,8 @@ const SignIn = () => {
         </div>
       </div>
 
-      <div className="relative flex flex-col justify-center px-5 pb-16 pt-24 sm:px-10 lg:px-14 lg:pt-28 xl:px-20">
-        <div className="absolute inset-x-5 top-7 flex items-center justify-between sm:inset-x-10 lg:inset-x-14 lg:top-9 xl:inset-x-20">
+      <div className="relative flex flex-col px-5 pb-14 pt-9 sm:px-10 sm:pt-12 lg:justify-center lg:px-14 lg:pb-16 lg:pt-28 xl:px-20">
+        <div className="absolute inset-x-14 top-9 hidden items-center justify-between lg:flex xl:inset-x-20">
           <Link
             to="/"
             className="font-display text-lg font-semibold tracking-tight lg:invisible"
@@ -153,7 +163,7 @@ const SignIn = () => {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.4, ease: easeOutExpo }}
             >
-              <h1 className="type-display">{mode === 'entrar' ? 'Bem-vindo de volta' : 'Crie a sua conta'}</h1>
+              <h1 className="type-banner">{mode === 'entrar' ? 'Bem-vindo de volta' : 'Crie a sua conta'}</h1>
               <p className="type-lead mt-3 text-ink/55">
                 {mode === 'entrar' ? 'Entre para acompanhar as suas encomendas' : 'Leva menos de um minuto'}
               </p>

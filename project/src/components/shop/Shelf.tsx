@@ -64,7 +64,8 @@ const Shelf = ({
       <div className="container-site flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
         <h2 id={id} className="type-title max-w-3xl">
           {title}
-          {lead && <span className="text-ink/45"> {lead}</span>}
+          {/* Phones keep the heading to its title */}
+          {lead && <span className="text-ink/45 max-sm:hidden"> {lead}</span>}
         </h2>
         {link && (
           <Link

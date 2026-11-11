@@ -11,6 +11,7 @@ import Shelf from '../../shop/Shelf';
 import Block from './Block';
 import NextGuide from './NextGuide';
 import ShareLinks from './ShareLinks';
+import Rail from '../../ui/Rail';
 import TableOfContents from './TableOfContents';
 import { sectionNumber, type Heading } from './sections';
 
@@ -53,7 +54,7 @@ const ArticleView = ({ article }: { article: Article }) => {
             <span>{topicLabel(article.topic)}</span>
           </nav>
           <motion.h1
-            className="type-display mt-5"
+            className="type-banner mt-4 sm:mt-5"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: easeOutExpo }}
@@ -61,7 +62,7 @@ const ArticleView = ({ article }: { article: Article }) => {
             {article.title}
           </motion.h1>
           <motion.p
-            className="type-lead mx-auto mt-5 max-w-xl text-ink/60"
+            className="type-lead mx-auto mt-4 max-w-xl text-ink/60 sm:mt-5"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: easeOutExpo, delay: 0.1 }}
@@ -74,15 +75,15 @@ const ArticleView = ({ article }: { article: Article }) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.25 }}
           >
-            <span className="text-ink">Equipa Rhulany Tech</span>
+            <span className="text-ink max-sm:hidden">Equipa Rhulany Tech</span>
             <span>{formatArticleDate(article.date)}</span>
             <span>{readingMinutes(article)} min de leitura</span>
           </motion.p>
         </div>
       </header>
 
-      <div ref={coverRef} className="container-site mt-10 lg:mt-14">
-        <div className="aspect-[4/3] overflow-hidden rounded-[28px] bg-mist sm:aspect-[21/9]">
+      <div ref={coverRef} className="container-site mt-8 sm:mt-10 lg:mt-14">
+        <div className="aspect-[4/3] overflow-hidden rounded-[24px] bg-mist sm:aspect-[21/9] sm:rounded-[28px]">
           <motion.img
             src={unsplash(article.cover.src, 2000)}
             srcSet={unsplashSrcSet(article.cover.src)}
@@ -94,7 +95,7 @@ const ArticleView = ({ article }: { article: Article }) => {
         </div>
       </div>
 
-      <div ref={articleRef} className="container-site mt-14 grid gap-12 lg:mt-20 lg:grid-cols-12">
+      <div ref={articleRef} className="container-site mt-10 grid gap-12 sm:mt-14 lg:mt-20 lg:grid-cols-12">
         <aside className="hidden lg:col-span-3 lg:block">
           <div className="sticky top-32">
             <TableOfContents headings={headings} />
@@ -103,7 +104,7 @@ const ArticleView = ({ article }: { article: Article }) => {
 
         <article className="mx-auto w-full max-w-[680px] lg:col-span-7 lg:col-start-5 lg:mx-0">
           <motion.section
-            className="rounded-[24px] bg-white p-6 sm:p-8"
+            className="rounded-[24px] bg-white p-5 sm:p-8"
             aria-labelledby="resumo"
             {...{ initial: { opacity: 0, y: 20 }, whileInView: { opacity: 1, y: 0 }, viewport: inViewOnce }}
             transition={{ duration: 0.8, ease: easeOutExpo }}
@@ -121,7 +122,7 @@ const ArticleView = ({ article }: { article: Article }) => {
             </ul>
           </motion.section>
 
-          <div className="mt-14">
+          <div className="mt-12 sm:mt-14">
             {article.body.map((block, index) => (
               <Block key={index} block={block} number={block.type === 'h2' ? numbers.get(block.id) : undefined} />
             ))}
@@ -144,7 +145,7 @@ const ArticleView = ({ article }: { article: Article }) => {
           id="produtos-guia"
           title="Produtos neste guia"
           lead="Equipamentos e acessórios de que falámos"
-          className="mt-24 lg:mt-32"
+          className="mt-20 sm:mt-24 lg:mt-32"
         >
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
@@ -152,12 +153,12 @@ const ArticleView = ({ article }: { article: Article }) => {
         </Shelf>
       )}
 
-      <section className="container-site mt-20 lg:mt-24" aria-label="Próximo guia">
+      <section className="container-site mt-16 sm:mt-20 lg:mt-24" aria-label="Próximo guia">
         <NextGuide article={next} />
       </section>
 
       {more.length > 0 && (
-        <section className="container-site mt-20 pb-28 lg:mt-24 lg:pb-36" aria-labelledby="continue">
+        <section className="container-site mt-16 pb-24 sm:mt-20 sm:pb-28 lg:mt-24 lg:pb-36" aria-labelledby="continue">
           <div className="flex items-end justify-between gap-6">
             <h2 id="continue" className="type-title">
               Mais guias
@@ -166,13 +167,14 @@ const ArticleView = ({ article }: { article: Article }) => {
               Ver todos
             </Link>
           </div>
-          <ul className="mt-10 grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8">
+          {/* Phones: a row to swipe instead of three tall cards */}
+          <Rail label="Mais guias" className="mt-8 sm:mt-10" gridClassName="lg:grid lg:grid-cols-3 lg:gap-x-8">
             {more.map((item) => (
-              <li key={item.slug}>
+              <li key={item.slug} className="w-[80%] shrink-0 snap-start sm:w-[46%] lg:w-auto">
                 <ArticleCard article={item} />
               </li>
             ))}
-          </ul>
+          </Rail>
         </section>
       )}
     </>

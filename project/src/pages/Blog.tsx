@@ -12,6 +12,8 @@ import BlogSearchHero from '../components/content/BlogSearchHero';
 import FaqPhone from '../components/content/chat/FaqPhone';
 import HelpPhone from '../components/content/chat/HelpPhone';
 import { WhatsAppIcon } from '../components/ui/Icons';
+import PhoneCopy from '../components/ui/PhoneCopy';
+import Rail from '../components/ui/Rail';
 import { SearchIcon } from '../components/ui/Icons';
 
 // Topic tiles use the newest guide's photo of that topic.
@@ -19,6 +21,8 @@ const TOPICS = BLOG_TOPICS.map((topic) => {
   const guides = ARTICLES_BY_DATE.filter((article) => article.topic === topic.id);
   return { ...topic, count: guides.length, cover: guides[0]?.cover };
 }).filter((topic) => topic.count > 0);
+
+const PHONE_LIST = 5;
 
 const normalise = (text: string) => text.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 
@@ -56,6 +60,9 @@ const Blog = () => {
     [search],
   );
   const phoneFaq = faqs[openFaq ?? 0] ?? FAQ[0];
+  // Phones list the newest guides first and fold the rest behind a button; a topic or a search shows all.
+  const [showAll, setShowAll] = useState(false);
+  const folded = !showAll && topic === 'todos' && !search && articles.length > PHONE_LIST + 1;
 
   const showAllResults = () => {
     setTopic('todos');
@@ -76,15 +83,18 @@ const Blog = () => {
 
       <Picks />
 
-      <section className="container-site pt-24 lg:pt-32" aria-labelledby="temas">
+      <section className="container-site pt-20 sm:pt-24 lg:pt-32" aria-labelledby="temas">
         <motion.div {...riseOnView} transition={{ duration: 0.8, ease: easeOutExpo }}>
           <p className="eyebrow text-ink/45">Temas</p>
           <h2 id="temas" className="type-title mt-3">
             Explore por equipamento
           </h2>
         </motion.div>
-        <motion.ul
-          className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:mt-12 lg:grid-cols-7 lg:gap-4"
+        {/* Phones and tablets: a row to swipe; desktop: all seven side by side */}
+        <Rail
+          label="Temas"
+          className="mt-8 lg:mt-12"
+          gridClassName="lg:grid lg:grid-cols-7 lg:gap-4"
           initial="hidden"
           whileInView="visible"
           viewport={inViewOnce}
@@ -93,6 +103,7 @@ const Blog = () => {
           {TOPICS.map((item) => (
             <motion.li
               key={item.id}
+              className="w-[42%] shrink-0 snap-start sm:w-[26%] lg:w-auto"
               variants={{
                 hidden: { opacity: 0, y: 20 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: easeOutExpo } },
@@ -122,10 +133,10 @@ const Blog = () => {
               </button>
             </motion.li>
           ))}
-        </motion.ul>
+        </Rail>
       </section>
 
-      <section id="todos-os-guias" className="container-site scroll-mt-20 pt-24 lg:pt-32" aria-labelledby="guias">
+      <section id="todos-os-guias" className="container-site scroll-mt-20 pt-20 sm:pt-24 lg:pt-32" aria-labelledby="guias">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="eyebrow text-ink/45">Biblioteca</p>
@@ -219,6 +230,7 @@ const Blog = () => {
                 {articles.map((article, index) => (
                   <motion.li
                     key={article.slug}
+                    className={folded && index >= PHONE_LIST ? 'max-sm:hidden' : undefined}
                     layout
                     initial={{ opacity: 0, y: 28 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -229,6 +241,17 @@ const Blog = () => {
                   </motion.li>
                 ))}
               </AnimatePresence>
+              {folded && (
+                <li className="pt-4 sm:hidden">
+                  <button
+                    type="button"
+                    onClick={() => setShowAll(true)}
+                    className="h-12 w-full rounded-full border border-ink/15 text-sm font-medium transition-colors active:bg-ink active:text-paper"
+                  >
+                    Ver mais {articles.length - PHONE_LIST} guias
+                  </button>
+                </li>
+              )}
             </motion.ul>
           ) : (
             <motion.div
@@ -253,7 +276,7 @@ const Blog = () => {
         </AnimatePresence>
       </section>
 
-      <section id="duvidas" className="container-site scroll-mt-20 pt-24 lg:pt-32" aria-labelledby="duvidas-titulo">
+      <section id="duvidas" className="container-site scroll-mt-20 pt-20 sm:pt-24 lg:pt-32" aria-labelledby="duvidas-titulo">
         <div className="grid gap-10 lg:grid-cols-12">
           <motion.div className="lg:col-span-5" {...riseOnView} transition={{ duration: 0.8, ease: easeOutExpo }}>
             <p className="eyebrow text-ink/45">Dúvidas frequentes</p>
@@ -280,7 +303,7 @@ const Blog = () => {
         </div>
       </section>
 
-      <section className="container-site pt-24 lg:pt-32" aria-labelledby="ajuda-blog">
+      <section className="container-site pt-20 sm:pt-24 lg:pt-32" aria-labelledby="ajuda-blog">
         <motion.div
           className="relative overflow-hidden rounded-[32px] bg-white"
           {...riseOnView}
@@ -296,7 +319,9 @@ const Blog = () => {
               Precisa de ajuda com um equipamento
             </h2>
             <p className="type-lead mt-4 max-w-md text-ink/60">
-              Diga-nos o modelo e o que está a acontecer. Respondemos pelo WhatsApp e indicamos o que fazer
+              <PhoneCopy phone="Diga-nos o modelo e respondemos pelo WhatsApp">
+                Diga-nos o modelo e o que está a acontecer. Respondemos pelo WhatsApp e indicamos o que fazer
+              </PhoneCopy>
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a

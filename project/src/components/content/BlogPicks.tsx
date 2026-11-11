@@ -11,7 +11,7 @@ const PICKS = ARTICLES_BY_DATE.slice(0, 3);
 const BlogPicks = () => {
   const [lead, ...rest] = PICKS;
   return (
-    <section className="container-site pt-20 lg:pt-28" aria-labelledby="para-comecar">
+    <section className="container-site pt-16 sm:pt-20 lg:pt-28" aria-labelledby="para-comecar">
       <motion.div {...riseOnView} transition={{ duration: 0.8, ease: easeOutExpo }}>
         <p className="eyebrow text-ink/45">Para começar</p>
         <h2 id="para-comecar" className="type-title mt-3">
@@ -19,10 +19,10 @@ const BlogPicks = () => {
         </h2>
       </motion.div>
 
-      <div className="mt-10 grid gap-10 lg:mt-12 lg:grid-cols-12 lg:gap-12">
+      <div className="mt-8 grid gap-10 sm:mt-10 lg:mt-12 lg:grid-cols-12 lg:gap-12">
         <motion.div className="lg:col-span-7" {...riseOnView} transition={{ duration: 0.9, ease: easeOutExpo }}>
           <Link to={`/blog/${lead.slug}`} className="group block">
-            <div className="aspect-[16/10] overflow-hidden rounded-[28px] bg-mist">
+            <div className="aspect-[4/3] overflow-hidden rounded-[24px] bg-mist sm:aspect-[16/10] sm:rounded-[28px]">
               <img
                 src={unsplash(lead.cover.src, 1400)}
                 alt={lead.cover.alt}
@@ -40,7 +40,7 @@ const BlogPicks = () => {
                 {lead.title}
               </span>
             </h3>
-            <p className="type-lead mt-3 max-w-xl text-ink/60">{lead.excerpt}</p>
+            <p className="type-lead mt-3 line-clamp-2 max-w-xl text-ink/60 sm:line-clamp-none">{lead.excerpt}</p>
           </Link>
         </motion.div>
 

@@ -21,7 +21,7 @@ const ProductOverview = ({ product }: { product: CatalogProduct }) => {
           Visão geral
         </h2>
         <motion.p
-          className="font-display text-2xl font-medium leading-[1.3] tracking-tight [text-wrap:pretty] sm:text-[1.75rem] lg:col-span-8 lg:text-[2.1rem]"
+          className="font-display text-xl font-medium leading-[1.35] tracking-tight [text-wrap:pretty] sm:text-[1.75rem] lg:col-span-8 lg:text-[2.1rem]"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={inViewOnce}

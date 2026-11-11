@@ -6,6 +6,7 @@ import { STORE } from '../data/store';
 import { unsplash } from '../lib/images';
 import { easeOutExpo, inViewOnce } from '../lib/motion';
 import PageHero from '../components/content/PageHero';
+import PhoneCopy from '../components/ui/PhoneCopy';
 
 // Maputo bay at sunset (Unsplash), kept locally with the lens flare removed and a portrait crop for phones.
 const HERO_IMAGE = '/images/sobre/baia-maputo';
@@ -143,8 +144,10 @@ const About = () => {
           <motion.p className="type-title lg:col-span-9" {...reveal} transition={{ duration: 1, ease: easeOutExpo }}>
             Comprar tecnologia em Moçambique devia ser tão seguro como em qualquer parte do mundo.{' '}
             <span className="text-ink/40">
-              Por isso vendemos só produtos originais, com preços claros, entrega em todo o país e uma equipa que continua
-              disponível depois da compra.
+              <PhoneCopy phone="Por isso vendemos só originais.">
+                Por isso vendemos só produtos originais, com preços claros, entrega em todo o país e uma equipa que continua
+                disponível depois da compra.
+              </PhoneCopy>
             </span>
           </motion.p>
         </div>
