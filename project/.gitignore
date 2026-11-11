@@ -1,11 +1,18 @@
 # Dependencies and build output
 node_modules/
 dist/
+dist-e2e/
+
+# Test reports
+playwright-report/
+test-results/
+coverage/
 
 # Environment (secrets stay local; .env.example is committed)
 .env
 .env.*
 !.env.example
+!.env.e2e
 
 # Logs
 *.log

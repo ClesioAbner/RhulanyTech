@@ -8,7 +8,7 @@ module.exports = {
     // Last: turns off rules that would fight Prettier's formatting.
     'prettier',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  ignorePatterns: ['dist', 'dist-e2e', 'playwright-report', 'test-results', 'coverage', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh'],
   rules: {
