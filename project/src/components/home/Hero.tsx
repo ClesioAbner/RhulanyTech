@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { INTRO_LIFT, introPending } from '../../lib/bootLoader';
 import { easeOutExpo } from '../../lib/motion';
+import PhoneCopy from '../ui/PhoneCopy';
 
 const HERO_VIDEO = '/videos/hero-circuit.mp4';
 const HERO_POSTER = '/videos/hero-circuit-poster.jpg';
@@ -72,8 +73,10 @@ const Hero = () => {
             animate={waiting ? undefined : { opacity: 1, y: 0 }}
             transition={{ duration: 1.1, ease: easeOutExpo, delay: 1 }}
           >
-            <p className="max-w-sm text-base leading-relaxed text-paper/75 sm:text-lg">
-              Smartphones, computadores, consoles e periféricos originais, com garantia e entrega em todo Moçambique
+            <p className="max-w-sm text-[15px] leading-relaxed text-paper/80 sm:text-lg sm:text-paper/75">
+              <PhoneCopy phone="Tecnologia original, com garantia">
+                Smartphones, computadores, consoles e periféricos originais, com garantia e entrega em todo Moçambique
+              </PhoneCopy>
             </p>
 
             <div className="flex items-center gap-3">

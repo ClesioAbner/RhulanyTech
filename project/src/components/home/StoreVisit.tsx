@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { STORE } from '../../data/store';
 import { easeOutExpo, inViewOnce } from '../../lib/motion';
+import PhoneCopy from '../ui/PhoneCopy';
 import StoreDisplay from './StoreDisplay';
 
 const DETAILS = [
@@ -40,8 +41,10 @@ const StoreVisit = () => (
             Experimente antes de comprar
           </h2>
           <p className="mt-6 max-w-md text-base leading-relaxed text-paper/70 sm:text-lg">
-            Venha ver os equipamentos de perto, testar teclados e ecrãs e sair com tudo configurado. Ou fale connosco pelo
-            WhatsApp durante o horário de loja
+            <PhoneCopy phone="Teste na loja e saia com tudo configurado">
+              Venha ver os equipamentos de perto, testar teclados e ecrãs e sair com tudo configurado. Ou fale connosco pelo
+              WhatsApp durante o horário de loja
+            </PhoneCopy>
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <a

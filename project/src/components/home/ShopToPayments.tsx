@@ -11,9 +11,12 @@ import {
   fallRotateY,
   fallRotateZ,
   fallTravel,
+  mobileEntryRotateX,
+  mobileEntryRotateY,
+  mobileEntryRotateZ,
+  mobileEntryScale,
   mobileRotateX,
   mobileRotateY,
-  mobileRotateZ,
   paymentRotateX,
   paymentRotateY,
 } from '../payments/phoneTimeline';
@@ -140,10 +143,17 @@ const ShopToPayments = () => {
   );
   const rotateZ = useTransform([fallSmooth, payments], ([f, p]: number[]) => still(inPayments(p) ? 0 : fallRotateZ(f)));
 
-  // Mobile phone: payments only.
-  const phoneRotateYMobile = useTransform(payments, (p) => still(mobileRotateY(p)));
-  const phoneRotateXMobile = useTransform(payments, (p) => still(mobileRotateX(p)));
-  const phoneRotateZMobile = useTransform(payments, (p) => still(mobileRotateZ(p)));
+  // Mobile phone: a full turn while the payments section scrolls in, then the sway while it is pinned.
+  const { scrollYProgress: entryRaw } = useScroll({ target: paymentsRef, offset: ['start end', 'start start'] });
+  const entry = useSpring(entryRaw, { stiffness: 140, damping: 30, mass: 0.5 });
+  const phoneRotateYMobile = useTransform([entry, payments], ([e, p]: number[]) =>
+    still(mobileEntryRotateY(e) + mobileRotateY(p)),
+  );
+  const phoneRotateXMobile = useTransform([entry, payments], ([e, p]: number[]) =>
+    still(mobileEntryRotateX(e) + mobileRotateX(p)),
+  );
+  const phoneRotateZMobile = useTransform(entry, (e) => still(mobileEntryRotateZ(e)));
+  const phoneScaleMobile = useTransform(entry, (e) => (prefersReducedMotion ? 1 : mobileEntryScale(e)));
 
   const screenKey: ScreenKey =
     activeIndex >= 0 ? (`method-${activeIndex}` as ScreenKey) : showcaseStage !== null ? 'lock' : 'checkout';
@@ -213,7 +223,11 @@ const ShopToPayments = () => {
         headingOpacity={isDesktop ? headingOpacity : undefined}
         listOpacity={listOpacity}
         listY={listY}
-        mobilePhone={isDesktop ? null : { rotateX: phoneRotateXMobile, rotateY: phoneRotateYMobile, rotateZ: phoneRotateZMobile }}
+        mobilePhone={
+          isDesktop
+            ? null
+            : { rotateX: phoneRotateXMobile, rotateY: phoneRotateYMobile, rotateZ: phoneRotateZMobile, scale: phoneScaleMobile }
+        }
       />
 
       {/* Shared phone layer (desktop) */}

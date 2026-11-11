@@ -2,8 +2,10 @@ import type { RefObject } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getProductById, type CatalogProduct } from '../../lib/catalog';
-import { easeOutExpo, isPhone } from '../../lib/motion';
+import { easeOutExpo, riseIn3d, stagger } from '../../lib/motion';
+import { useMediaQuery } from '../../lib/useMediaQuery';
 import FeaturedProductCard from './FeaturedProductCard';
+import Rail from '../ui/Rail';
 import SectionHeading from '../ui/SectionHeading';
 
 // A fixed selection that spans the catalogue, each with its own product photography.
@@ -18,37 +20,53 @@ interface ShopSectionProps {
   phoneSlotRef?: RefObject<HTMLDivElement>;
 }
 
-const ShopSection = ({ sectionRef, phoneSlotRef }: ShopSectionProps) => (
-  <section ref={sectionRef} id="loja" className="relative scroll-mt-24 border-t border-ink/10" aria-labelledby="loja-titulo">
-    <div className="container-site py-28 lg:py-40">
-      <SectionHeading
-        id="loja-titulo"
-        index="02"
-        eyebrow="Loja"
-        title="Os favoritos"
-        action={
-          <Link to="/loja" className="link-underline text-sm">
-            Ver todos os produtos
-          </Link>
-        }
-      />
+const ShopSection = ({ sectionRef, phoneSlotRef }: ShopSectionProps) => {
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+  return (
+    <section ref={sectionRef} id="loja" className="relative scroll-mt-24 border-t border-ink/10" aria-labelledby="loja-titulo">
+      <div className="container-site py-20 sm:py-28 lg:py-40">
+        <SectionHeading
+          id="loja-titulo"
+          index="02"
+          eyebrow="Loja"
+          title="Os favoritos"
+          action={
+            <Link to="/loja" className="link-underline text-sm">
+              Ver todos os produtos
+            </Link>
+          }
+        />
 
-      <ul className="mt-12 grid grid-cols-2 gap-x-4 gap-y-12 lg:mt-16 lg:grid-cols-3 lg:gap-x-6 lg:gap-y-16">
-        {FAVORITES.map((product, index) => (
-          <motion.li
-            key={product.id}
-            initial={isPhone ? { opacity: 0, y: 24 } : { opacity: 0, y: 40, rotateX: 18 }}
-            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-            viewport={{ once: true, margin: '0px 0px -10% 0px' }}
-            transition={{ duration: isPhone ? 0.7 : 0.9, ease: easeOutExpo, delay: (index % (isPhone ? 2 : 3)) * 0.07 }}
-            className="[transform-origin:50%_100%]"
-          >
-            <FeaturedProductCard product={product} mediaSlotRef={product.id === PHONE_PRODUCT_ID ? phoneSlotRef : undefined} />
-          </motion.li>
-        ))}
-      </ul>
-    </div>
-  </section>
-);
+        {/* Phones and tablets: a row to swipe, rising in as one; desktop: a grid whose rows rise in turn */}
+        <Rail
+          label="Os favoritos"
+          className="mt-12 lg:mt-16"
+          gridClassName="lg:grid lg:grid-cols-3 lg:gap-x-6 lg:gap-y-16"
+          variants={stagger(0.07)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '0px 0px -10% 0px' }}
+        >
+          {FAVORITES.map((product, index) => (
+            <motion.li
+              key={product.id}
+              {...(isDesktop
+                ? {
+                    initial: { opacity: 0, y: 40, rotateX: 18 },
+                    whileInView: { opacity: 1, y: 0, rotateX: 0 },
+                    viewport: { once: true, margin: '0px 0px -10% 0px' },
+                    transition: { duration: 0.9, ease: easeOutExpo, delay: (index % 3) * 0.07 },
+                  }
+                : { variants: riseIn3d })}
+              className="w-[66%] shrink-0 snap-start [transform-origin:50%_100%] sm:w-[40%] lg:w-auto"
+            >
+              <FeaturedProductCard product={product} mediaSlotRef={product.id === PHONE_PRODUCT_ID ? phoneSlotRef : undefined} />
+            </motion.li>
+          ))}
+        </Rail>
+      </div>
+    </section>
+  );
+};
 
 export default ShopSection;

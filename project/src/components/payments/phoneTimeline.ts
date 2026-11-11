@@ -19,10 +19,14 @@ const stops = [0, INTRO_END, ...PAYMENT_METHODS.map((_, i) => INTRO_END + STEP *
 export const paymentRotateY = interpolate(stops, [0, 0, 12, -12, 10, 16, 8, 0]);
 export const paymentRotateX = interpolate(stops, [0, 0, -3, 4, -3, 3, -2, 0]);
 
-// Mobile has no fall: the phone turns from its back to the front as the section pins.
-export const mobileRotateY = interpolate(stops, [-180, 0, 12, -12, 10, 12, 8, 0]);
-export const mobileRotateX = interpolate(stops, [16, 0, -3, 4, -3, 3, -2, 0]);
-export const mobileRotateZ = interpolate([0, INTRO_END], [-8, 0]);
+// Mobile has no fall. The phone makes its full turn while the section scrolls onto the screen
+// (`entry`, 0 → 1 until it pins), lands facing forward, then sways gently per method.
+export const mobileEntryRotateY = (entry: number) => -360 * (1 - easeInOutCubic(clamp01(entry)));
+export const mobileEntryRotateX = (entry: number) => 14 * Math.sin(Math.PI * clamp01(entry));
+export const mobileEntryRotateZ = (entry: number) => -6 * (1 - easeInOutCubic(clamp01(entry)));
+export const mobileEntryScale = (entry: number) => 0.84 + 0.16 * easeInOutCubic(clamp01(entry));
+export const mobileRotateY = interpolate(stops, [0, 0, 9, -9, 8, 9, 6, 0]);
+export const mobileRotateX = interpolate(stops, [0, 0, -2, 3, -2, 2, -1, 0]);
 
 /*
  * Fall timeline (desktop, 0 → 1 from release to landing), choreographed in three beats:

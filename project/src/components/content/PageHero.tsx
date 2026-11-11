@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { unsplash, unsplashSrcSet } from '../../lib/images';
 import { easeOutExpo } from '../../lib/motion';
+import PhoneCopy from '../ui/PhoneCopy';
 
 interface PageHeroProps {
   image: string;
@@ -12,8 +13,11 @@ interface PageHeroProps {
   alt: string;
   eyebrow: string;
   title: string;
+  /** Phones show these shorter lines instead, so the banner reads at a glance. */
+  phoneTitle?: string;
   /** Second line under the title, quieter and smaller. */
   lead?: string;
+  phoneLead?: string;
   /** Bottom-right on desktop, under the title on mobile. */
   aside?: ReactNode;
   /** Section the "Deslize" cue scrolls to. */
@@ -24,7 +28,19 @@ interface PageHeroProps {
  * Full-screen opening banner for content pages: edge-to-edge photo under the floating header,
  * title at the bottom. The photo drifts and the copy fades as the page scrolls away.
  */
-const PageHero = ({ image, mobileImage, imagePosition = '', alt, eyebrow, title, lead, aside, nextId }: PageHeroProps) => {
+const PageHero = ({
+  image,
+  mobileImage,
+  imagePosition = '',
+  alt,
+  eyebrow,
+  title,
+  phoneTitle,
+  lead,
+  phoneLead,
+  aside,
+  nextId,
+}: PageHeroProps) => {
   const ref = useRef<HTMLElement>(null);
   const photoRef = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(false);
@@ -82,24 +98,24 @@ const PageHero = ({ image, mobileImage, imagePosition = '', alt, eyebrow, title,
           >
             {eyebrow}
           </motion.p>
-          <h1 className="type-display mt-4 overflow-hidden pb-[0.08em]">
+          <h1 className="type-banner mt-3 overflow-hidden pb-[0.08em] sm:mt-4">
             <motion.span
               className="block"
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               transition={{ duration: 1.1, ease: easeOutExpo, delay: 0.2 }}
             >
-              {title}
+              {phoneTitle ? <PhoneCopy phone={phoneTitle}>{title}</PhoneCopy> : title}
             </motion.span>
           </h1>
           {lead && (
             <motion.p
-              className="type-lead mt-4 max-w-xl text-paper/70"
+              className="type-banner-lead mt-3 max-w-xl text-paper/70 sm:mt-4"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, ease: easeOutExpo, delay: 0.45 }}
             >
-              {lead}
+              {phoneLead ? <PhoneCopy phone={phoneLead}>{lead}</PhoneCopy> : lead}
             </motion.p>
           )}
         </div>

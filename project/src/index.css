@@ -67,6 +67,15 @@
     @apply font-display text-[2.25rem] font-medium leading-[1.05] tracking-tightest [text-wrap:balance] sm:text-[2.75rem] lg:text-[3.25rem];
   }
 
+  /* Titles over a full-screen photo: smaller on phones, so the photo still reads */
+  .type-banner {
+    @apply font-display text-[1.875rem] font-medium leading-[1.08] tracking-tightest [text-wrap:balance] sm:text-[2.75rem] lg:text-[3.25rem];
+  }
+
+  .type-banner-lead {
+    @apply text-[15px] leading-relaxed sm:text-[17px];
+  }
+
   .type-title {
     @apply font-display text-[1.75rem] font-medium leading-[1.12] tracking-tight [text-wrap:balance] sm:text-[2rem] lg:text-[2.25rem];
   }

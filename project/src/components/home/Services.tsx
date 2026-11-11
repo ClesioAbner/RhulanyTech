@@ -1,29 +1,34 @@
 import { motion } from 'framer-motion';
 import { easeOutExpo, inViewOnce } from '../../lib/motion';
+import PhoneCopy from '../ui/PhoneCopy';
 import SectionHeading from '../ui/SectionHeading';
 
 const REASONS = [
   {
     title: 'Garantia oficial',
     body: 'Produtos originais, selados de fábrica, com garantia do fabricante e assistência técnica especializada.',
+    short: 'Selados de fábrica, com garantia do fabricante.',
   },
   {
     title: 'Entrega em todo o país',
     body: 'Entregamos em Maputo e em todas as províncias, com acompanhamento da encomenda até à sua porta.',
+    short: 'Em Maputo e em todas as províncias.',
   },
   {
     title: 'Pagamento à sua medida',
     body: 'M-Pesa, e-Mola, mKesh, cartão ou PayPal. Escolha o método que lhe der mais jeito no checkout.',
+    short: 'M-Pesa, e-Mola, mKesh, cartão ou PayPal.',
   },
   {
     title: 'Aconselhamento real',
     body: 'Uma equipa que usa o que vende e o ajuda a escolher a configuração certa para o seu trabalho ou jogo.',
+    short: 'Ajudamos a escolher o equipamento certo.',
   },
 ];
 
 const Services = () => (
   <section className="border-t border-ink/10" aria-labelledby="servicos-titulo">
-    <div className="container-site grid gap-14 py-28 lg:grid-cols-12 lg:py-40">
+    <div className="container-site grid gap-12 py-20 sm:gap-14 sm:py-28 lg:grid-cols-12 lg:py-40">
       <div className="lg:col-span-5">
         <div className="lg:sticky lg:top-32">
           <SectionHeading
@@ -33,7 +38,9 @@ const Services = () => (
             title="Comprar tecnologia devia ser simples"
           />
           <p className="mt-6 max-w-sm text-base leading-relaxed text-ink/60">
-            Somos uma equipa moçambicana que testa o que vende, explica sem jargão e continua consigo depois da compra
+            <PhoneCopy phone="Uma equipa moçambicana, consigo antes e depois da compra">
+              Somos uma equipa moçambicana que testa o que vende, explica sem jargão e continua consigo depois da compra
+            </PhoneCopy>
           </p>
         </div>
       </div>
@@ -53,7 +60,9 @@ const Services = () => (
             </span>
             <div>
               <h3 className="type-heading">{reason.title}</h3>
-              <p className="mt-3 max-w-md text-base leading-relaxed text-ink/60">{reason.body}</p>
+              <p className="mt-2 max-w-md text-base leading-relaxed text-ink/60 sm:mt-3">
+                <PhoneCopy phone={reason.short}>{reason.body}</PhoneCopy>
+              </p>
             </div>
           </motion.li>
         ))}

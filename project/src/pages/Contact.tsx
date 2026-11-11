@@ -76,6 +76,7 @@ const Contact = () => {
         eyebrow="Contacto"
         title="Fale connosco"
         lead="Estamos disponíveis antes, durante e depois da compra"
+        phoneLead="Antes, durante e depois da compra"
         aside={
           <div className="flex flex-wrap gap-2">
             <a href={STORE.whatsappUrl} target="_blank" rel="noopener noreferrer" className={heroAction}>

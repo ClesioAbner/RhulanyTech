@@ -1,18 +1,19 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { easeOutExpo, inViewOnce } from '../../lib/motion';
+import PhoneCopy from '../ui/PhoneCopy';
 import SectionHeading from '../ui/SectionHeading';
 import GamingStage from './GamingStage';
 
 const HIGHLIGHTS = [
-  { label: 'Consoles', detail: 'PlayStation, Xbox e Nintendo' },
-  { label: 'Periféricos', detail: 'Teclados, ratos e headsets de competição' },
-  { label: 'Monitores', detail: 'Alta frequência para jogar sem atrasos' },
+  { label: 'Consoles', detail: 'PlayStation, Xbox e Nintendo', short: 'PlayStation, Xbox, Nintendo' },
+  { label: 'Periféricos', detail: 'Teclados, ratos e headsets de competição', short: 'Teclados, ratos, headsets' },
+  { label: 'Monitores', detail: 'Alta frequência para jogar sem atrasos', short: 'Sem atrasos' },
 ];
 
 const GamingFeature = () => (
   <section className="overflow-hidden border-t border-ink/10" aria-labelledby="gaming-titulo">
-    <div className="container-site grid items-center gap-16 py-28 lg:grid-cols-12 lg:gap-12 lg:py-40">
+    <div className="container-site grid items-center gap-12 py-20 sm:gap-16 sm:py-28 lg:grid-cols-12 lg:gap-12 lg:py-40">
       <div className="lg:col-span-5">
         <SectionHeading id="gaming-titulo" index="04" eyebrow="Gaming" title="O seu setup, montado peça a peça" />
         <motion.p
@@ -22,8 +23,10 @@ const GamingFeature = () => (
           viewport={inViewOnce}
           transition={{ duration: 0.9, ease: easeOutExpo, delay: 0.1 }}
         >
-          Consoles, monitores de alta frequência e periféricos de competição. Ajudamos a escolher cada componente para que tudo
-          funcione em conjunto desde o primeiro dia
+          <PhoneCopy phone="Escolhemos consigo cada peça, para tudo funcionar junto">
+            Consoles, monitores de alta frequência e periféricos de competição. Ajudamos a escolher cada componente para que tudo
+            funcione em conjunto desde o primeiro dia
+          </PhoneCopy>
         </motion.p>
 
         <motion.ul
@@ -43,7 +46,9 @@ const GamingFeature = () => (
               }}
             >
               <span className="font-medium">{item.label}</span>
-              <span className="text-right text-sm text-ink/55">{item.detail}</span>
+              <span className="text-right text-sm text-ink/55">
+                <PhoneCopy phone={item.short}>{item.detail}</PhoneCopy>
+              </span>
             </motion.li>
           ))}
         </motion.ul>

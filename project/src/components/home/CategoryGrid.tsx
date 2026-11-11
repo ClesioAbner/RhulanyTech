@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CATEGORIES, categoryPath, productsIn, resolveImage } from '../../lib/catalog';
 import { easeOutExpo, inViewOnce, isTouch, riseIn3d, stagger } from '../../lib/motion';
+import Rail from '../ui/Rail';
 import SectionHeading from '../ui/SectionHeading';
 
 interface Piece {
@@ -87,7 +88,7 @@ const ART: Record<string, TileArt> = {
 };
 
 const CategoryGrid = () => (
-  <section id="categorias" className="container-site scroll-mt-24 py-28 lg:py-40" aria-labelledby="categorias-titulo">
+  <section id="categorias" className="container-site scroll-mt-24 py-20 sm:py-28 lg:py-40" aria-labelledby="categorias-titulo">
     <SectionHeading
       id="categorias-titulo"
       index="01"
@@ -100,8 +101,11 @@ const CategoryGrid = () => (
       }
     />
 
-    <motion.ul
-      className="mt-10 grid grid-cols-2 gap-3 [perspective:1600px] sm:mt-12 sm:gap-4 lg:mt-16 lg:grid-cols-12 lg:gap-5"
+    {/* Phones and tablets: a row to swipe; desktop: the editorial grid */}
+    <Rail
+      label="Categorias"
+      className="mt-10 sm:mt-12 lg:mt-16"
+      gridClassName="[perspective:1600px] lg:grid lg:grid-cols-12 lg:gap-5"
       variants={stagger(0.08)}
       initial="hidden"
       whileInView="visible"
@@ -112,11 +116,10 @@ const CategoryGrid = () => (
         if (!art) return null;
         const wide = art.span !== 'lg:col-span-3';
         return (
-          // Phones: the two wide tiles span the row, the four others sit in pairs.
           <motion.li
             key={category.slug}
             variants={riseIn3d}
-            className={`${wide ? 'col-span-2 sm:col-span-1' : ''} ${art.span} [transform-origin:50%_100%]`}
+            className={`w-[78%] shrink-0 snap-start sm:w-[44%] lg:w-auto ${art.span} [transform-origin:50%_100%]`}
           >
             <motion.div
               className="h-full"
@@ -126,11 +129,14 @@ const CategoryGrid = () => (
             >
               <Link
                 to={categoryPath(category.slug)}
-                className={`group relative block overflow-hidden rounded-[22px] ring-1 ring-ink/[0.05] sm:aspect-[4/3] sm:rounded-[28px] ${wide ? 'aspect-[6/5]' : 'aspect-[4/5]'} ${art.shape}`}
+                className={`group relative block aspect-[4/5] overflow-hidden rounded-[24px] ring-1 ring-ink/[0.05] sm:rounded-[28px] ${art.shape}`}
                 style={{ background: `radial-gradient(120% 80% at 50% 0%, #ffffff 0%, ${art.tint} 72%)` }}
               >
-                {/* Still life; on phones the small tiles lower it so the name stays clear */}
-                <div className={`absolute inset-0 ${wide ? '' : 'max-sm:translate-y-[9%]'}`}>
+                {/* Still life. In the rail every tile is portrait: a wide scene keeps its proportions in the
+                    middle, a small one sits lower so the name stays clear. */}
+                <div
+                  className={`absolute ${wide ? 'inset-x-0 top-[56%] aspect-[6/5] -translate-y-1/2 lg:inset-0 lg:aspect-auto lg:translate-y-0' : 'inset-0 max-lg:translate-y-[9%]'}`}
+                >
                   {art.pieces.map((piece, index) => (
                     <motion.img
                       key={piece.src}
@@ -167,9 +173,7 @@ const CategoryGrid = () => (
                 {/* Name, count and the way in */}
                 <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-4 sm:gap-4 sm:p-6 lg:p-8">
                   <div>
-                    <h3
-                      className={`font-display font-medium tracking-tight ${wide ? 'text-2xl lg:text-3xl' : 'text-lg sm:text-xl lg:text-2xl'}`}
-                    >
+                    <h3 className={`font-display text-2xl font-medium tracking-tight ${wide ? 'lg:text-3xl' : ''}`}>
                       {category.name}
                     </h3>
                     <p className="mt-1 text-xs tabular-nums text-ink/50 sm:text-sm">
@@ -188,7 +192,7 @@ const CategoryGrid = () => (
           </motion.li>
         );
       })}
-    </motion.ul>
+    </Rail>
   </section>
 );
 

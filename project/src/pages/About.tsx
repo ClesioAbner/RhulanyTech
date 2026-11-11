@@ -112,6 +112,8 @@ const About = () => {
         eyebrow="Sobre a Rhulany Tech"
         title="Tecnologia original, de Maputo para todo o país"
         lead="Smartphones, computadores, consolas e acessórios originais, com a garantia oficial de cada marca"
+        phoneTitle="Tecnologia original"
+        phoneLead="De Maputo para todo o país"
         aside={
           <div className="flex flex-wrap gap-3">
             <Link
