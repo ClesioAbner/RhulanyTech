@@ -22,6 +22,7 @@ import { useCartStore } from '../stores/cartStore';
 import { useOrderStore, type Order } from '../stores/orderStore';
 import { useUserStore } from '../stores/userStore';
 import AwaitingConfirmation from '../components/checkout/AwaitingConfirmation';
+import SendingOrder from '../components/checkout/SendingOrder';
 import Step from '../components/checkout/CheckoutStep';
 import CheckoutProgress from '../components/checkout/CheckoutProgress';
 import ContactForm from '../components/checkout/ContactForm';
@@ -31,6 +32,9 @@ import PaymentForm from '../components/checkout/PaymentForm';
 import type { CardDetails, ContactDetails, DeliveryDetails, Errors } from '../components/checkout/types';
 
 /** /checkout */
+// How long the van is on screen between the confirmed payment and the receipt.
+const SENDING_MS = 2600;
+
 const Checkout = () => {
   const navigate = useNavigate();
   const items = useCartStore((state) => state.items);
@@ -55,6 +59,8 @@ const Checkout = () => {
   const [card, setCard] = useState<CardDetails>({ name: '', number: '', expiry: '', cvc: '' });
   const [errors, setErrors] = useState<Errors>({});
   const [processing, setProcessing] = useState(false);
+  // After the payment: the van sets off for a moment before the receipt opens.
+  const [sending, setSending] = useState(false);
 
   const lines = useMemo(() => items.map(toCartLine), [items]);
 
@@ -189,6 +195,8 @@ const Checkout = () => {
         },
       });
     }
+    setSending(true);
+    await new Promise((resolve) => setTimeout(resolve, SENDING_MS));
     navigate(orderPath(order), { replace: true });
     clearCart();
   };
@@ -283,7 +291,9 @@ const Checkout = () => {
           </Step>
 
           <Step index={2} current={step} title="Pagamento" onEdit={() => setStep(2)}>
-            {processing ? (
+            {sending ? (
+              <SendingOrder pickup={delivery.method === 'levantamento'} />
+            ) : processing ? (
               <AwaitingConfirmation method={payment} phone={wallet} amount={subtotal} />
             ) : (
               <PaymentForm

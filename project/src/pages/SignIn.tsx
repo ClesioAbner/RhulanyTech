@@ -9,12 +9,20 @@ import AuthForm, { type AuthMode } from '../components/account/AuthForm';
 import PhotoScreen from '../components/content/PhotoScreen';
 import { FRONT } from '../components/content/chat/photos';
 import AccountScreen from '../components/content/screens/AccountScreen';
-import SavedCheckoutScreen from '../components/content/screens/SavedCheckoutScreen';
+import PaymentStoryScreen from '../components/content/screens/PaymentStoryScreen';
 
-// One hand and phone for both tabs; only the screen changes: the account, or a checkout already filled in.
-const SCREENS: Record<AuthMode, { caption: string; screen: () => JSX.Element }> = {
-  entrar: { caption: 'As suas encomendas, recibos e dados de entrega num só lugar', screen: AccountScreen },
-  criar: { caption: 'Compre mais depressa, com a morada e o contacto já preenchidos', screen: SavedCheckoutScreen },
+// One hand and phone for both tabs; only the screen changes: paying in the checkout, or the account.
+const SCREENS: Record<AuthMode, { caption: string; alt: string; screen: () => JSX.Element }> = {
+  entrar: {
+    caption: 'Pague com M-Pesa, e-Mola, mKesh, cartão ou PayPal, e a encomenda segue logo',
+    alt: 'Mão a segurar um telemóvel com o pagamento da Rhulany Tech no ecrã',
+    screen: PaymentStoryScreen,
+  },
+  criar: {
+    caption: 'As suas encomendas, recibos e dados de entrega num só lugar',
+    alt: 'Mão a segurar um telemóvel com a conta da Rhulany Tech no ecrã',
+    screen: AccountScreen,
+  },
 };
 
 /** Width over height of an element, kept up to date, so a photo can be framed to fill it. */
@@ -44,7 +52,7 @@ const SignIn = () => {
   const mode: AuthMode = params.get('modo') === 'criar' ? 'criar' : 'entrar';
   const back = safeReturn(params.get('voltar'));
   const leave = params.get('voltar') && back !== '/conta' ? back : '/';
-  const { caption, screen: Screen } = SCREENS[mode];
+  const { caption, alt, screen: Screen } = SCREENS[mode];
   const [panelRef, aspect] = useAspect();
   const isDesktop = useMediaQuery('(min-width: 1024px)');
 
@@ -90,9 +98,12 @@ const SignIn = () => {
               src="/images/telemovel/mao-frente-960.jpg"
               srcSet="/images/telemovel/mao-frente-600.jpg 600w, /images/telemovel/mao-frente-960.jpg 960w"
               sizes="50vw"
-              alt="Mão a segurar um telemóvel com a conta da Rhulany Tech no ecrã"
+              alt={alt}
               photo={FRONT}
               aspect={aspect}
+              // A little more contrast and warmth than the stock photo, and light on the glass.
+              imageClassName="[filter:contrast(1.06)_saturate(1.1)_sepia(0.06)]"
+              glare
               // Never narrower than the panel, whatever its shape; closer in on the shorter phone banner.
               zoom={Math.max(isDesktop ? 1 : 1.15, FRONT.width / FRONT.height / aspect)}
               focus={{ x: 0.5, y: 0.395 }}
@@ -114,6 +125,8 @@ const SignIn = () => {
             </PhotoScreen>
           </div>
         )}
+        {/* Soft vignette that draws the eye to the phone */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(75%_65%_at_50%_42%,transparent_50%,rgba(70,52,36,0.14)_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-[42%] bg-gradient-to-t from-[#ece9e4] via-[#ece9e4]/80 to-transparent max-lg:hidden" />
         {/* Phones: the photo melts into the page above the form */}
         <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-paper to-transparent lg:hidden" />

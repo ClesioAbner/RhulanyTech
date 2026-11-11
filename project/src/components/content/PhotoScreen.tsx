@@ -38,6 +38,10 @@ interface PhotoScreenProps {
   focus?: { x: number; y: number };
   target?: { x: number; y: number };
   className?: string;
+  /** Classes for the photo itself, e.g. a colour grade; the screen content is left as it is. */
+  imageClassName?: string;
+  /** A faint reflection across the glass, so the content reads as behind it. */
+  glare?: boolean;
   children: ReactNode;
 }
 
@@ -102,6 +106,8 @@ const PhotoScreen = ({
   focus = { x: 0.5, y: 0.5 },
   target = { x: 0.5, y: 0.5 },
   className = '',
+  imageClassName = '',
+  glare = false,
   children,
 }: PhotoScreenProps) => {
   const frameRef = useRef<HTMLDivElement>(null);
@@ -133,7 +139,15 @@ const PhotoScreen = ({
 
   return (
     <div ref={frameRef} className={`relative overflow-hidden ${className}`} style={{ aspectRatio: String(aspect) }}>
-      <img src={src} srcSet={srcSet} sizes={sizes} alt={alt} loading="lazy" className="absolute max-w-none" style={imageStyle} />
+      <img
+        src={src}
+        srcSet={srcSet}
+        sizes={sizes}
+        alt={alt}
+        loading="lazy"
+        className={`absolute max-w-none ${imageClassName}`}
+        style={imageStyle}
+      />
       {frameWidth > 0 && (
         <div
           className="absolute left-0 top-0 overflow-hidden [container-type:inline-size]"
@@ -146,6 +160,12 @@ const PhotoScreen = ({
           }}
         >
           {children}
+          {glare && (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-[linear-gradient(118deg,rgba(255,255,255,0.2)_0%,rgba(255,255,255,0.06)_32%,transparent_46%)]"
+            />
+          )}
         </div>
       )}
       {photo.occluders?.map((shape, index) => (
@@ -156,7 +176,7 @@ const PhotoScreen = ({
           sizes={sizes}
           alt=""
           aria-hidden="true"
-          className="pointer-events-none absolute max-w-none"
+          className={`pointer-events-none absolute max-w-none ${imageClassName}`}
           style={{
             ...imageStyle,
             clipPath: `polygon(${shape.map(([x, y]) => `${pct(x / photo.width)} ${pct(y / photo.height)}`).join(', ')})`,

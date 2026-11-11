@@ -277,8 +277,13 @@ const Blog = () => {
       </section>
 
       <section id="duvidas" className="container-site scroll-mt-20 pt-20 sm:pt-24 lg:pt-32" aria-labelledby="duvidas-titulo">
-        <div className="grid gap-10 lg:grid-cols-12">
-          <motion.div className="lg:col-span-5" {...riseOnView} transition={{ duration: 0.8, ease: easeOutExpo }}>
+        {/* The heading spans the section; below it the photo and the questions start on the same line */}
+        <motion.div
+          className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"
+          {...riseOnView}
+          transition={{ duration: 0.8, ease: easeOutExpo }}
+        >
+          <div>
             <p className="eyebrow text-ink/45">Dúvidas frequentes</p>
             <h2 id="duvidas-titulo" className="type-title mt-3">
               As perguntas que mais recebemos
@@ -286,13 +291,16 @@ const Blog = () => {
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-ink/60">
               Sobre produtos, entregas, pagamentos e cuidados com os equipamentos
             </p>
-            <Link to="/contacto" className="link-underline mt-5 inline-block text-sm font-medium">
-              Fazer outra pergunta
-            </Link>
-            <div className="mt-10 hidden lg:block">
-              <FaqPhone question={phoneFaq.q} answer={phoneFaq.a} />
-            </div>
-          </motion.div>
+          </div>
+          <Link to="/contacto" className="link-underline inline-block shrink-0 self-start text-sm font-medium lg:self-end">
+            Fazer outra pergunta
+          </Link>
+        </motion.div>
+        <div className="mt-10 grid gap-10 lg:mt-12 lg:grid-cols-12 lg:items-start">
+          {/* Desktop: the photo stays beside the questions while the list scrolls */}
+          <div className="hidden lg:sticky lg:top-28 lg:col-span-5 lg:block">
+            <FaqPhone question={phoneFaq.q} answer={phoneFaq.a} />
+          </div>
           <div className="lg:col-span-7">
             {faqs.length > 0 ? (
               <FaqList key={search} items={faqs} open={openFaq} onOpenChange={setOpenFaq} />

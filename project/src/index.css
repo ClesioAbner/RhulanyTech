@@ -111,3 +111,84 @@
     @apply origin-left scale-x-100;
   }
 }
+
+/* The delivery van (components/checkout/DeliveryTruck.tsx). Sized in em: 1em is a tenth of the
+   road's width step, so the same van fits the checkout card or a phone screen in a photo. */
+@layer components {
+  .rt-truck {
+    @apply relative mx-auto flex flex-col items-center justify-end overflow-hidden;
+    width: 22em;
+    height: 10em;
+    /* The road's gaps take the colour of the card it sits on */
+    --rt-truck-gap: theme('colors.paper');
+  }
+
+  .rt-truck-body {
+    @apply relative z-[1];
+    width: 13em;
+    margin-bottom: 0.6em;
+    animation: rt-truck-bob 1s linear infinite;
+  }
+
+  .rt-truck-tires {
+    @apply absolute bottom-0 z-[1] flex items-center justify-between;
+    width: 13em;
+    padding: 0 1em 0 1.5em;
+  }
+
+  .rt-truck-tires svg {
+    width: 2.4em;
+  }
+
+  .rt-truck-road {
+    @apply relative w-full self-end rounded bg-ink;
+    height: 0.15em;
+  }
+
+  .rt-truck-road::before,
+  .rt-truck-road::after {
+    content: '';
+    @apply absolute h-full rounded bg-ink;
+    animation: rt-truck-road 1.4s linear infinite;
+  }
+
+  .rt-truck-road::before {
+    right: -50%;
+    width: 2em;
+    border-left: 1em solid var(--rt-truck-gap);
+  }
+
+  .rt-truck-road::after {
+    right: -65%;
+    width: 1em;
+    border-left: 0.4em solid var(--rt-truck-gap);
+  }
+
+  .rt-truck-lamp {
+    @apply absolute bottom-0 text-ink/25;
+    height: 9em;
+    right: -90%;
+    animation: rt-truck-road 1.4s linear infinite;
+  }
+
+  @keyframes rt-truck-bob {
+    50% {
+      transform: translateY(0.3em);
+    }
+  }
+
+  @keyframes rt-truck-road {
+    to {
+      transform: translateX(-35em);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rt-truck-body,
+    .rt-truck-road::before,
+    .rt-truck-road::after,
+    .rt-truck-lamp {
+      animation-duration: 4s;
+    }
+  }
+}

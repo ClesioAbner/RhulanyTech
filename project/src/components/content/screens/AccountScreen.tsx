@@ -42,8 +42,8 @@ const AccountScreen = () => (
     {/* The latest order, on its way */}
     <motion.div className="mx-[5cqw] mt-[4cqw] rounded-[4.4cqw] bg-white p-[4cqw]" {...rise(2)}>
       <div className="flex items-center gap-[3cqw]">
-        <span className="stage grid h-[15cqw] w-[15cqw] shrink-0 place-items-center overflow-hidden rounded-[3cqw]">
-          <img src="/images/produtos/iphone-17-pro-laranja-600.webp" alt="" className="stage-shadow h-[80%] object-contain" />
+        <span className="stage grid h-[18cqw] w-[18cqw] shrink-0 place-items-center overflow-hidden rounded-[3.4cqw]">
+          <img src="/images/produtos/iphone-17-pro-laranja-600.webp" alt="" className="stage-shadow h-[84%] object-contain" />
         </span>
         <span className="min-w-0 flex-1 leading-tight">
           <span className="block text-[3.7cqw] font-medium">iPhone 17 Pro</span>
@@ -89,6 +89,25 @@ const AccountScreen = () => (
       <p className="text-[2.7cqw] font-medium uppercase tracking-[0.14em] text-ink/45">Morada de entrega</p>
       <p className="mt-[2cqw] text-[3.3cqw] font-medium">Av. Julius Nyerere, 1234</p>
       <p className="mt-[0.8cqw] text-[3cqw] text-ink/55">Sommerschield, Maputo · 84 123 4567</p>
+    </motion.div>
+
+    {/* A suggestion to go with the phone on its way (price from the catalogue) */}
+    <motion.div className="mx-[5cqw] mt-[3cqw] flex items-center gap-[3.4cqw] rounded-[4.4cqw] bg-white p-[3cqw]" {...rise(5)}>
+      <span className="stage grid h-[34cqw] w-[30cqw] shrink-0 place-items-center overflow-hidden rounded-[3.4cqw]">
+        <img
+          src="/images/produtos/capa-transparente-com-magsafe-para-iphone-600.webp"
+          alt=""
+          className="stage-shadow w-[82%] object-contain"
+        />
+      </span>
+      <span className="min-w-0 leading-tight">
+        <span className="block text-[2.6cqw] font-medium uppercase tracking-[0.14em] text-ink/45">Combina com o seu iPhone</span>
+        <span className="mt-[1.8cqw] block text-[3.5cqw] font-medium">Capa transparente com MagSafe</span>
+        <span className="mt-[1.2cqw] block text-[3.1cqw] tabular-nums text-ink/55">3500 MT</span>
+        <span className="mt-[2.6cqw] inline-block rounded-full bg-ink px-[3.4cqw] py-[1.6cqw] text-[2.9cqw] font-medium text-paper">
+          Adicionar
+        </span>
+      </span>
     </motion.div>
 
     <span className="mx-auto mb-[2.4cqw] mt-auto block h-[1.3cqw] w-[34%] rounded-full bg-ink/80" aria-hidden="true" />
