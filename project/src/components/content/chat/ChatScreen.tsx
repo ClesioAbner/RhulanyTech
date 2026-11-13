@@ -102,18 +102,15 @@ const BusinessCard = () => (
 /** A group chat instead of the store's: its name, and each member's name colour. */
 export interface ChatGroup {
   name: string;
+  /** The group's profile photo. */
+  photo?: string;
   members: Record<string, string>;
 }
 
-/** A sticker as WhatsApp shows them: no bubble, a white die-cut edge, slightly tilted. */
-const Sticker = ({ text }: { text: string }) => (
-  <span className="relative block rotate-[-6deg] rounded-[3.4cqw] bg-white p-[1cqw] shadow-[0_1.4cqw_3cqw_-1cqw_rgba(12,12,13,0.35)]">
-    <span className="flex flex-col items-center rounded-[2.6cqw] bg-[linear-gradient(135deg,#ffd84d,#ff9f1c)] px-[4cqw] py-[2.4cqw] text-center">
-      <span className="text-[7cqw] leading-none">🫡</span>
-      <span className="mt-[1cqw] font-display text-[5.2cqw] font-black uppercase leading-none tracking-tight text-ink [text-shadow:0_0.3cqw_0_rgba(255,255,255,0.7)]">
-        {text}
-      </span>
-    </span>
+/** A sticker as WhatsApp shows them: no bubble, just the picture in its white die-cut frame. */
+const Sticker = ({ src, alt }: { src: string; alt: string }) => (
+  <span className="block w-[36cqw] overflow-hidden rounded-[2cqw] border-[0.8cqw] border-white shadow-[0_1cqw_2.4cqw_-0.6cqw_rgba(12,12,13,0.35)]">
+    <img src={src} alt={alt} className="block aspect-square w-full object-cover" />
   </span>
 );
 
@@ -134,7 +131,7 @@ const ChatScreen = ({ state, group }: { state: ChatState; group?: ChatGroup }) =
         />
       </svg>
       <span className="grid h-[9cqw] w-[9cqw] shrink-0 place-items-center rounded-full bg-ink text-[3.2cqw] font-semibold text-paper">
-        {group ? '🐐' : 'RT'}
+        {group?.photo ? <img src={group.photo} alt="" className="h-full w-full rounded-full object-cover" /> : 'RT'}
       </span>
       <span className="min-w-0 flex-1 leading-tight">
         <span className="block truncate text-[4.1cqw] font-semibold">{group ? group.name : 'Rhulany Tech'}</span>
@@ -190,12 +187,12 @@ const ChatScreen = ({ state, group }: { state: ChatState; group?: ChatGroup }) =
                 key={line.id}
                 layout
                 className="mt-[2.2cqw] flex justify-end pr-[2cqw]"
-                initial={{ opacity: 0, scale: 0.4, rotate: 12 }}
-                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                initial={{ opacity: 0, scale: 0.4 }}
+                animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ type: 'spring', stiffness: 380, damping: 18 }}
               >
-                <Sticker text={line.text} />
+                <Sticker src={line.sticker} alt={line.text} />
               </motion.div>
             );
           return (

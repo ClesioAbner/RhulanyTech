@@ -6,38 +6,38 @@ import ChatScreen, { type ChatGroup } from './ChatScreen';
 import { useChatScript, type Step } from './chatScript';
 import { HAND } from './photos';
 
-// The group "Goat": Nelson asks where to buy speakers and Clesio (the phone's owner) recommends the store.
-// Edilson Malache always ends with a full stop; João signs off with "lets goo" or "GG".
+// The friends' group: Ivan Mombi wants to chip in for Kiba's album and asks where to buy speakers;
+// Clesio (the phone's owner) recommends the store with a sticker. Edilson Malache always ends with a
+// full stop; João signs off with "lets goo" or "GG".
 const GOAT: ChatGroup = {
-  name: 'Goat',
+  name: "G.O.A.T 's",
+  photo: '/images/ajuda/goat-grupo.png',
   members: {
-    Nelson: '#d9480f',
-    'Edilson Malache': '#1971c2',
-    'João Roberto': '#2b8a3e',
-    'Ivan Mombi': '#9c36b5',
+    'Edilson Malache': '#1d8fd1',
+    'Ivan Mombi': '#1a9e4b',
+    'João Roberto': '#d6337e',
   },
 };
 
 const HELP_STEPS: Step[] = [
-  { type: 'typing', name: 'Nelson', duration: 1300 },
-  { type: 'reply', name: 'Nelson', text: 'Edjo, preciso de uma loja onde vendem colunas para escutar o álbum do Kiba 🔊' },
+  { type: 'typing', name: 'Ivan Mombi', duration: 1400 },
+  { type: 'reply', name: 'Ivan Mombi', text: 'Bro, vamos lá juntar 100 mts cada gajo, compramos o álbum Tio Santos do Kiba' },
+  { type: 'typing', name: 'Ivan Mombi', duration: 1200 },
+  { type: 'reply', name: 'Ivan Mombi', text: 'Edjo, preciso de uma loja onde vendem colunas para escutar o álbum 🔊' },
   { type: 'typing', name: 'Edilson Malache', duration: 1000 },
   { type: 'reply', name: 'Edilson Malache', text: 'Boa pergunta, também quero saber.' },
   { type: 'typing', name: 'João Roberto', duration: 900 },
   { type: 'reply', name: 'João Roberto', text: 'Kiba no volume máximo, lets goo 🔥' },
-  { type: 'typing', name: 'Ivan Mombi', duration: 900 },
-  { type: 'reply', name: 'Ivan Mombi', text: 'Clesio deve saber 👀' },
   { type: 'compose', text: 'Rhulany Tech, meus. Colunas originais com garantia e entregam em casa', duration: 2200 },
   { type: 'send' },
   { type: 'ticks', value: 3, after: 500 },
-  { type: 'sticker', text: 'Meu chef' },
-  { type: 'react', emoji: '🙏', after: 600 },
-  { type: 'typing', name: 'Nelson', duration: 1000 },
-  { type: 'reply', name: 'Nelson', text: 'Vou já ver, valeu brada 🙌' },
-  { type: 'typing', name: 'Edilson Malache', duration: 900 },
-  { type: 'reply', name: 'Edilson Malache', text: 'Boa recomendação.' },
-  { type: 'typing', name: 'João Roberto', duration: 700 },
-  { type: 'reply', name: 'João Roberto', text: 'GG 🎮' },
+  { type: 'sticker', src: '/images/ajuda/sticker-recomendo.png', alt: 'Sticker de um amigo a sorrir' },
+  { type: 'typing', name: 'Ivan Mombi', duration: 1000 },
+  { type: 'reply', name: 'Ivan Mombi', text: 'Vou já ver, valeu brada 🙌' },
+  { type: 'typing', name: 'Edilson Malache', duration: 1100 },
+  { type: 'reply', name: 'Edilson Malache', text: 'Mandem os 100 mts no meu M-Pesa.' },
+  { type: 'typing', name: 'João Roberto', duration: 800 },
+  { type: 'reply', name: 'João Roberto', text: 'Já mandei, GG 🎮' },
   { type: 'wait', duration: 6000 },
 ];
 

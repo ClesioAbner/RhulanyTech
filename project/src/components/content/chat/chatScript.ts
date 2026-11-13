@@ -12,8 +12,8 @@ export interface Line {
   reaction?: string;
   /** In a group: who sent it, shown above the text. */
   name?: string;
-  /** A sticker instead of a text bubble; `text` is what the sticker says. */
-  sticker?: boolean;
+  /** A sticker instead of a text bubble: its image; `text` describes it. */
+  sticker?: string;
 }
 
 export interface ChatState {
@@ -30,7 +30,7 @@ export type Step =
   | { type: 'ticks'; value: Ticks; after: number }
   | { type: 'typing'; duration: number; name?: string }
   | { type: 'reply'; text: string; name?: string }
-  | { type: 'sticker'; text: string }
+  | { type: 'sticker'; src: string; alt: string }
   | { type: 'react'; emoji: string; after: number }
   | { type: 'wait'; duration: number };
 
@@ -100,7 +100,7 @@ export const useChatScript = (steps: Step[], active: boolean, loop: boolean) => 
             const id = idRef.current;
             setState((s) => ({
               ...s,
-              lines: [...s.lines, { id, from: 'cliente', text: step.text, sticker: true, time: clock(), ticks: 3 }],
+              lines: [...s.lines, { id, from: 'cliente', text: step.alt, sticker: step.src, time: clock(), ticks: 3 }],
             }));
             await sleep(600);
           } else {
