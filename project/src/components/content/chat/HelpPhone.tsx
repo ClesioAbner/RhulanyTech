@@ -19,6 +19,7 @@ const GOAT: ChatGroup = {
   },
 };
 
+// Hand emojis in dark skin tones.
 const HELP_STEPS: Step[] = [
   { type: 'typing', name: 'Ivan Mombi', duration: 1400 },
   { type: 'reply', name: 'Ivan Mombi', text: 'Bro, vamos lá juntar 100 mts cada gajo, compramos o álbum Tio Santos do Kiba' },
@@ -26,18 +27,26 @@ const HELP_STEPS: Step[] = [
   { type: 'reply', name: 'Ivan Mombi', text: 'Edjo, preciso de uma loja onde vendem colunas para escutar o álbum 🔊' },
   { type: 'typing', name: 'Edilson Malache', duration: 1000 },
   { type: 'reply', name: 'Edilson Malache', text: 'Boa pergunta, também quero saber.' },
-  { type: 'typing', name: 'João Roberto', duration: 900 },
-  { type: 'reply', name: 'João Roberto', text: 'Kiba no volume máximo, lets goo 🔥' },
-  { type: 'compose', text: 'Rhulany Tech, meus. Colunas originais com garantia e entregam em casa', duration: 2200 },
+  { type: 'typing', name: 'João Roberto', duration: 800 },
+  { type: 'reply', name: 'João Roberto', text: 'Vossas cenas bro aaaa' },
+  { type: 'compose', text: 'Yes, conheço uma loja', duration: 900 },
+  { type: 'send' },
+  { type: 'compose', text: 'Rhulany Tech, vou mandar o link', duration: 1200 },
+  { type: 'send' },
+  { type: 'compose', text: 'rhulanytech.co.mz', duration: 900 },
   { type: 'send' },
   { type: 'ticks', value: 3, after: 500 },
   { type: 'sticker', src: '/images/ajuda/sticker-recomendo.png', alt: 'Sticker de um amigo a sorrir' },
-  { type: 'typing', name: 'Ivan Mombi', duration: 1000 },
-  { type: 'reply', name: 'Ivan Mombi', text: 'Vou já ver, valeu brada 🙌' },
-  { type: 'typing', name: 'Edilson Malache', duration: 1100 },
+  { type: 'typing', name: 'João Roberto', duration: 900 },
+  { type: 'reply', name: 'João Roberto', text: 'Lets goo, vamos lá comprar 🙌🏿' },
+  { type: 'typing', name: 'Edilson Malache', duration: 1000 },
   { type: 'reply', name: 'Edilson Malache', text: 'Mandem os 100 mts no meu M-Pesa.' },
-  { type: 'typing', name: 'João Roberto', duration: 800 },
-  { type: 'reply', name: 'João Roberto', text: 'Já mandei, GG 🎮' },
+  { type: 'typing', name: 'João Roberto', duration: 1300 },
+  { type: 'reply', name: 'João Roberto', text: 'Valeu pelo pin, vou tentar ver se tem PS5 para jogar GTA 6 🎮' },
+  { type: 'sticker', name: 'João Roberto', src: '/images/ajuda/sticker-maos.png', alt: 'Sticker de um amigo de mãos levantadas' },
+  { type: 'compose', text: 'Tá nice, cenas de qualidade só na Rhulany Tech 👊🏿', duration: 1800 },
+  { type: 'send' },
+  { type: 'ticks', value: 3, after: 500 },
   { type: 'wait', duration: 6000 },
 ];
 

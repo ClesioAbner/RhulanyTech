@@ -186,7 +186,7 @@ const ChatScreen = ({ state, group }: { state: ChatState; group?: ChatGroup }) =
               <motion.div
                 key={line.id}
                 layout
-                className="mt-[2.2cqw] flex justify-end pr-[2cqw]"
+                className={`mt-[2.2cqw] flex ${line.from === 'cliente' ? 'justify-end pr-[2cqw]' : 'justify-start pl-[2cqw]'}`}
                 initial={{ opacity: 0, scale: 0.4 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
@@ -215,7 +215,12 @@ const ChatScreen = ({ state, group }: { state: ChatState; group?: ChatGroup }) =
                     {line.name}
                   </span>
                 )}
-                {line.text}
+                {/* A web address reads as a link, as in WhatsApp */}
+                {/^[\w.-]+\.[a-z]{2,}(\/\S*)?$/i.test(line.text) ? (
+                  <span className="text-[#0a84ff] underline">{line.text}</span>
+                ) : (
+                  line.text
+                )}
                 <span className="float-right ml-[2cqw] mt-[1.2cqw] inline-flex items-center gap-[0.8cqw] text-[2.6cqw] tabular-nums text-ink/45">
                   {line.time}
                   {own && <TickMarks value={line.ticks} />}
