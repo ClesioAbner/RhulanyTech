@@ -220,7 +220,7 @@ export const categoryPath = (categorySlug: string, subcategorySlug?: string) =>
 // ---------- Merchandising lists ----------
 
 /** Latest launches, newest first; drives the "Novo" label and the shop's new-arrivals shelf. */
-const NEW_ARRIVAL_IDS = ['38', '39', '40', '41', '46', '71', '54', '55', '56', '57', '51', '53'];
+const NEW_ARRIVAL_IDS = ['91', '92', '93', '38', '39', '40', '41', '46', '71', '54', '55', '56', '57', '51', '53'];
 export const isNewArrival = (product: Pick<CatalogProduct, 'id'>) => NEW_ARRIVAL_IDS.includes(product.id);
 export const newArrivals = () => NEW_ARRIVAL_IDS.map((id) => getProductById(id)).filter((p): p is CatalogProduct => Boolean(p));
 

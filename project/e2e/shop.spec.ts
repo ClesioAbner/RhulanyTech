@@ -11,7 +11,8 @@ test('filtrar por marca mostra só essa marca e fica no endereço', async ({ pag
   // Each card shows its brand on the line above the product name.
   const brands = page.locator('main article h3').locator('xpath=preceding-sibling::p[1]');
   await expect(brands.first()).toHaveText('Apple');
-  for (const brand of await brands.allTextContents()) expect(brand).toBe('Apple');
+  // Cards filtered out leave with a short animation, so wait for the list to settle.
+  await expect.poll(async () => (await brands.allTextContents()).every((brand) => brand === 'Apple')).toBe(true);
 
   // The filter survives a reload, because it lives in the address.
   await page.reload();
@@ -24,7 +25,7 @@ test('a pesquisa encontra pelo nome, sem precisar de acentos', async ({ page }) 
   await expect(page).toHaveURL(/q=pixel/);
   const titles = page.locator('main article h3');
   await expect(titles.first()).toContainText('Pixel');
-  for (const title of await titles.allTextContents()) expect(title).toContain('Pixel');
+  await expect.poll(async () => (await titles.allTextContents()).every((title) => title.includes('Pixel'))).toBe(true);
 });
 
 test('escolher a cor muda a fotografia do produto', async ({ page }) => {

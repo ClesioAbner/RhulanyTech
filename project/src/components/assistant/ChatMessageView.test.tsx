@@ -20,7 +20,7 @@ describe('mensagens do chat', () => {
     show({ id: '1', role: 'assistant', text: 'Veja este.', products: ['39'] });
     const card = screen.getByRole('link', { name: /iPhone 17 Pro/ });
     expect(card).toHaveAttribute('href', '/produto/iphone-17-pro');
-    expect(card).toHaveTextContent(/Desde 165\s000\sMT/);
+    expect(card).toHaveTextContent(/Desde 140\s000\sMT/);
   });
 
   it('envia a sugestão escolhida', async () => {

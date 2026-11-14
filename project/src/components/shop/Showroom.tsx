@@ -18,8 +18,10 @@ import Phone3D, { type PhoneShape } from './Phone3D';
 
 // Phones on show, with their real proportions (body, corners, thickness, front camera).
 const FEATURED: { id: string; shape: PhoneShape }[] = [
-  { id: '39', shape: { aspect: 0.486, radius: 0.17, depth: 0.12, camera: 'island' } },
-  { id: '46', shape: { aspect: 0.499, radius: 0.09, depth: 0.105, camera: 'punch' } },
+  { id: '91', shape: { aspect: 0.479, radius: 0.17, depth: 0.115, camera: 'island' } },
+  { id: '93', shape: { aspect: 0.48, radius: 0.12, depth: 0.1, camera: 'punch' } },
+  // The Duo on show folded: wider, and as thick as two thin phones.
+  { id: '92', shape: { aspect: 0.705, radius: 0.13, depth: 0.134, camera: 'punch' } },
   { id: '51', shape: { aspect: 0.479, radius: 0.165, depth: 0.118, camera: 'punch' } },
   { id: '40', shape: { aspect: 0.488, radius: 0.17, depth: 0.075, camera: 'island' } },
 ];
@@ -341,7 +343,9 @@ const Showroom = () => {
         <div
           role="tablist"
           aria-label="Escolher telemóvel"
-          className="container-site grid grid-cols-4 gap-2 pb-6 sm:gap-6 lg:pb-8"
+          className="container-site grid gap-2 pb-6 sm:gap-6 lg:pb-8"
+          // One column per phone on show, however many there are.
+          style={{ gridTemplateColumns: `repeat(${SLIDES.length}, minmax(0, 1fr))` }}
         >
           {SLIDES.map(({ product: item }, index) => {
             const active = index === slide;

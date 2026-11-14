@@ -73,7 +73,7 @@ const PaymentStoryScreen = () => {
           <span className="block text-[3.9cqw] font-medium">iPhone 17 Pro</span>
           <span className="mt-[1cqw] block text-[3cqw] text-ink/50">256GB · Laranja cósmico</span>
         </span>
-        <span className="text-[3.4cqw] font-medium tabular-nums">165 000 MT</span>
+        <span className="text-[3.4cqw] font-medium tabular-nums">140 000 MT</span>
       </div>
 
       <div className="relative mt-[5cqw] flex min-h-0 flex-1 flex-col">

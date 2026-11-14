@@ -4,7 +4,7 @@ import type { Merchandising } from './merchandising';
 /*
  * Catalogue additions, written compactly. Each entry becomes a regular Product plus its shelves
  * and merchandising.
- * Images are Unsplash ids of the actual model. Prices are indicative and should be confirmed.
+ * Images are Unsplash ids of the actual model, or our own cut-outs. Prices are indicative and should be confirmed.
  */
 
 // Name, swatch and the photos of that colour (hero first).
@@ -40,13 +40,72 @@ const storage = (...choices: [string, number][]) => choices;
 const ENTRIES: Entry[] = [
   // ---------- iPhone ----------
   {
+    id: '91',
+    name: 'iPhone 18 Pro',
+    brand: 'Apple',
+    model: 'iPhone 18 Pro',
+    category: 'celulares',
+    shelves: ['celulares/iphone'],
+    price: 145000,
+    images: ['/images/produtos/iphone-18-pro-glaciar'],
+    summary: 'A primeira câmara de iPhone com abertura variável, e o chip A20 Pro',
+    overview:
+      'O iPhone 18 Pro mantém o desenho do 17 Pro com um acabamento novo e estreia a câmara Fusion de 48MP com abertura variável: seis lâminas abrem até ƒ/1.48 para fotografar com pouca luz e fecham até ƒ/4 para mais profundidade de campo. Por dentro tem o chip A20 Pro, feito em 2 nanómetros, e o modem C2 da Apple.',
+    specs: [
+      'Chip A20 Pro (2 nm)',
+      'Ecrã de 6,3" com ProMotion',
+      'Câmara Fusion de 48MP com abertura variável, de ƒ/1.48 a ƒ/4',
+      'Até 36 horas de reprodução de vídeo',
+      'Carrega até 50% em cerca de 15 minutos',
+      'Modem C2 da Apple',
+    ],
+    colours: [
+      ['Glaciar', '#b7c9de', '/images/produtos/iphone-18-pro-glaciar'],
+      ['Bordeaux', '#6b2232', '/images/produtos/iphone-18-pro-bordeaux'],
+      ['Prateado', '#dcdcde', '/images/produtos/iphone-18-pro-prateado'],
+      ['Preto', '#2a2a2c', '/images/produtos/iphone-18-pro-preto'],
+    ],
+    storage: storage(['256GB', 0], ['512GB', 25000], ['1TB', 50000], ['2TB', 100000]),
+    stock: 6,
+    warranty: '1 ano Apple',
+    tags: ['premium', 'flagship', 'camera', 'iphone'],
+  },
+  {
+    id: '92',
+    name: 'iPhone Duo',
+    brand: 'Apple',
+    model: 'iPhone Duo',
+    category: 'celulares',
+    shelves: ['celulares/iphone'],
+    price: 150000,
+    images: ['/images/produtos/iphone-duo-ceu-nocturno'],
+    summary: 'O primeiro iPhone dobrável: um ecrã de 7,6" que fecha no bolso',
+    overview:
+      'Fechado, o iPhone Duo é um iPhone com ecrã exterior de 5,4 polegadas. Aberto, torna-se um ecrã de 7,6 polegadas para ler, trabalhar e ver vídeos com espaço. Tem o chip A20 Pro, duas câmaras Fusion de 48MP atrás e Touch ID no botão lateral, com 11,3 mm de espessura fechado e 5,2 mm aberto.',
+    specs: [
+      'Chip A20 Pro',
+      'Ecrã interior de 7,6" e exterior de 5,4", ambos com ProMotion',
+      'Duas câmaras Fusion de 48MP: principal e ultra grande angular',
+      'Touch ID no botão lateral',
+      '11,3 mm fechado e 5,2 mm aberto',
+    ],
+    colours: [
+      ['Céu nocturno', '#2b3445', '/images/produtos/iphone-duo-ceu-nocturno'],
+      ['Branco estelar', '#ecebe7', '/images/produtos/iphone-duo-branco-estelar'],
+    ],
+    storage: storage(['256GB', 0], ['512GB', 25000], ['1TB', 50000], ['2TB', 100000]),
+    stock: 4,
+    warranty: '1 ano Apple',
+    tags: ['premium', 'flagship', 'dobravel', 'iphone'],
+  },
+  {
     id: '38',
     name: 'iPhone 17 Pro Max',
     brand: 'Apple',
     model: 'iPhone 17 Pro Max',
     category: 'celulares',
     shelves: ['celulares/iphone'],
-    price: 185000,
+    price: 160000,
     images: ['1758327059164-396c3602b8f5', '1759203302534-c6e71c93e886', '1758578938566-c986f710feb6'],
     summary: 'O iPhone mais potente, com o maior ecrã e a maior bateria de sempre',
     overview:
@@ -97,7 +156,7 @@ const ENTRIES: Entry[] = [
     model: 'iPhone 17 Pro',
     category: 'celulares',
     shelves: ['celulares/iphone'],
-    price: 165000,
+    price: 140000,
     images: ['1759588071781-2c3ba9128497', '1759588073186-1d4ac7e33623', '1759588071838-d560be56b2a2'],
     summary: 'Desempenho Pro e três câmaras de 48MP num formato de 6,3"',
     overview:
@@ -142,7 +201,7 @@ const ENTRIES: Entry[] = [
     model: 'iPhone Air',
     category: 'celulares',
     shelves: ['celulares/iphone'],
-    price: 150000,
+    price: 125000,
     images: ['1758682663464-69d0d62fa2be'],
     summary: 'O iPhone mais fino de sempre, com o poder de um Pro',
     overview:
@@ -181,7 +240,7 @@ const ENTRIES: Entry[] = [
     model: 'iPhone 17',
     category: 'celulares',
     shelves: ['celulares/iphone'],
-    price: 120000,
+    price: 95000,
     images: ['1758467700578-7491a5c7eedd'],
     summary: 'Ecrã ProMotion e duas câmaras de 48MP, pela primeira vez no modelo base',
     overview:
@@ -215,7 +274,7 @@ const ENTRIES: Entry[] = [
     model: 'iPhone 16',
     category: 'celulares',
     shelves: ['celulares/iphone'],
-    price: 105000,
+    price: 80000,
     images: ['1726828537956-61ae115d7d7a', '1726732946451-98690db97aae'],
     summary: 'Controlo da Câmara, botão de Acção e chip A18',
     overview:
@@ -249,7 +308,7 @@ const ENTRIES: Entry[] = [
     model: 'iPhone 15 Pro',
     category: 'celulares',
     shelves: ['celulares/iphone'],
-    price: 125000,
+    price: 100000,
     images: ['1710023038502-ba80a70a9f53', '1695048132832-b41495f12eb4'],
     summary: 'Titânio, chip A17 Pro e teleobjectiva de 3x',
     overview:
@@ -301,7 +360,7 @@ const ENTRIES: Entry[] = [
     model: 'iPhone 15',
     category: 'celulares',
     shelves: ['celulares/iphone'],
-    price: 90000,
+    price: 65000,
     images: ['1703434123142-1b41a1b1055b'],
     summary: 'Dynamic Island, câmara de 48MP e USB-C',
     overview:
@@ -329,7 +388,7 @@ const ENTRIES: Entry[] = [
     model: 'iPhone 13',
     category: 'celulares',
     shelves: ['celulares/iphone'],
-    price: 65000,
+    price: 40000,
     images: ['1686657724539-0b1cb25677e7', '1726574778294-adfb9ee2e5ca'],
     summary: 'A porta de entrada no ecossistema iPhone',
     overview:
@@ -353,13 +412,45 @@ const ENTRIES: Entry[] = [
 
   // ---------- Samsung ----------
   {
+    id: '93',
+    name: 'Samsung Galaxy S26 Ultra',
+    brand: 'Samsung',
+    model: 'Galaxy S26 Ultra',
+    category: 'celulares',
+    shelves: ['celulares/samsung'],
+    price: 148000,
+    images: ['/images/produtos/galaxy-s26-ultra-cobalt-violet'],
+    summary: 'Privacy Display, S Pen e o Snapdragon 8 Elite Gen 5 num ecrã de 6,9"',
+    overview:
+      'O Galaxy S26 Ultra estreia o Privacy Display, que esconde o ecrã de quem está ao lado sem película, e traz o Snapdragon 8 Elite Gen 5 for Galaxy num ecrã QHD+ de 6,9 polegadas a 120 Hz. A bateria de 5000 mAh carrega a 60W com fio, e a S Pen continua guardada no próprio telemóvel.',
+    specs: [
+      'Snapdragon 8 Elite Gen 5 for Galaxy',
+      'Ecrã QHD+ de 6,9" a 120 Hz com Privacy Display',
+      'Bateria de 5000 mAh',
+      'Carregamento de 60W com fio e 25W sem fio',
+      'S Pen integrada',
+      'Estrutura em alumínio',
+    ],
+    colours: [
+      ['Cobalt Violet', '#4f4a78', '/images/produtos/galaxy-s26-ultra-cobalt-violet'],
+      ['Sky Blue', '#bcd3e6', '/images/produtos/galaxy-s26-ultra-sky-blue'],
+      ['Black', '#2b2d30', '/images/produtos/galaxy-s26-ultra-black'],
+      ['White', '#f1f1f1', '/images/produtos/galaxy-s26-ultra-white'],
+    ],
+    storage: storage(['256GB', 0], ['512GB', 20000], ['1TB', 45000]),
+    stock: 6,
+    warranty: '2 anos Samsung',
+    weight: '214g',
+    tags: ['android', 'flagship', 'camera', 's-pen'],
+  },
+  {
     id: '46',
     name: 'Samsung Galaxy S25 Ultra',
     brand: 'Samsung',
     model: 'Galaxy S25 Ultra',
     category: 'celulares',
     shelves: ['celulares/samsung'],
-    price: 175000,
+    price: 150000,
     images: ['1738830251513-a7bfef4b53c6', '1738830228067-ede76105594a', '1738830234395-a351829a1c7b'],
     summary: 'Câmara de 200MP, S Pen e Galaxy AI em titânio',
     overview:
@@ -400,7 +491,7 @@ const ENTRIES: Entry[] = [
     model: 'Galaxy S25',
     category: 'celulares',
     shelves: ['celulares/samsung'],
-    price: 115000,
+    price: 90000,
     images: ['1744399335781-528757813604'],
     summary: 'Topo de gama compacto com Galaxy AI',
     overview:
@@ -433,7 +524,7 @@ const ENTRIES: Entry[] = [
     model: 'Galaxy Z Fold6',
     category: 'celulares',
     shelves: ['celulares/samsung'],
-    price: 260000,
+    price: 235000,
     images: ['1724323224408-e24e732e56af', '1722155961274-30d30d68ca51', '1724323184361-539f7d8b3b01'],
     summary: 'Um telemóvel que se abre num ecrã de 7,6"',
     overview:
@@ -471,7 +562,7 @@ const ENTRIES: Entry[] = [
     model: 'Galaxy Z Flip6',
     category: 'celulares',
     shelves: ['celulares/samsung'],
-    price: 160000,
+    price: 135000,
     images: ['1721864428881-dbabb9ea0017', '1676121228785-f1dcd462025f', '1721864428848-503a2a27bded'],
     summary: 'Dobrável, compacto e com ecrã exterior de 3,4"',
     overview:
@@ -506,7 +597,7 @@ const ENTRIES: Entry[] = [
     model: '14T Pro',
     category: 'celulares',
     shelves: ['celulares/xiaomi'],
-    price: 95000,
+    price: 70000,
     images: ['1701696255815-14a98bc1afcd'],
     summary: 'Óptica Leica e carregamento de 120W',
     overview:
@@ -540,7 +631,7 @@ const ENTRIES: Entry[] = [
     model: 'Pixel 9 Pro',
     category: 'celulares',
     shelves: ['celulares/google-pixel'],
-    price: 150000,
+    price: 125000,
     images: ['1756517313520-c6c25364ce65', '1724322535079-11b08f7f5c88', '1724322637761-1fef6ca8c8b3'],
     summary: 'Tensor G4, teleobjectiva de 5x e a fotografia computacional da Google',
     overview:
@@ -579,7 +670,7 @@ const ENTRIES: Entry[] = [
     model: 'Pixel 9',
     category: 'celulares',
     shelves: ['celulares/google-pixel'],
-    price: 115000,
+    price: 90000,
     images: ['1724438192699-89f587b04c24', '1729302784412-c36bbab2a6ef'],
     summary: 'A experiência Pixel completa, com Tensor G4',
     overview:
@@ -614,7 +705,7 @@ const ENTRIES: Entry[] = [
     model: '13',
     category: 'celulares',
     shelves: ['celulares/oneplus'],
-    price: 130000,
+    price: 105000,
     images: ['1757847505239-ce2fb51da67d', '1757847505222-cfe856c93be0'],
     summary: 'Snapdragon 8 Elite, câmaras Hasselblad e bateria de 6000 mAh',
     overview:
@@ -1506,7 +1597,8 @@ const ENTRIES: Entry[] = [
 
 // ---------- Conversion ----------
 
-const url = (id: string) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=1200`;
+// Unsplash ids, or our own studio cut-outs (a path in public/images, resolved to a size later).
+const url = (id: string) => (id.startsWith('/') ? id : `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=1200`);
 
 export const INVENTORY_PRODUCTS: Product[] = ENTRIES.map((entry) => ({
   id: entry.id,

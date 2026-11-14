@@ -49,7 +49,7 @@ const AccountScreen = () => (
           <span className="block text-[3.7cqw] font-medium">iPhone 17 Pro</span>
           <span className="mt-[0.8cqw] block text-[2.9cqw] text-ink/50">256GB · Laranja cósmico</span>
         </span>
-        <span className="text-[3.3cqw] font-medium tabular-nums">165 000 MT</span>
+        <span className="text-[3.3cqw] font-medium tabular-nums">140 000 MT</span>
       </div>
       <div className="mt-[4cqw] flex items-baseline justify-between text-[2.9cqw]">
         <span className="tabular-nums text-ink/45">RT261014-4821</span>
