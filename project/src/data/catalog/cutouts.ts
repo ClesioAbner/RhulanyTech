@@ -59,9 +59,9 @@ export const CUTOUTS: Record<string, { product?: string; [finish: number]: strin
   '87': { product: '/images/produtos/logitech-c920-hd-pro' },
   '88': { product: '/images/produtos/carregador-magsafe' },
   '90': { product: '/images/produtos/capa-transparente-com-magsafe-para-iphone' },
-  '13': { 0: '/images/produtos/steam-deck-oled' },
-  '19': { 0: '/images/produtos/logitech-brio-4k' },
-  '69': { 0: '/images/produtos/xbox-series-s-512gb' },
+  '13': { product: '/images/produtos/steam-deck-oled' },
+  '19': { product: '/images/produtos/logitech-brio-4k' },
+  '69': { product: '/images/produtos/xbox-series-s-512gb' },
   '83': { 0: '/images/produtos/logitech-mx-keys-s' },
   '85': { 0: '/images/produtos/apple-magic-mouse' },
 };

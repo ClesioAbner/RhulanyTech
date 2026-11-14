@@ -1,7 +1,7 @@
 import { SCREEN_H, SCREEN_W, easeOut, roundRect, type Ctx } from './canvas';
 import { drawCard, drawCardPaid } from './card';
 import { drawCheckout } from './checkout';
-import { NOTIFICATIONS, drawLock } from './lock';
+import { LOCK_WALLPAPER, NOTIFICATIONS, drawLock } from './lock';
 import { drawPaypal } from './paypal';
 import { drawEmola, drawMkesh, drawMpesa } from './wallets';
 
@@ -47,6 +47,11 @@ export class ScreenPainter {
     void document.fonts?.ready.then(() => {
       this.dirty = true;
     });
+    // And once the official wallpaper arrives, so the lock screen swaps the drawn one for it.
+    void LOCK_WALLPAPER?.decode().then(
+      () => (this.dirty = true),
+      () => undefined,
+    );
   }
 
   setScreen(key: ScreenKey, lockStage: number, now: number) {

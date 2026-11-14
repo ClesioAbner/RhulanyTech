@@ -1,7 +1,25 @@
 import { DISPLAY, PRICE, PRODUCT_NAME, SCREEN_H, SCREEN_W, easeOut, roundRect, text, wrap, type Ctx } from './canvas';
 
-// Lock screen wallpaper in the phone's own blue.
+// Apple's own iPhone 18 Pro wallpaper in Glacier, the colour of the phone on show; loaded once.
+export const LOCK_WALLPAPER =
+  typeof Image === 'undefined' ? null : Object.assign(new Image(), { src: '/images/produtos/ecras/18pro-glaciar.webp' });
+
+// Lock screen wallpaper: the official one when it has loaded, a drawn one in the phone's blue until then.
 const drawWallpaper = (ctx: Ctx) => {
+  if (LOCK_WALLPAPER?.complete && LOCK_WALLPAPER.naturalWidth) {
+    const scale = Math.max(SCREEN_W / LOCK_WALLPAPER.naturalWidth, SCREEN_H / LOCK_WALLPAPER.naturalHeight);
+    const w = LOCK_WALLPAPER.naturalWidth * scale;
+    const h = LOCK_WALLPAPER.naturalHeight * scale;
+    ctx.drawImage(LOCK_WALLPAPER, (SCREEN_W - w) / 2, (SCREEN_H - h) / 2, w, h);
+    // A little shade at the top, so the white clock and notifications read on the pale glass.
+    const shade = ctx.createLinearGradient(0, 0, 0, SCREEN_H);
+    shade.addColorStop(0, 'rgba(10,20,40,0.38)');
+    shade.addColorStop(0.45, 'rgba(10,20,40,0.12)');
+    shade.addColorStop(1, 'rgba(10,20,40,0.2)');
+    ctx.fillStyle = shade;
+    ctx.fillRect(0, 0, SCREEN_W, SCREEN_H);
+    return;
+  }
   const bg = ctx.createLinearGradient(0, 0, 0, SCREEN_H);
   bg.addColorStop(0, '#16233f');
   bg.addColorStop(0.5, '#0a1020');

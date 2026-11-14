@@ -15,8 +15,10 @@ const DUNES = [
 ].join(', ');
 
 /** The inner screen, wider than one half: each half shows its own side of the same wallpaper. */
-const InnerScreen = ({ side, height }: { side: 'left' | 'right'; height: number }) => (
+const InnerScreen = ({ side, height, wallpaper }: { side: 'left' | 'right'; height: number; wallpaper?: string }) => (
   <div className="absolute inset-y-0 w-[200%]" style={{ left: side === 'left' ? 0 : '-100%', background: DUNES }}>
+    {/* Apple's own wallpaper for the inner screen, when there is one; the drawn dunes otherwise */}
+    {wallpaper && <img src={wallpaper} alt="" draggable={false} className="absolute inset-0 h-full w-full object-cover" />}
     {/* The low sun's glow drifting slowly along the horizon */}
     <motion.span
       aria-hidden="true"
@@ -24,6 +26,13 @@ const InnerScreen = ({ side, height }: { side: 'left' | 'right'; height: number 
       animate={{ x: ['0%', '120%', '0%'], opacity: [0.7, 1, 0.7] }}
       transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
     />
+    {/* The shop's name, quiet at the foot of the right half */}
+    <p
+      className="absolute left-1/2 w-1/2 text-center font-display font-semibold tracking-tight text-white/75"
+      style={{ bottom: height * 0.05, fontSize: height * 0.04 }}
+    >
+      Rhulany<span className="text-white/40">Tech</span>
+    </p>
     {/* The time sits on the left half, clear of the fold */}
     <p
       className="absolute left-0 w-1/2 text-center font-display font-semibold leading-none tracking-tight text-white/95"
@@ -50,6 +59,7 @@ const FoldPhone3D = ({
   pointerX,
   pointerY,
   onGrab,
+  wallpaper,
   maxWidth,
   closing = false,
 }: Phone3DProps & {
@@ -178,7 +188,7 @@ const FoldPhone3D = ({
           back={back}
           backAlt={alt}
           sheen={sheen}
-          screen={<InnerScreen side="right" height={height} />}
+          screen={<InnerScreen side="right" height={height} wallpaper={wallpaper} />}
         />
       </div>
       {/* Folding half, hinged on the left: the cover screen outside, the left of the inner screen inside */}
@@ -191,8 +201,8 @@ const FoldPhone3D = ({
             depth={leaf}
             frame={frame}
             sheen={sheen}
-            screen={<LockScreen frame={frame} width={width} height={height} camera={shape.camera} />}
-            backScreen={<InnerScreen side="left" height={height} />}
+            screen={<LockScreen frame={frame} width={width} height={height} camera={shape.camera} wallpaper={wallpaper} />}
+            backScreen={<InnerScreen side="left" height={height} wallpaper={wallpaper} />}
           />
         </div>
       </motion.div>

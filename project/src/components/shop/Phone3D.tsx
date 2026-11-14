@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { useEffect, useId, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { animate, motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from 'framer-motion';
 import PhoneBody from '../product/PhoneBody';
 
@@ -30,6 +30,8 @@ export interface Phone3DProps {
   pointerY: MotionValue<number>;
   /** Called when the visitor starts turning the phone by hand. */
   onGrab?: () => void;
+  /** The maker's own wallpaper for this colour, shown on the lock screen instead of the drawn one. */
+  wallpaper?: string;
 }
 
 const TIME = '09:41';
@@ -37,9 +39,8 @@ const today = new Intl.DateTimeFormat('pt-PT', { weekday: 'long', day: 'numeric'
 const DATE = today.charAt(0).toUpperCase() + today.slice(1);
 
 /*
- * A living wallpaper in the phone's colour, like the dynamic ones on iPhone: soft lights of that
- * colour (and a paler and a deeper shade of it) drift slowly over a deep base. Gradients only, no
- * blur filters, so it stays light to draw on a turning 3D face.
+ * The lock screen's wallpaper in the phone's colour, in the manner of the iPhone's own: ribbons of
+ * that colour and its neighbours curving across a deep base, light along their edges, swaying slowly.
  */
 const hueOf = (hex: string) => {
   const n = parseInt(hex.slice(1), 16);
@@ -71,65 +72,60 @@ const paletteFor = (hex: string) => {
   };
 };
 
-const LIGHTS = [
-  { size: 1.5, left: -0.35, top: -0.15, drift: [0.18, 0.1], duration: 14 },
-  { size: 1.3, left: 0.25, top: 0.35, drift: [-0.2, 0.14], duration: 17 },
-  { size: 1.4, left: -0.2, top: 0.62, drift: [0.22, -0.12], duration: 19 },
-  { size: 0.9, left: 0.45, top: -0.05, drift: [-0.15, 0.2], duration: 12 },
+// Ribbons of colour, like the iPhone's own wallpapers: wide curved bands with light along their edges.
+const RIBBONS = [
+  { d: 'M-30 150C15 105 60 175 130 112V240H-30Z', light: 2, opacity: 1, drift: 7, duration: 14 },
+  { d: 'M-30 118C25 66 72 146 130 78V108C74 168 26 96 -30 148Z', light: 0, opacity: 0.95, drift: -6, duration: 12 },
+  { d: 'M-30 92C30 44 76 112 130 52V64C78 128 28 66 -30 106Z', light: 1, opacity: 0.85, drift: 5, duration: 16 },
+  { d: 'M-30 70C34 26 80 86 130 30V36C80 98 34 46 -30 78Z', light: 3, opacity: 0.7, drift: -4, duration: 11 },
 ] as const;
 
-const Wallpaper = ({ frame, width, height }: { frame: string; width: number; height: number }) => {
+const Wallpaper = ({ frame }: { frame: string }) => {
   const prefersReducedMotion = useReducedMotion();
   const palette = paletteFor(frame);
+  const id = `rt-wall-${useId().replace(/:/g, '')}`;
   return (
     <div className="absolute inset-0 overflow-hidden" style={{ background: palette.base }} aria-hidden="true">
-      {/* Aurora: a soft ribbon of the finish's colours turning slowly behind everything */}
-      <motion.span
-        className="absolute left-1/2 top-[58%] aspect-square"
-        style={{
-          width: height * 1.5,
-          marginLeft: -(height * 0.75),
-          marginTop: -(height * 0.75),
-          background: `conic-gradient(from 0deg, transparent 0deg, ${palette.lights[0]} 60deg, transparent 120deg, ${palette.lights[1]} 200deg, transparent 260deg, ${palette.lights[2]} 320deg, transparent 360deg)`,
-          filter: `blur(${Math.round(width * 0.09)}px)`,
-          opacity: 0.75,
-        }}
-        animate={prefersReducedMotion ? undefined : { rotate: 360 }}
-        transition={{ duration: 36, repeat: Infinity, ease: 'linear' }}
-      />
-      {LIGHTS.map((light, index) => (
-        <motion.span
-          key={index}
-          className="absolute rounded-full"
-          style={{
-            width: width * light.size,
-            height: width * light.size,
-            left: width * light.left,
-            top: height * light.top,
-            background: `radial-gradient(closest-side, ${palette.lights[index]} 0%, transparent 100%)`,
-            opacity: 0.9,
-          }}
-          animate={
-            prefersReducedMotion
-              ? undefined
-              : {
-                  x: [0, width * light.drift[0], 0],
-                  y: [0, height * light.drift[1], 0],
-                  scale: [1, 1.15, 1],
-                }
-          }
-          transition={{ duration: light.duration, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      ))}
+      <svg viewBox="0 0 100 200" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full">
+        <defs>
+          {RIBBONS.map((ribbon, index) => (
+            <linearGradient key={index} id={`${id}-${index}`} x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.55" />
+              <stop offset="22%" stopColor={palette.lights[ribbon.light]} />
+              <stop offset="100%" stopColor={palette.base} />
+            </linearGradient>
+          ))}
+          <filter id={`${id}-soft`} x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="0.6" />
+          </filter>
+          <radialGradient id={`${id}-glow`} cx="30%" cy="20%" r="70%">
+            <stop offset="0%" stopColor={palette.lights[3]} stopOpacity="0.45" />
+            <stop offset="100%" stopColor={palette.lights[3]} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <rect width="100" height="200" fill={`url(#${id}-glow)`} />
+        {RIBBONS.map((ribbon, index) => (
+          <motion.path
+            key={index}
+            d={ribbon.d}
+            fill={`url(#${id}-${index})`}
+            opacity={ribbon.opacity}
+            filter={`url(#${id}-soft)`}
+            animate={prefersReducedMotion ? undefined : { y: [0, ribbon.drift, 0], rotate: [0, ribbon.drift * 0.3, 0] }}
+            transition={{ duration: ribbon.duration, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ transformOrigin: '50px 100px' }}
+          />
+        ))}
+      </svg>
       {/* Glass: a faint diagonal sheen that crosses the screen now and then */}
       <motion.span
-        className="absolute inset-y-0 w-1/2 bg-[linear-gradient(105deg,transparent_20%,rgba(255,255,255,0.14)_50%,transparent_80%)]"
+        className="absolute inset-y-0 w-1/2 bg-[linear-gradient(105deg,transparent_20%,rgba(255,255,255,0.12)_50%,transparent_80%)]"
         initial={{ x: '-120%' }}
         animate={prefersReducedMotion ? undefined : { x: ['-120%', '260%'] }}
         transition={{ duration: 3.2, repeat: Infinity, repeatDelay: 5, ease: 'easeInOut' }}
       />
-      {/* Depth: darker towards the bottom, where the clock's shadow would fall */}
-      <span className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/35" />
+      {/* Depth: darker at the top, where the clock sits */}
+      <span className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent" />
     </div>
   );
 };
@@ -140,14 +136,31 @@ export const LockScreen = ({
   width,
   height,
   camera,
+  wallpaper,
 }: {
   frame: string;
   width: number;
   height: number;
   camera: PhoneShape['camera'];
+  wallpaper?: string;
 }) => (
   <div className="absolute inset-0">
-    <Wallpaper frame={frame} width={width} height={height} />
+    {wallpaper ? (
+      <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+        <img src={wallpaper} alt="" draggable={false} className="h-full w-full object-cover" />
+        {/* Light on the glass and a little shade under the clock, as on the real lock screen */}
+        <span className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-transparent" />
+      </div>
+    ) : (
+      <Wallpaper frame={frame} />
+    )}
+    {/* The shop's name, quiet at the foot of the screen, where a carrier's name would sit */}
+    <p
+      className="absolute inset-x-0 text-center font-display font-semibold tracking-tight text-white/75"
+      style={{ bottom: height * 0.045, fontSize: width * 0.055 }}
+    >
+      Rhulany<span className="text-white/40">Tech</span>
+    </p>
     {camera === 'island' ? (
       <span
         className="absolute left-1/2 -translate-x-1/2 rounded-full bg-black"
@@ -185,7 +198,7 @@ export const LockScreen = ({
  * (the screen passes by in the new colour); at rest it sways, follows the pointer and can be turned
  * by hand, settling on whichever side faces the visitor.
  */
-const Phone3D = ({ image, alt, hex, shape, height, pointerX, pointerY, onGrab }: Phone3DProps) => {
+const Phone3D = ({ image, alt, hex, shape, height, pointerX, pointerY, onGrab, wallpaper }: Phone3DProps) => {
   const prefersReducedMotion = useReducedMotion();
   const width = Math.round(height * shape.aspect);
   const depth = Math.max(6, Math.round(width * shape.depth));
@@ -193,6 +206,7 @@ const Phone3D = ({ image, alt, hex, shape, height, pointerX, pointerY, onGrab }:
 
   const [back, setBack] = useState(image);
   const [frame, setFrame] = useState(hex);
+  const [screenImage, setScreenImage] = useState(wallpaper);
   const turn = useMotionValue(prefersReducedMotion ? 180 : 0);
   const sway = useMotionValue(0);
   const tiltY = useSpring(useTransform(pointerX, [-0.5, 0.5], [-16, 16]), { stiffness: 110, damping: 20 });
@@ -223,6 +237,7 @@ const Phone3D = ({ image, alt, hex, shape, height, pointerX, pointerY, onGrab }:
     if (prefersReducedMotion) {
       setBack(image);
       setFrame(hex);
+      setScreenImage(wallpaper);
       return;
     }
     const from = turn.get();
@@ -231,12 +246,13 @@ const Phone3D = ({ image, alt, hex, shape, height, pointerX, pointerY, onGrab }:
     const repaint = window.setTimeout(() => {
       setBack(image);
       setFrame(hex);
+      setScreenImage(wallpaper);
     }, 360);
     return () => {
       controls.stop();
       window.clearTimeout(repaint);
     };
-  }, [image, hex, turn, prefersReducedMotion]);
+  }, [image, hex, wallpaper, turn, prefersReducedMotion]);
 
   // Turning by hand: follows the finger, then settles on the nearest side.
   const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -272,7 +288,7 @@ const Phone3D = ({ image, alt, hex, shape, height, pointerX, pointerY, onGrab }:
         back={back}
         backAlt={alt}
         sheen={sheen}
-        screen={<LockScreen frame={frame} width={width} height={height} camera={shape.camera} />}
+        screen={<LockScreen frame={frame} width={width} height={height} camera={shape.camera} wallpaper={screenImage} />}
       />
     </motion.div>
   );

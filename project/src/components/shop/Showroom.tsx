@@ -18,11 +18,32 @@ import FoldPhone3D from './FoldPhone3D';
 import Phone3D, { type PhoneShape } from './Phone3D';
 
 // Phones on show, with their real proportions (body, corners, thickness, front camera).
-const FEATURED: { id: string; shape: PhoneShape }[] = [
-  { id: '91', shape: { aspect: 0.479, radius: 0.17, depth: 0.115, camera: 'island' } },
-  { id: '93', shape: { aspect: 0.48, radius: 0.12, depth: 0.1, camera: 'punch' } },
+// Official wallpapers, cropped from the makers' own photos, in the order of each product's colours.
+const W = '/images/produtos/ecras/';
+
+interface Featured {
+  id: string;
+  shape: PhoneShape;
+  wallpapers?: string[];
+}
+
+const FEATURED: Featured[] = [
+  {
+    id: '91',
+    shape: { aspect: 0.479, radius: 0.17, depth: 0.115, camera: 'island' },
+    wallpapers: ['18pro-glaciar', '18pro-bordeaux', '18pro-prateado', '18pro-preto'].map((name) => `${W}${name}.webp`),
+  },
+  {
+    id: '93',
+    shape: { aspect: 0.48, radius: 0.12, depth: 0.1, camera: 'punch' },
+    wallpapers: ['s26-cobalt-violet', 's26-sky-blue', 's26-black', 's26-white'].map((name) => `${W}${name}.webp`),
+  },
   // The Duo on show folded: wider, and as thick as two thin phones.
-  { id: '92', shape: { aspect: 0.705, radius: 0.13, depth: 0.134, camera: 'punch', fold: true } },
+  {
+    id: '92',
+    shape: { aspect: 0.705, radius: 0.13, depth: 0.134, camera: 'punch', fold: true },
+    wallpapers: [`${W}duo-dunas.webp`, `${W}duo-dunas.webp`],
+  },
   { id: '51', shape: { aspect: 0.479, radius: 0.165, depth: 0.118, camera: 'punch' } },
   { id: '40', shape: { aspect: 0.488, radius: 0.17, depth: 0.075, camera: 'island' } },
 ];
@@ -32,8 +53,9 @@ const FOLD_SLIDE_SECONDS = 9;
 // Halfway through, the phone turns round to show its next colour on its own.
 const AUTO_TURN_AT = 0.5;
 
-const SLIDES = FEATURED.map(({ id, shape }) => ({ product: getProductById(id), shape })).filter(
-  (slide): slide is { product: CatalogProduct; shape: PhoneShape } => Boolean(slide.product?.finishes[0]?.images?.length),
+const SLIDES = FEATURED.map(({ id, shape, wallpapers }) => ({ product: getProductById(id), shape, wallpapers })).filter(
+  (slide): slide is { product: CatalogProduct; shape: PhoneShape; wallpapers: string[] | undefined } =>
+    Boolean(slide.product?.finishes[0]?.images?.length),
 );
 
 const toRgb = (hex: string) => {
@@ -91,7 +113,7 @@ const Showroom = () => {
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
   const prefersReducedMotion = useReducedMotion();
-  const { product, shape } = SLIDES[slide];
+  const { product, shape, wallpapers } = SLIDES[slide];
   const finish = product.finishes[finishIndex] ?? product.finishes[0];
   const image = resolveImage(finish.images![0], 1200);
   // Each phone waits for its photo, so it never turns with an empty back; colour changes don't wait.
@@ -259,6 +281,7 @@ const Showroom = () => {
                       pointerX={pointerX}
                       pointerY={pointerY}
                       onGrab={() => setPaused(true)}
+                      wallpaper={wallpapers?.[finishIndex]}
                       maxWidth={stageWidth}
                       closing={closingFold}
                     />
@@ -272,6 +295,7 @@ const Showroom = () => {
                       pointerX={pointerX}
                       pointerY={pointerY}
                       onGrab={() => setPaused(true)}
+                      wallpaper={wallpapers?.[finishIndex]}
                     />
                   )}
                 </motion.div>
