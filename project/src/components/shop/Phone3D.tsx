@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { animate, motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from 'framer-motion';
 import PhoneBody from '../product/PhoneBody';
-import { mixColor } from '../../lib/color';
 
 /** Physical shape of a phone, relative to its width. */
 export interface PhoneShape {
@@ -37,7 +36,84 @@ const TIME = '09:41';
 const today = new Intl.DateTimeFormat('pt-PT', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
 const DATE = today.charAt(0).toUpperCase() + today.slice(1);
 
-/** Lock screen in the phone's colour: wallpaper, front camera, date and time. */
+/*
+ * A living wallpaper in the phone's colour, like the dynamic ones on iPhone: soft lights of that
+ * colour (and a paler and a deeper shade of it) drift slowly over a deep base. Gradients only, no
+ * blur filters, so it stays light to draw on a turning 3D face.
+ */
+const hueOf = (hex: string) => {
+  const n = parseInt(hex.slice(1), 16);
+  const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => v / 255);
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const d = max - min;
+  const l = (max + min) / 2;
+  const s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
+  let h = 0;
+  if (d) h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return { h: (h * 60 + 360) % 360, s };
+};
+
+// The finish's hue, made vivid; neutral finishes (silver, black, white) get a cool blue instead.
+const paletteFor = (hex: string) => {
+  const { h, s } = hueOf(hex);
+  const neutral = s < 0.18;
+  const hue = neutral ? 222 : h;
+  const sat = neutral ? 38 : Math.max(58, Math.round(s * 100));
+  return {
+    base: `hsl(${hue} ${Math.round(sat * 0.7)}% 11%)`,
+    lights: [
+      `hsl(${hue} ${sat}% 64%)`,
+      `hsl(${(hue + 38) % 360} ${sat}% 56%)`,
+      `hsl(${(hue + 322) % 360} ${Math.round(sat * 0.9)}% 42%)`,
+      `hsl(${hue} ${Math.round(sat * 0.55)}% 86%)`,
+    ],
+  };
+};
+
+const LIGHTS = [
+  { size: 1.5, left: -0.35, top: -0.15, drift: [0.18, 0.1], duration: 14 },
+  { size: 1.3, left: 0.25, top: 0.35, drift: [-0.2, 0.14], duration: 17 },
+  { size: 1.4, left: -0.2, top: 0.62, drift: [0.22, -0.12], duration: 19 },
+  { size: 0.9, left: 0.45, top: -0.05, drift: [-0.15, 0.2], duration: 12 },
+] as const;
+
+const Wallpaper = ({ frame, width, height }: { frame: string; width: number; height: number }) => {
+  const prefersReducedMotion = useReducedMotion();
+  const palette = paletteFor(frame);
+  return (
+    <div className="absolute inset-0 overflow-hidden" style={{ background: palette.base }} aria-hidden="true">
+      {LIGHTS.map((light, index) => (
+        <motion.span
+          key={index}
+          className="absolute rounded-full"
+          style={{
+            width: width * light.size,
+            height: width * light.size,
+            left: width * light.left,
+            top: height * light.top,
+            background: `radial-gradient(closest-side, ${palette.lights[index]} 0%, transparent 100%)`,
+            opacity: 0.9,
+          }}
+          animate={
+            prefersReducedMotion
+              ? undefined
+              : {
+                  x: [0, width * light.drift[0], 0],
+                  y: [0, height * light.drift[1], 0],
+                  scale: [1, 1.15, 1],
+                }
+          }
+          transition={{ duration: light.duration, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      ))}
+      {/* Depth: darker towards the bottom, where the clock's shadow would fall */}
+      <span className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/35" />
+    </div>
+  );
+};
+
+/** Lock screen in the phone's colour: a living wallpaper, front camera, date and time. */
 export const LockScreen = ({
   frame,
   width,
@@ -49,12 +125,8 @@ export const LockScreen = ({
   height: number;
   camera: PhoneShape['camera'];
 }) => (
-  <div
-    className="absolute inset-0"
-    style={{
-      background: `radial-gradient(90% 60% at 20% 18%, ${mixColor(frame, 255, 0.35)} 0%, transparent 60%), radial-gradient(80% 70% at 85% 80%, ${mixColor(frame, 0, 0.1)} 0%, transparent 65%), linear-gradient(165deg, ${mixColor(frame, 0, 0.35)} 0%, ${mixColor(frame, 0, 0.82)} 100%)`,
-    }}
-  >
+  <div className="absolute inset-0">
+    <Wallpaper frame={frame} width={width} height={height} />
     {camera === 'island' ? (
       <span
         className="absolute left-1/2 -translate-x-1/2 rounded-full bg-black"

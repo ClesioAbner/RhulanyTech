@@ -17,6 +17,13 @@ const DUNES = [
 /** The inner screen, wider than one half: each half shows its own side of the same wallpaper. */
 const InnerScreen = ({ side, height }: { side: 'left' | 'right'; height: number }) => (
   <div className="absolute inset-y-0 w-[200%]" style={{ left: side === 'left' ? 0 : '-100%', background: DUNES }}>
+    {/* The low sun's glow drifting slowly along the horizon */}
+    <motion.span
+      aria-hidden="true"
+      className="absolute left-[20%] top-[48%] h-[38%] w-[36%] rounded-full bg-[radial-gradient(closest-side,rgba(255,206,170,0.55),transparent)]"
+      animate={{ x: ['0%', '120%', '0%'], opacity: [0.7, 1, 0.7] }}
+      transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
+    />
     {/* The time sits on the left half, clear of the fold */}
     <p
       className="absolute left-0 w-1/2 text-center font-display font-semibold leading-none tracking-tight text-white/95"
