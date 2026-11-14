@@ -4,6 +4,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { INTRO_LIFT, introPending } from '../../lib/bootLoader';
 import { easeOutExpo } from '../../lib/motion';
 import PhoneCopy from '../ui/PhoneCopy';
+import ArrowChip from '../ui/ArrowChip';
 
 const HERO_VIDEO = '/videos/hero-circuit.mp4';
 const HERO_POSTER = '/videos/hero-circuit-poster.jpg';
@@ -82,16 +83,17 @@ const Hero = () => {
             <div className="flex items-center gap-3">
               <Link
                 to="/loja"
-                className="inline-flex h-12 items-center rounded-full bg-paper px-7 text-sm font-medium text-ink transition-colors duration-300 hover:bg-mist"
+                className="group inline-flex h-14 items-center gap-3 rounded-full bg-paper pl-7 pr-3 text-sm font-medium text-ink shadow-[0_18px_40px_-20px_rgba(0,0,0,0.6)] transition-transform duration-300 hover:-translate-y-0.5"
               >
                 Entrar na loja
+                <ArrowChip tone="ink" />
               </Link>
-              <a
-                href="#categorias"
-                className="inline-flex h-12 items-center rounded-full border border-paper/25 px-7 text-sm font-medium text-paper backdrop-blur-sm transition-colors duration-300 hover:border-paper/60"
+              <Link
+                to="/loja/celulares?ordem=novidades"
+                className="inline-flex h-14 items-center rounded-full border border-paper/25 bg-paper/5 px-7 text-sm font-medium text-paper backdrop-blur-md transition-colors duration-300 hover:border-paper/60 hover:bg-paper/10"
               >
-                Ver categorias
-              </a>
+                Ver novidades
+              </Link>
             </div>
           </motion.div>
         </motion.div>

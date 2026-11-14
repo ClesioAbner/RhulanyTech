@@ -120,7 +120,7 @@
     width: 22em;
     height: 10em;
     /* The road's gaps take the colour of the card it sits on */
-    --rt-truck-gap: theme('colors.paper');
+    --rt-truck-gap: var(--rt-truck-bg, theme('colors.paper'));
   }
 
   .rt-truck-body {

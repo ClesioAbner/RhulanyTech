@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { STORE } from '../../data/store';
 import { easeOutExpo, inViewOnce } from '../../lib/motion';
+import ArrowChip from '../ui/ArrowChip';
+import { WhatsAppIcon } from '../ui/Icons';
 import PhoneCopy from '../ui/PhoneCopy';
 import StoreDisplay from './StoreDisplay';
 
@@ -33,7 +35,7 @@ const StoreVisit = () => (
           transition={{ duration: 1.1, ease: easeOutExpo }}
         >
           <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-paper/55">
-            <span className="tabular-nums">06</span>
+            <span className="tabular-nums">05</span>
             <span aria-hidden="true" className="h-px w-8 bg-current" />
             <span>A loja</span>
           </p>
@@ -46,20 +48,25 @@ const StoreVisit = () => (
               WhatsApp durante o horário de loja
             </PhoneCopy>
           </p>
+          {/* One clear way in (the shop on the map), WhatsApp beside it; the phone is in the details below */}
           <div className="mt-10 flex flex-wrap gap-3">
+            <a
+              href={STORE.mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex h-14 items-center gap-3 rounded-full bg-paper pl-7 pr-3 text-sm font-medium text-ink shadow-[0_18px_40px_-20px_rgba(0,0,0,0.7)] transition-transform duration-300 hover:-translate-y-0.5"
+            >
+              Como chegar
+              <ArrowChip tone="ink" />
+            </a>
             <a
               href={STORE.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-12 items-center rounded-full bg-paper px-7 text-sm font-medium text-ink transition-colors duration-300 hover:bg-mist"
+              className="inline-flex h-14 items-center gap-2.5 rounded-full border border-paper/25 bg-paper/5 px-7 text-sm font-medium backdrop-blur-md transition-colors duration-300 hover:border-paper/60 hover:bg-paper/10"
             >
-              Falar pelo WhatsApp
-            </a>
-            <a
-              href={STORE.phoneHref}
-              className="inline-flex h-12 items-center rounded-full border border-paper/30 px-7 text-sm font-medium transition-colors duration-300 hover:border-paper/70"
-            >
-              Ligar agora
+              <WhatsAppIcon className="h-[18px] w-[18px]" />
+              Falar no WhatsApp
             </a>
           </div>
         </motion.div>
