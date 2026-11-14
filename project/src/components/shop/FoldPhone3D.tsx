@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
-import { animate, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion';
+import { animate, motion, useIsPresent, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion';
 import PhoneBody from '../product/PhoneBody';
 import { LockScreen, type Phone3DProps } from './Phone3D';
 
@@ -51,7 +51,12 @@ const FoldPhone3D = ({
   pointerY,
   onGrab,
   maxWidth,
-}: Phone3DProps & { maxWidth: number }) => {
+  closing = false,
+}: Phone3DProps & {
+  maxWidth: number;
+  /** The showroom is about to move on: fold it shut before it leaves. */
+  closing?: boolean;
+}) => {
   const prefersReducedMotion = useReducedMotion();
   const width = Math.round(height * shape.aspect);
   const depth = Math.max(8, Math.round(width * shape.depth));
@@ -75,6 +80,14 @@ const FoldPhone3D = ({
   const shift = useTransform(open, (p) => (width / 2) * p);
   const originX = useTransform(open, (p) => 0.5 - 0.5 * p);
   const scale = useTransform(open, (p) => 1 + (openScale - 1) * p);
+
+  // It folds shut before leaving: when its time is nearly up, or at once if another phone is picked.
+  const isPresent = useIsPresent();
+  useEffect(() => {
+    if (!closing && isPresent) return;
+    const controls = animate(open, 0, { duration: isPresent ? 0.9 : 0.45, ease: EASE });
+    return () => controls.stop();
+  }, [closing, isPresent, open]);
 
   const lastImage = useRef(image);
   const drag = useRef<{ x: number; turn: number } | null>(null);

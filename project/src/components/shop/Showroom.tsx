@@ -84,6 +84,8 @@ const Showroom = () => {
   const [handPicked, setHandPicked] = useState(false);
   const [phoneHeight, setPhoneHeight] = useState(520);
   const [stageWidth, setStageWidth] = useState(800);
+  // A folding phone closes in the last moments of its turn, so it leaves folded.
+  const [closingFold, setClosingFold] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
   const progress = useMotionValue(0);
   const pointerX = useMotionValue(0);
@@ -119,6 +121,8 @@ const Showroom = () => {
   };
 
   useMotionValueEvent(progress, 'change', (value) => {
+    const closing = shape.fold === true && value > 0.88;
+    setClosingFold((current) => (current === closing ? current : closing));
     // A folding phone stays open on show instead.
     if (value >= AUTO_TURN_AT && finishIndex === 0 && !handPicked && !shape.fold && product.finishes.length > 1)
       setFinishIndex(1);
@@ -256,6 +260,7 @@ const Showroom = () => {
                       pointerY={pointerY}
                       onGrab={() => setPaused(true)}
                       maxWidth={stageWidth}
+                      closing={closingFold}
                     />
                   ) : (
                     <Phone3D
