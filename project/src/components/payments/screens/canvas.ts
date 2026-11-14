@@ -14,10 +14,10 @@ export const DISPLAY = '"Inter Tight", Inter, ui-sans-serif, system-ui, sans-ser
 export const INK = '#0C0C0D';
 export const PAPER = '#F5F5F7';
 
-// The phone on show is the iPhone 17 Pro in Deep Blue.
-const showcase = getProductById('39');
-export const PRODUCT_NAME = showcase?.title ?? 'iPhone 17 Pro';
-export const PRICE = formatPrice(showcase?.price ?? 165000);
+// The phone on show is the iPhone 18 Pro in Glacier.
+const showcase = getProductById('91');
+export const PRODUCT_NAME = showcase?.title ?? 'iPhone 18 Pro';
+export const PRICE = formatPrice(showcase?.price ?? 145000);
 
 export type Ctx = CanvasRenderingContext2D;
 

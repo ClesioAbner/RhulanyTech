@@ -14,7 +14,9 @@ interface PhoneBodyProps {
   /** Frame colour. */
   frame: string;
   /** Back of the phone: a transparent studio cut-out. */
-  back: string;
+  back?: string;
+  /** A second screen on the back instead of the photo (one half of a folding phone). */
+  backScreen?: ReactNode;
   backAlt?: string;
   /** Screen content, drawn inside the black border on the front. */
   screen: ReactNode;
@@ -27,7 +29,7 @@ interface PhoneBodyProps {
  * The real back photo on one side, the screen on the other, and a body of thin rounded slices in
  * between plus solid side bands, so it keeps its thickness and corners from any angle.
  */
-const PhoneBody = ({ width, height, radius, depth, frame, back, backAlt = '', screen, sheen }: PhoneBodyProps) => {
+const PhoneBody = ({ width, height, radius, depth, frame, back, backScreen, backAlt = '', screen, sheen }: PhoneBodyProps) => {
   const half = depth / 2;
   const border = width * 0.028;
   const metal = `linear-gradient(90deg, ${mixColor(frame, 0, 0.45)}, ${mixColor(frame, 255, 0.25)} 40%, ${mixColor(frame, 0, 0.15)} 65%, ${mixColor(frame, 0, 0.5)})`;
@@ -102,23 +104,41 @@ const PhoneBody = ({ width, height, radius, depth, frame, back, backAlt = '', sc
         />
       </div>
 
-      {/* Back: the real photo */}
-      <div className="absolute inset-0" style={{ ...face, transform: `rotateY(180deg) translateZ(${half + 0.5}px)` }}>
-        <img src={back} alt={backAlt} draggable={false} className="h-full w-full object-fill" />
-        <motion.span
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 mix-blend-soft-light"
+      {/* Back: a second screen (one half of a folding phone), or the real photo */}
+      {backScreen && (
+        <div
+          className="absolute inset-0 overflow-hidden"
           style={{
-            backgroundImage: 'linear-gradient(110deg, transparent 32%, rgba(255,255,255,0.8) 50%, transparent 68%)',
-            backgroundSize: '250% 100%',
-            backgroundPositionX: sheen,
-            WebkitMaskImage: `url("${back}")`,
-            maskImage: `url("${back}")`,
-            WebkitMaskSize: '100% 100%',
-            maskSize: '100% 100%',
+            ...face,
+            borderRadius: radius,
+            transform: `rotateY(180deg) translateZ(${half + 0.5}px)`,
+            background: '#050506',
+            padding: border,
           }}
-        />
-      </div>
+        >
+          <div className="relative h-full w-full overflow-hidden" style={{ borderRadius: radius - border }}>
+            {backScreen}
+          </div>
+        </div>
+      )}
+      {back && (
+        <div className="absolute inset-0" style={{ ...face, transform: `rotateY(180deg) translateZ(${half + 0.5}px)` }}>
+          <img src={back} alt={backAlt} draggable={false} className="h-full w-full object-fill" />
+          <motion.span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 mix-blend-soft-light"
+            style={{
+              backgroundImage: 'linear-gradient(110deg, transparent 32%, rgba(255,255,255,0.8) 50%, transparent 68%)',
+              backgroundSize: '250% 100%',
+              backgroundPositionX: sheen,
+              WebkitMaskImage: `url("${back}")`,
+              maskImage: `url("${back}")`,
+              WebkitMaskSize: '100% 100%',
+              maskSize: '100% 100%',
+            }}
+          />
+        </div>
+      )}
     </>
   );
 };

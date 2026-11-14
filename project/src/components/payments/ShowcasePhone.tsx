@@ -7,10 +7,10 @@ import { CARD_METHOD_INDEX } from './methods';
 import PaymentCard3D from './PaymentCard3D';
 import { ScreenPainter, type ScreenKey } from './screens';
 
-// iPhone 17 Pro in Deep Blue: real proportions, back photo and frame colour.
-const ASPECT = 0.486;
-const BACK = resolveImage('/images/produtos/iphone-17-pro-azul', 1200);
-const FRAME = '#33415f';
+// iPhone 18 Pro in Glacier: real proportions, back photo and frame colour.
+const ASPECT = 0.479;
+const BACK = resolveImage('/images/produtos/iphone-18-pro-glaciar', 1200);
+const FRAME = '#9fb2c8';
 const CARD_SCREEN = `method-${CARD_METHOD_INDEX}` as ScreenKey;
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -27,7 +27,7 @@ interface ShowcasePhoneProps {
 }
 
 /*
- * The homepage phone: an iPhone 17 Pro in CSS 3D that fills its box. Its screen is the canvas from
+ * The homepage phone: an iPhone 18 Pro in CSS 3D that fills its box. Its screen is the canvas from
  * screens.ts (lock screen, checkout, each payment method).
  *
  * Card choreography, while the card method is on screen: the Rhulany Classic Visa comes out from

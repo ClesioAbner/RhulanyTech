@@ -14,6 +14,7 @@ import { formatPrice } from '../../lib/format';
 import { easeOutExpo, isPhone } from '../../lib/motion';
 import { useImageReady } from '../../lib/useImageReady';
 import BrandLoader from '../ui/BrandLoader';
+import FoldPhone3D from './FoldPhone3D';
 import Phone3D, { type PhoneShape } from './Phone3D';
 
 // Phones on show, with their real proportions (body, corners, thickness, front camera).
@@ -21,11 +22,13 @@ const FEATURED: { id: string; shape: PhoneShape }[] = [
   { id: '91', shape: { aspect: 0.479, radius: 0.17, depth: 0.115, camera: 'island' } },
   { id: '93', shape: { aspect: 0.48, radius: 0.12, depth: 0.1, camera: 'punch' } },
   // The Duo on show folded: wider, and as thick as two thin phones.
-  { id: '92', shape: { aspect: 0.705, radius: 0.13, depth: 0.134, camera: 'punch' } },
+  { id: '92', shape: { aspect: 0.705, radius: 0.13, depth: 0.134, camera: 'punch', fold: true } },
   { id: '51', shape: { aspect: 0.479, radius: 0.165, depth: 0.118, camera: 'punch' } },
   { id: '40', shape: { aspect: 0.488, radius: 0.17, depth: 0.075, camera: 'island' } },
 ];
 const SLIDE_SECONDS = 6;
+// A folding phone needs longer: it turns, opens, and stays open for a moment.
+const FOLD_SLIDE_SECONDS = 9;
 // Halfway through, the phone turns round to show its next colour on its own.
 const AUTO_TURN_AT = 0.5;
 
@@ -80,6 +83,7 @@ const Showroom = () => {
   // A colour picked by hand keeps the phone on show; the automatic turn does not.
   const [handPicked, setHandPicked] = useState(false);
   const [phoneHeight, setPhoneHeight] = useState(520);
+  const [stageWidth, setStageWidth] = useState(800);
   const stageRef = useRef<HTMLDivElement>(null);
   const progress = useMotionValue(0);
   const pointerX = useMotionValue(0);
@@ -98,8 +102,10 @@ const Showroom = () => {
   useLayoutEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
-    const measure = () =>
+    const measure = () => {
       setPhoneHeight(Math.round(Math.min(stage.clientHeight * 0.84, (stage.clientWidth * 0.62) / shape.aspect)));
+      setStageWidth(stage.clientWidth);
+    };
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(stage);
@@ -113,14 +119,20 @@ const Showroom = () => {
   };
 
   useMotionValueEvent(progress, 'change', (value) => {
-    if (value >= AUTO_TURN_AT && finishIndex === 0 && !handPicked && product.finishes.length > 1) setFinishIndex(1);
+    // A folding phone stays open on show instead.
+    if (value >= AUTO_TURN_AT && finishIndex === 0 && !handPicked && !shape.fold && product.finishes.length > 1)
+      setFinishIndex(1);
   });
 
   // The timer restarts with each phone; picking a colour or turning the phone pauses it.
   useEffect(() => {
     progress.set(0);
     if (prefersReducedMotion) return;
-    controls.current = animate(progress, 1, { duration: SLIDE_SECONDS, ease: 'linear', onComplete: () => goTo(slide + 1) });
+    controls.current = animate(progress, 1, {
+      duration: SLIDES[slide].shape.fold ? FOLD_SLIDE_SECONDS : SLIDE_SECONDS,
+      ease: 'linear',
+      onComplete: () => goTo(slide + 1),
+    });
     if (pausedRef.current) controls.current.pause();
     return () => controls.current?.stop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -223,8 +235,9 @@ const Showroom = () => {
                   transition: { duration: 0.8, ease: [0.45, 0, 0.7, 0.3] },
                 }}
                 transition={{
-                  default: { duration: 1.25, ease: easeOutExpo },
-                  opacity: { duration: 0.5, ease: 'easeOut' },
+                  // A beat after the last phone starts to leave, so the two never cross in the middle.
+                  default: { duration: 1.35, ease: easeOutExpo, delay: 0.18 },
+                  opacity: { duration: 0.55, ease: 'easeOut', delay: 0.18 },
                 }}
               >
                 <motion.div
@@ -232,16 +245,30 @@ const Showroom = () => {
                   animate={prefersReducedMotion ? undefined : { y: [0, -14, 0] }}
                   transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
                 >
-                  <Phone3D
-                    image={image}
-                    alt={`${product.title} em ${finish.name}`}
-                    hex={finish.hex}
-                    shape={shape}
-                    height={phoneHeight}
-                    pointerX={pointerX}
-                    pointerY={pointerY}
-                    onGrab={() => setPaused(true)}
-                  />
+                  {shape.fold ? (
+                    <FoldPhone3D
+                      image={image}
+                      alt={`${product.title} em ${finish.name}`}
+                      hex={finish.hex}
+                      shape={shape}
+                      height={phoneHeight}
+                      pointerX={pointerX}
+                      pointerY={pointerY}
+                      onGrab={() => setPaused(true)}
+                      maxWidth={stageWidth}
+                    />
+                  ) : (
+                    <Phone3D
+                      image={image}
+                      alt={`${product.title} em ${finish.name}`}
+                      hex={finish.hex}
+                      shape={shape}
+                      height={phoneHeight}
+                      pointerX={pointerX}
+                      pointerY={pointerY}
+                      onGrab={() => setPaused(true)}
+                    />
+                  )}
                 </motion.div>
               </motion.div>
             )}

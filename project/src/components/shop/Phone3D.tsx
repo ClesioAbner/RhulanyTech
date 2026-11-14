@@ -13,9 +13,11 @@ export interface PhoneShape {
   depth: number;
   /** Front camera: Dynamic Island or a punch hole. */
   camera: 'island' | 'punch';
+  /** A folding phone, shown folded; it opens like a book to show its inner screen (see FoldPhone3D). */
+  fold?: boolean;
 }
 
-interface Phone3DProps {
+export interface Phone3DProps {
   /** Back of the phone: a transparent studio cut-out. */
   image: string;
   alt: string;
@@ -36,7 +38,7 @@ const today = new Intl.DateTimeFormat('pt-PT', { weekday: 'long', day: 'numeric'
 const DATE = today.charAt(0).toUpperCase() + today.slice(1);
 
 /** Lock screen in the phone's colour: wallpaper, front camera, date and time. */
-const LockScreen = ({
+export const LockScreen = ({
   frame,
   width,
   height,
