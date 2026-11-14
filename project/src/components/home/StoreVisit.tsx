@@ -35,7 +35,7 @@ const StoreVisit = () => (
           transition={{ duration: 1.1, ease: easeOutExpo }}
         >
           <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-paper/55">
-            <span className="tabular-nums">05</span>
+            <span className="tabular-nums">04</span>
             <span aria-hidden="true" className="h-px w-8 bg-current" />
             <span>A loja</span>
           </p>

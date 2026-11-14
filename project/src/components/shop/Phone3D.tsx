@@ -83,6 +83,20 @@ const Wallpaper = ({ frame, width, height }: { frame: string; width: number; hei
   const palette = paletteFor(frame);
   return (
     <div className="absolute inset-0 overflow-hidden" style={{ background: palette.base }} aria-hidden="true">
+      {/* Aurora: a soft ribbon of the finish's colours turning slowly behind everything */}
+      <motion.span
+        className="absolute left-1/2 top-[58%] aspect-square"
+        style={{
+          width: height * 1.5,
+          marginLeft: -(height * 0.75),
+          marginTop: -(height * 0.75),
+          background: `conic-gradient(from 0deg, transparent 0deg, ${palette.lights[0]} 60deg, transparent 120deg, ${palette.lights[1]} 200deg, transparent 260deg, ${palette.lights[2]} 320deg, transparent 360deg)`,
+          filter: `blur(${Math.round(width * 0.09)}px)`,
+          opacity: 0.75,
+        }}
+        animate={prefersReducedMotion ? undefined : { rotate: 360 }}
+        transition={{ duration: 36, repeat: Infinity, ease: 'linear' }}
+      />
       {LIGHTS.map((light, index) => (
         <motion.span
           key={index}
@@ -107,6 +121,13 @@ const Wallpaper = ({ frame, width, height }: { frame: string; width: number; hei
           transition={{ duration: light.duration, repeat: Infinity, ease: 'easeInOut' }}
         />
       ))}
+      {/* Glass: a faint diagonal sheen that crosses the screen now and then */}
+      <motion.span
+        className="absolute inset-y-0 w-1/2 bg-[linear-gradient(105deg,transparent_20%,rgba(255,255,255,0.14)_50%,transparent_80%)]"
+        initial={{ x: '-120%' }}
+        animate={prefersReducedMotion ? undefined : { x: ['-120%', '260%'] }}
+        transition={{ duration: 3.2, repeat: Infinity, repeatDelay: 5, ease: 'easeInOut' }}
+      />
       {/* Depth: darker towards the bottom, where the clock's shadow would fall */}
       <span className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/35" />
     </div>

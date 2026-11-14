@@ -9,8 +9,8 @@ import Rail from '../ui/Rail';
 import SectionHeading from '../ui/SectionHeading';
 
 // A fixed selection that spans the catalogue, each with its own product photography.
-// The iPhone stays fourth (second row, left column): its card hosts the 3D phone that falls into payments.
-const FAVORITE_IDS = ['67', '54', '93', '91', '80', '71'];
+// Three highlights. The iPhone stays first (left column): its card hosts the 3D phone that falls into payments.
+const FAVORITE_IDS = ['91', '67', '93'];
 const PHONE_PRODUCT_ID = '91';
 
 const FAVORITES = FAVORITE_IDS.map((id) => getProductById(id)).filter((product): product is CatalogProduct => Boolean(product));
@@ -27,7 +27,7 @@ const ShopSection = ({ sectionRef, phoneSlotRef }: ShopSectionProps) => {
       <div className="container-site py-20 sm:py-28 lg:py-40">
         <SectionHeading
           id="loja-titulo"
-          index="02"
+          index="01"
           eyebrow="Loja"
           title="Os favoritos"
           action={
@@ -58,9 +58,13 @@ const ShopSection = ({ sectionRef, phoneSlotRef }: ShopSectionProps) => {
                     transition: { duration: 0.9, ease: easeOutExpo, delay: (index % 3) * 0.07 },
                   }
                 : { variants: riseIn3d })}
-              className="w-[66%] shrink-0 snap-start [transform-origin:50%_100%] sm:w-[40%] lg:w-auto"
+              className="w-[78%] shrink-0 snap-start [transform-origin:50%_100%] sm:w-[44%] lg:w-auto"
             >
-              <FeaturedProductCard product={product} mediaSlotRef={product.id === PHONE_PRODUCT_ID ? phoneSlotRef : undefined} />
+              <FeaturedProductCard
+                product={product}
+                size="large"
+                mediaSlotRef={product.id === PHONE_PRODUCT_ID ? phoneSlotRef : undefined}
+              />
             </motion.li>
           ))}
         </Rail>

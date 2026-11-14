@@ -55,7 +55,7 @@ const Services = () => (
     <div className="container-site py-20 sm:py-28 lg:py-40">
       <SectionHeading
         id="servicos-titulo"
-        index="04"
+        index="03"
         eyebrow="Porquê a Rhulany Tech"
         title="Comprar tecnologia devia ser simples"
       />
