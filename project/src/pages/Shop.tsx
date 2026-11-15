@@ -2,11 +2,10 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CATALOG, CATEGORIES, categoryFace, categoryPath, productsIn } from '../lib/catalog';
 import { easeOutExpo, inViewOnce } from '../lib/motion';
-import { STORE } from '../data/store';
 import Showroom from '../components/shop/Showroom';
+import PocketShop from '../components/shop/PocketShop';
 import Catalogue from '../components/shop/catalogue/Catalogue';
 import ProductImage from '../components/product/ProductImage';
-import { PhoneIcon, WhatsAppIcon } from '../components/ui/Icons';
 import PhoneCopy from '../components/ui/PhoneCopy';
 import Rail from '../components/ui/Rail';
 
@@ -93,6 +92,9 @@ const Shop = () => (
       <Catalogue products={CATALOG} />
     </section>
 
+    {/* The shop on a phone, in 3D */}
+    <PocketShop />
+
     {/* Services */}
     <section aria-label="Porquê comprar na Rhulany Tech" className="container-site mt-24 lg:mt-32">
       <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
@@ -112,40 +114,6 @@ const Shop = () => (
           </motion.li>
         ))}
       </ul>
-    </section>
-
-    {/* Help */}
-    <section aria-labelledby="ajuda-compra" className="container-site mt-6">
-      <div className="flex flex-col gap-8 rounded-[26px] bg-ink px-6 py-10 text-paper sm:px-10 lg:flex-row lg:items-center lg:justify-between lg:px-14 lg:py-12">
-        <div className="max-w-xl">
-          <h2 id="ajuda-compra" className="type-title text-paper">
-            Não sabe qual escolher?
-          </h2>
-          <p className="mt-3 text-[15px] leading-relaxed text-paper/60">
-            <PhoneCopy phone="Diga-nos o que procura e sugerimos as melhores opções">
-              Diga-nos para que precisa e quanto quer gastar. Respondemos com duas ou três opções que fazem sentido para si.
-            </PhoneCopy>
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-3">
-          <a
-            href={STORE.whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-12 items-center gap-2.5 rounded-full bg-paper px-6 text-sm font-medium text-ink transition-transform duration-300 hover:scale-[1.03]"
-          >
-            <WhatsAppIcon className="h-[18px] w-[18px]" />
-            Falar no WhatsApp
-          </a>
-          <a
-            href={STORE.phoneHref}
-            className="inline-flex h-12 items-center gap-2.5 rounded-full px-6 text-sm font-medium text-paper ring-1 ring-inset ring-white/20 transition-colors hover:bg-white/10"
-          >
-            <PhoneIcon className="h-[18px] w-[18px]" />
-            {STORE.phone}
-          </a>
-        </div>
-      </div>
     </section>
   </div>
 );
