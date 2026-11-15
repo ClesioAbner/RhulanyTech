@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ARTICLES_BY_DATE, BLOG_TOPICS, FAQ, topicLabel, type BlogTopic } from '../data/blog';
+import { ARTICLES_BY_DATE, BLOG_PICKS, BLOG_TOPICS, FAQ, topicLabel, type BlogTopic } from '../data/blog';
 import { STORE } from '../data/store';
 import { unsplash } from '../lib/images';
 import { easeOutExpo, inViewOnce, riseOnView } from '../lib/motion';
@@ -45,12 +45,17 @@ const Blog = () => {
   }, []);
 
   const search = normalise(query.trim());
+  // Unfiltered, the library goes on from the essential guides above instead of repeating them; a
+  // topic or a search shows every guide that fits.
+  const browsing = topic === 'todos' && !search;
   const articles = useMemo(
     () =>
-      ARTICLES_BY_DATE.filter((article) => topic === 'todos' || article.topic === topic).filter(
-        (article) => !search || normalise(`${article.title} ${article.excerpt} ${topicLabel(article.topic)}`).includes(search),
-      ),
-    [topic, search],
+      ARTICLES_BY_DATE.filter((article) => topic === 'todos' || article.topic === topic)
+        .filter(
+          (article) => !search || normalise(`${article.title} ${article.excerpt} ${topicLabel(article.topic)}`).includes(search),
+        )
+        .filter((article) => !browsing || !BLOG_PICKS.includes(article)),
+    [topic, search, browsing],
   );
   const faqs = useMemo(() => FAQ.filter((item) => !search || normalise(`${item.q} ${item.a}`).includes(search)), [search]);
   // Every guide that matches the search, whatever topic is selected below.
@@ -146,7 +151,7 @@ const Blog = () => {
           <div>
             <p className="eyebrow text-ink/45">Biblioteca</p>
             <h2 id="guias" className="type-title mt-3">
-              Todos os guias
+              {browsing ? 'Mais guias' : 'Todos os guias'}
             </h2>
           </div>
           <p className="shrink-0 pb-1 text-sm tabular-nums text-ink/45" aria-live="polite">

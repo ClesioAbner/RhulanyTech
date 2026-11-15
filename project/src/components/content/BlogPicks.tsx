@@ -1,18 +1,16 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ARTICLES_BY_DATE, readingMinutes, topicLabel } from '../../data/blog';
+import { BLOG_PICKS, readingMinutes, topicLabel } from '../../data/blog';
 import { unsplash } from '../../lib/images';
 import { easeOutExpo, riseOnView } from '../../lib/motion';
 import ArticleCard from './ArticleCard';
-
-const PICKS = ARTICLES_BY_DATE.slice(0, 4);
 
 /**
  * Editorial opening: one large story and, beside it, three smaller ones from the top of its photo
  * down, split by hairlines, like a news front page.
  */
 const BlogPicks = () => {
-  const [lead, ...rest] = PICKS;
+  const [lead, ...rest] = BLOG_PICKS;
   return (
     <section className="container-site pt-16 sm:pt-20 lg:pt-28" aria-labelledby="para-comecar">
       <motion.div {...riseOnView} transition={{ duration: 0.8, ease: easeOutExpo }}>
