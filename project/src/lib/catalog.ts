@@ -220,12 +220,14 @@ export const categoryPath = (categorySlug: string, subcategorySlug?: string) =>
 // ---------- Merchandising lists ----------
 
 /** Latest launches, newest first; drives the "Novo" label and the shop's new-arrivals shelf. */
-const NEW_ARRIVAL_IDS = ['91', '92', '93', '71', '54', '55', '56', '57'];
+const NEW_ARRIVAL_IDS = ['91', '92', '93', '71', '54', '55', '57'];
 export const isNewArrival = (product: Pick<CatalogProduct, 'id'>) => NEW_ARRIVAL_IDS.includes(product.id);
-// Position in the arrivals list (the newest first); everything else after them.
+// The top of the shop: the arrivals, newest first, with the iPhone 16 among them (shown, not marked new).
+const SHOP_FIRST_IDS = ['91', '92', '93', '71', '54', '55', '42', '57'];
+// Position at the top of the shop; everything else after.
 const arrivalRank = (product: Pick<CatalogProduct, 'id'>) => {
-  const index = NEW_ARRIVAL_IDS.indexOf(product.id);
-  return index < 0 ? NEW_ARRIVAL_IDS.length : index;
+  const index = SHOP_FIRST_IDS.indexOf(product.id);
+  return index < 0 ? SHOP_FIRST_IDS.length : index;
 };
 export const newArrivals = () => NEW_ARRIVAL_IDS.map((id) => getProductById(id)).filter((p): p is CatalogProduct => Boolean(p));
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -19,9 +19,13 @@ import { useMediaQuery } from '../../../lib/useMediaQuery';
 import { STORE } from '../../../data/store';
 import ProductCard from '../../product/ProductCard';
 import SortMenu from '../SortMenu';
+import ChipLoader from '../../ui/ChipLoader';
 import { SearchIcon } from '../../ui/Icons';
 import { Group, NavItem, Option } from './FilterControls';
 import { PAGE, PRICES, VISIBLE_BRANDS, countLabel, fold, isSort } from './filters';
+
+// How long the chip works before a search or the next page of products shows.
+const LOADER_MS = 1500;
 
 interface CatalogueProps {
   /** Products in scope: the whole shop, a category or one of its ranges. */
@@ -42,6 +46,18 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
   const [allBrands, setAllBrands] = useState(false);
   const { pathname } = useLocation();
   const isDesktop = useMediaQuery('(min-width: 1024px)');
+  // The chip loader, while a search runs or more products are on their way.
+  const [busy, setBusy] = useState<'search' | 'more' | null>(null);
+  const busyTimer = useRef<number>();
+  const work = (kind: 'search' | 'more', then?: () => void) => {
+    window.clearTimeout(busyTimer.current);
+    setBusy(kind);
+    busyTimer.current = window.setTimeout(() => {
+      then?.();
+      setBusy(null);
+    }, LOADER_MS);
+  };
+  useEffect(() => () => window.clearTimeout(busyTimer.current), []);
   useEffect(() => setSheetOpen(false), [pathname]);
 
   const sort: SortId = isSort(params.get('ordem')) ? (params.get('ordem') as SortId) : 'destaque';
@@ -60,7 +76,10 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
   // Search applies as the visitor types, after a short pause.
   useEffect(() => {
     if (draft === query) return;
-    const timer = window.setTimeout(() => update({ q: draft.trim() || null }), 250);
+    const timer = window.setTimeout(() => {
+      update({ q: draft.trim() || null });
+      work('search');
+    }, 250);
     return () => window.clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draft]);
@@ -316,7 +335,11 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
         </AnimatePresence>
 
         {/* Results */}
-        {results.length > 0 ? (
+        {busy === 'search' ? (
+          <div className="mt-6 grid min-h-[45vh] place-items-center">
+            <ChipLoader label="A procurar" />
+          </div>
+        ) : results.length > 0 ? (
           <>
             <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:mt-4 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
               <AnimatePresence mode="popLayout" initial={false}>
@@ -339,13 +362,17 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
                 <p className="text-xs tabular-nums text-ink/45">
                   A ver {shown} de {results.length}
                 </p>
-                <button
-                  type="button"
-                  onClick={() => setShown((n) => n + PAGE)}
-                  className="inline-flex h-12 items-center rounded-full bg-ink px-8 text-sm font-medium text-paper transition-colors hover:bg-ink-soft"
-                >
-                  Mostrar mais produtos
-                </button>
+                {busy === 'more' ? (
+                  <ChipLoader label="A carregar mais produtos" className="py-1" />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => work('more', () => setShown((n) => n + PAGE))}
+                    className="inline-flex h-12 items-center rounded-full bg-ink px-8 text-sm font-medium text-paper transition-colors hover:bg-ink-soft"
+                  >
+                    Mostrar mais produtos
+                  </button>
+                )}
               </div>
             )}
           </>

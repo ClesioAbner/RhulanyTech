@@ -26,7 +26,6 @@ export const CUTOUTS: Record<string, { product?: string; [finish: number]: strin
   '36': { product: '/images/produtos/hub-usb-3-0-de-7-portas' },
   '54': { 0: '/images/produtos/macbook-air-13-m4-azul-ceu' },
   '55': { 0: '/images/produtos/macbook-pro-14-m4-prateado' },
-  '56': { 0: '/images/produtos/imac-24-m4-amarelo' },
   '57': { product: '/images/produtos/mac-mini-m4' },
   '58': { 0: '/images/produtos/dell-xps-13-platinum' },
   '59': { product: '/images/produtos/lenovo-thinkpad-x1-carbon-gen-12' },
