@@ -29,3 +29,29 @@ export const removeWithUndo = (id: string) => {
     { id: `remover-${id}`, duration: 5000 },
   );
 };
+
+/** Empties the cart straight away and offers "Anular" for a few seconds, which puts everything back. */
+export const clearWithUndo = () => {
+  const { items, total, clearCart } = useCartStore.getState();
+  if (!items.length) return;
+  clearCart();
+
+  toast(
+    (t) => (
+      <span className="flex items-center gap-4">
+        <span>Carrinho limpo</span>
+        <button
+          type="button"
+          onClick={() => {
+            useCartStore.setState({ items, total });
+            toast.dismiss(t.id);
+          }}
+          className="font-medium underline underline-offset-4"
+        >
+          Anular
+        </button>
+      </span>
+    ),
+    { id: 'limpar-carrinho', duration: 5000 },
+  );
+};

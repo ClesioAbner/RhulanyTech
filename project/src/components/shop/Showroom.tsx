@@ -9,10 +9,11 @@ import {
   useReducedMotion,
   type Variants,
 } from 'framer-motion';
-import { getProductById, priceFrom, productPath, resolveImage, type CatalogProduct } from '../../lib/catalog';
+import { getProductById, isNewArrival, priceFrom, productPath, resolveImage, type CatalogProduct } from '../../lib/catalog';
 import { formatPrice } from '../../lib/format';
 import { easeOutExpo } from '../../lib/motion';
 import { useImageReady } from '../../lib/useImageReady';
+import ArrowChip from '../ui/ArrowChip';
 import BrandLoader from '../ui/BrandLoader';
 import FoldPhone3D from './FoldPhone3D';
 import Phone3D, { type PhoneShape } from './Phone3D';
@@ -333,8 +334,9 @@ const Showroom = () => {
         <div className="relative lg:order-1 lg:col-span-5">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div key={product.id} variants={textVariants} initial="hidden" animate="show" exit="exit">
-              <motion.p variants={line} className="eyebrow text-ink/50">
-                {product.brand}
+              {/* The name already carries the brand: above it, whether it is new */}
+              <motion.p variants={line} className={`eyebrow ${isNewArrival(product) ? 'text-accent-deep' : 'text-ink/50'}`}>
+                {isNewArrival(product) ? 'Novo' : 'Em destaque'}
               </motion.p>
               <h2 className="type-display mt-4" aria-label={product.title}>
                 {words.map((text, index) => (
@@ -403,13 +405,14 @@ const Showroom = () => {
               <motion.div variants={line} className="mt-9 flex flex-wrap gap-3">
                 <Link
                   to={productPath(product, finish)}
-                  className="inline-flex h-12 items-center rounded-full bg-ink px-8 text-sm font-medium text-paper transition-transform duration-300 hover:scale-[1.03]"
+                  className="group inline-flex h-14 items-center gap-3 rounded-full bg-ink pl-7 pr-3 text-sm font-medium text-paper shadow-[0_18px_40px_-18px_rgba(12,12,13,0.55)] transition-transform duration-300 hover:-translate-y-0.5"
                 >
                   Comprar
+                  <ArrowChip />
                 </Link>
                 <Link
                   to="/loja/celulares"
-                  className="inline-flex h-12 items-center rounded-full bg-white/70 px-6 text-sm font-medium ring-1 ring-inset ring-ink/10 backdrop-blur transition-colors duration-300 hover:bg-white"
+                  className="inline-flex h-14 items-center rounded-full bg-white/80 px-7 text-sm font-medium ring-1 ring-inset ring-ink/10 backdrop-blur transition-colors duration-300 hover:bg-white"
                 >
                   Ver todos os celulares
                 </Link>

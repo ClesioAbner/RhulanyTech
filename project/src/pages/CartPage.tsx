@@ -6,6 +6,7 @@ import { itemCountLabel, toCartLine, whatsappOrderUrl } from '../lib/cart';
 import { easeOutExpo } from '../lib/motion';
 import { useCartStore } from '../stores/cartStore';
 import CartLineItem from '../components/cart/CartLineItem';
+import { clearWithUndo } from '../components/cart/removeWithUndo';
 import RollingPrice from '../components/cart/RollingPrice';
 import ProductCard from '../components/product/ProductCard';
 import Shelf from '../components/shop/Shelf';
@@ -79,22 +80,29 @@ const CartPage = () => {
       </header>
 
       <div className="container-site mt-10 grid gap-10 lg:mt-12 lg:grid-cols-12 lg:gap-10">
-        <ul className="space-y-3 lg:col-span-7">
-          <AnimatePresence initial={false}>
-            {lines.map((line) => (
-              <motion.li
-                key={line.id}
-                layout
-                exit={{ opacity: 0, height: 0, transition: { duration: 0.35, ease: easeOutExpo } }}
-                className="overflow-hidden rounded-[28px] bg-white"
-              >
-                <div className="p-5 sm:p-7">
-                  <CartLineItem line={line} size="full" />
-                </div>
-              </motion.li>
-            ))}
-          </AnimatePresence>
-        </ul>
+        <div className="lg:col-span-7">
+          <ul className="space-y-3">
+            <AnimatePresence initial={false}>
+              {lines.map((line) => (
+                <motion.li
+                  key={line.id}
+                  layout
+                  exit={{ opacity: 0, height: 0, transition: { duration: 0.35, ease: easeOutExpo } }}
+                  className="overflow-hidden rounded-[28px] bg-white"
+                >
+                  <div className="p-5 sm:p-7">
+                    <CartLineItem line={line} size="full" />
+                  </div>
+                </motion.li>
+              ))}
+            </AnimatePresence>
+          </ul>
+          <div className="mt-4 flex justify-end px-2">
+            <button type="button" onClick={clearWithUndo} className="link-underline text-sm text-ink/60 hover:text-ink">
+              Limpar carrinho
+            </button>
+          </div>
+        </div>
 
         <aside className="lg:col-span-5" aria-label="Resumo da encomenda">
           <div className="rounded-[28px] bg-white p-6 sm:p-8 lg:sticky lg:top-28">
