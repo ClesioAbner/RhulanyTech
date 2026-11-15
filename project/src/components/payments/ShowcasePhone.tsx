@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { animate, motion, useReducedMotion, useTransform, type MotionValue } from 'framer-motion';
 import PhoneBody from '../product/PhoneBody';
+import { IPHONE_PRO } from '../product/phoneControls';
 import { resolveImage } from '../../lib/catalog';
 import { easeOutExpo } from '../../lib/motion';
 import { CARD_METHOD_INDEX } from './methods';
@@ -158,6 +159,7 @@ const ShowcasePhone = ({ rotateX, rotateY, rotateZ, scale, screen, lockStage }: 
             back={BACK}
             backAlt="iPhone 17 Pro em azul profundo"
             sheen={sheen}
+            controls={IPHONE_PRO}
             screen={<div ref={screenRef} className="absolute inset-0 bg-black" />}
           />
 

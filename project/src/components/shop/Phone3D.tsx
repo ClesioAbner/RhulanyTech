@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { animate, motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from 'framer-motion';
 import PhoneBody from '../product/PhoneBody';
+import type { PhoneControls } from '../product/phoneControls';
 
 /** Physical shape of a phone, relative to its width. */
 export interface PhoneShape {
@@ -14,6 +15,8 @@ export interface PhoneShape {
   camera: 'island' | 'punch';
   /** A folding phone, shown folded; it opens like a book to show its inner screen (see FoldPhone3D). */
   fold?: boolean;
+  /** Its physical buttons, where the real model has them. */
+  controls?: PhoneControls;
 }
 
 export interface Phone3DProps {
@@ -288,6 +291,7 @@ const Phone3D = ({ image, alt, hex, shape, height, pointerX, pointerY, onGrab, w
         back={back}
         backAlt={alt}
         sheen={sheen}
+        controls={shape.controls}
         screen={<LockScreen frame={frame} width={width} height={height} camera={shape.camera} wallpaper={screenImage} />}
       />
     </motion.div>

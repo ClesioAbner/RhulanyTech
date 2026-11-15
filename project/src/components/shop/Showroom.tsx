@@ -17,6 +17,7 @@ import ArrowChip from '../ui/ArrowChip';
 import BrandLoader from '../ui/BrandLoader';
 import FoldPhone3D from './FoldPhone3D';
 import Phone3D, { type PhoneShape } from './Phone3D';
+import { GALAXY_ULTRA, IPHONE_AIR, IPHONE_PRO, PIXEL_PRO } from '../product/phoneControls';
 
 // Phones on show, with their real proportions (body, corners, thickness, front camera).
 // Official wallpapers, cropped from the makers' own photos, in the order of each product's colours.
@@ -31,12 +32,12 @@ interface Featured {
 const FEATURED: Featured[] = [
   {
     id: '91',
-    shape: { aspect: 0.479, radius: 0.17, depth: 0.115, camera: 'island' },
+    shape: { aspect: 0.479, radius: 0.17, depth: 0.115, camera: 'island', controls: IPHONE_PRO },
     wallpapers: ['18pro-glaciar', '18pro-bordeaux', '18pro-prateado', '18pro-preto'].map((name) => `${W}${name}.webp`),
   },
   {
     id: '93',
-    shape: { aspect: 0.48, radius: 0.12, depth: 0.1, camera: 'punch' },
+    shape: { aspect: 0.48, radius: 0.12, depth: 0.1, camera: 'punch', controls: GALAXY_ULTRA },
     wallpapers: ['s26-cobalt-violet', 's26-sky-blue', 's26-black', 's26-white'].map((name) => `${W}${name}.webp`),
   },
   // The Duo on show folded: wider, and as thick as two thin phones.
@@ -45,8 +46,8 @@ const FEATURED: Featured[] = [
     shape: { aspect: 0.705, radius: 0.13, depth: 0.134, camera: 'punch', fold: true },
     wallpapers: [`${W}duo-dunas.webp`, `${W}duo-dunas.webp`],
   },
-  { id: '51', shape: { aspect: 0.479, radius: 0.165, depth: 0.118, camera: 'punch' } },
-  { id: '40', shape: { aspect: 0.488, radius: 0.17, depth: 0.075, camera: 'island' } },
+  { id: '51', shape: { aspect: 0.479, radius: 0.165, depth: 0.118, camera: 'punch', controls: PIXEL_PRO } },
+  { id: '40', shape: { aspect: 0.488, radius: 0.17, depth: 0.075, camera: 'island', controls: IPHONE_AIR } },
 ];
 const SLIDE_SECONDS = 6;
 // A folding phone needs longer: it turns, opens, and stays open for a moment.
