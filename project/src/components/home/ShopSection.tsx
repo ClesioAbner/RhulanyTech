@@ -37,9 +37,10 @@ const ShopSection = ({ sectionRef, phoneSlotRef }: ShopSectionProps) => {
           }
         />
 
-        {/* Phones and tablets: a row to swipe, rising in as one; desktop: a grid whose rows rise in turn */}
+        {/* Phones and tablets: a carousel that turns by itself or by swipe; desktop: a grid whose rows rise in turn */}
         <Rail
           label="Os favoritos"
+          autoplay={4000}
           className="mt-12 lg:mt-16"
           gridClassName="lg:grid lg:grid-cols-3 lg:gap-x-6 lg:gap-y-16"
           variants={stagger(0.07)}
@@ -58,7 +59,7 @@ const ShopSection = ({ sectionRef, phoneSlotRef }: ShopSectionProps) => {
                     transition: { duration: 0.9, ease: easeOutExpo, delay: (index % 3) * 0.07 },
                   }
                 : { variants: riseIn3d })}
-              className="w-[78%] shrink-0 snap-start [transform-origin:50%_100%] sm:w-[44%] lg:w-auto"
+              className="w-[84%] shrink-0 snap-start [transform-origin:50%_100%] sm:w-[44%] lg:w-auto"
             >
               <FeaturedProductCard
                 product={product}
