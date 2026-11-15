@@ -36,8 +36,6 @@ const Hero = () => {
 
   return (
     <section ref={sectionRef} className="relative h-[100svh] min-h-[600px] bg-paper [perspective:1400px]">
-      <h1 className="sr-only">Rhulany Tech, tecnologia original em Maputo</h1>
-
       <motion.div
         className="absolute inset-0 overflow-hidden [perspective:1400px] [transform-origin:50%_0%]"
         style={{ scale: stageScale, rotateX: stageRotateX, borderRadius: stageRadius }}
@@ -74,11 +72,16 @@ const Hero = () => {
             animate={waiting ? undefined : { opacity: 1, y: 0 }}
             transition={{ duration: 1.1, ease: easeOutExpo, delay: 1 }}
           >
-            <p className="max-w-sm text-[15px] leading-relaxed text-paper/80 sm:text-lg sm:text-paper/75">
-              <PhoneCopy phone="Tecnologia original, com garantia">
-                Smartphones, computadores, consoles e periféricos originais, com garantia e entrega em todo Moçambique
-              </PhoneCopy>
-            </p>
+            <div className="max-w-md">
+              <h1 className="font-display text-[28px] font-medium leading-[1.1] tracking-tight text-paper sm:text-[40px]">
+                Tecnologia original em Moçambique
+              </h1>
+              <p className="mt-3 max-w-sm text-[15px] leading-relaxed text-paper/70 sm:mt-4 sm:text-base">
+                <PhoneCopy phone="Com garantia e entrega em todo o país">
+                  Smartphones, computadores, consolas e acessórios originais, com garantia e entrega em todo o país.
+                </PhoneCopy>
+              </p>
+            </div>
 
             <div className="flex items-center gap-3">
               <Link
