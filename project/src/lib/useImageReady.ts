@@ -7,23 +7,26 @@ export const isImageReady = (src: string) => {
   return probe.complete && probe.naturalWidth > 0;
 };
 
-/** Whether an image has arrived; a failed image counts as done, so nothing waits on it forever. */
+/**
+ * Whether an image has arrived; a failed image counts as done, so nothing waits on it forever.
+ * The answer always belongs to the current `src`: when it changes, the last image's "ready" is not
+ * carried over for a render (which would show the new content, then hide it while it loads).
+ */
 export const useImageReady = (src: string) => {
-  const [ready, setReady] = useState(() => isImageReady(src));
+  const [arrived, setArrived] = useState<string | null>(() => (isImageReady(src) ? src : null));
 
   useEffect(() => {
     if (isImageReady(src)) {
-      setReady(true);
+      setArrived(src);
       return;
     }
-    setReady(false);
     const image = new Image();
-    image.onload = image.onerror = () => setReady(true);
+    image.onload = image.onerror = () => setArrived(src);
     image.src = src;
     return () => {
       image.onload = image.onerror = null;
     };
   }, [src]);
 
-  return ready;
+  return arrived === src || isImageReady(src);
 };

@@ -11,7 +11,7 @@ import {
 } from 'framer-motion';
 import { getProductById, priceFrom, productPath, resolveImage, type CatalogProduct } from '../../lib/catalog';
 import { formatPrice } from '../../lib/format';
-import { easeOutExpo, isPhone } from '../../lib/motion';
+import { easeOutExpo } from '../../lib/motion';
 import { useImageReady } from '../../lib/useImageReady';
 import BrandLoader from '../ui/BrandLoader';
 import FoldPhone3D from './FoldPhone3D';
@@ -75,6 +75,38 @@ const fieldFor = (hex: string) => {
   return `radial-gradient(52% 62% at 70% 48%, rgba(${r},${g},${b},0.5) 0%, rgba(${r},${g},${b},0) 72%), radial-gradient(38% 46% at 8% 92%, rgba(${r},${g},${b},0.2) 0%, rgba(${r},${g},${b},0) 70%), linear-gradient(180deg, #f7f7f9 0%, #eceef2 100%)`;
 };
 
+// The swap, like a turntable seen from the front: the phone on show swings away to one side and
+// back, turned, while the next one is already swinging in from the other side to face the visitor.
+// Both move at once, so the stage is never empty. `custom` is the direction and the stage width.
+type Swap = { dir: number; width: number };
+const SWING = 0.42; // share of the stage width each phone travels sideways
+const phoneSwap: Variants = {
+  enter: ({ dir, width }: Swap) => ({ opacity: 0, x: dir * width * SWING, z: -320, rotateY: dir * 42, scale: 0.86 }),
+  center: {
+    opacity: 1,
+    x: 0,
+    z: 0,
+    rotateY: 0,
+    scale: 1,
+    transition: {
+      // A beat after the last one starts to leave, so they pass side by side, never stacked.
+      default: { duration: 1.2, ease: [0.33, 0, 0.15, 1], delay: 0.22 },
+      opacity: { duration: 0.6, ease: 'easeOut', delay: 0.22 },
+    },
+  },
+  exit: ({ dir, width }: Swap) => ({
+    opacity: 0,
+    x: -dir * width * SWING,
+    z: -320,
+    rotateY: -dir * 42,
+    scale: 0.86,
+    transition: {
+      default: { duration: 0.9, ease: [0.55, 0, 0.45, 1] },
+      opacity: { duration: 0.5, ease: 'easeIn', delay: 0.3 },
+    },
+  }),
+};
+
 const textVariants: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.06, delayChildren: 0.2 } },
@@ -96,10 +128,13 @@ const word: Variants = {
  * Choreography: the stage changes colour, the phone sweeps in screen first and turns to show its
  * back, the name rises word by word, then the details and colours follow. Halfway through, the
  * phone turns all the way round into its next colour; colours picked by hand do the same and keep
- * it on show. The tabs move between phones and show the time left on the current one.
+ * it on show. The tabs move between phones and show the time left on the current one. Moving on,
+ * the phones swap like a turntable, in the direction of travel (see `phoneSwap`).
  */
 const Showroom = () => {
   const [slide, setSlide] = useState(0);
+  // Which way the phones travel: forwards from the right, backwards from the left.
+  const [dir, setDir] = useState(1);
   const [finishIndex, setFinishIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   // A colour picked by hand keeps the phone on show; the automatic turn does not.
@@ -137,6 +172,7 @@ const Showroom = () => {
   }, [shape.aspect]);
 
   const goTo = (index: number) => {
+    setDir(index < slide ? -1 : 1);
     setSlide((index + SLIDES.length) % SLIDES.length);
     setFinishIndex(0);
     setHandPicked(false);
@@ -227,13 +263,7 @@ const Showroom = () => {
             pointerY.set(0);
           }}
         >
-          <motion.div
-            aria-hidden="true"
-            className="absolute bottom-[3%] left-1/2 h-8 w-[40%] -translate-x-1/2 rounded-[50%] bg-ink/30 blur-2xl lg:w-[30%]"
-            animate={prefersReducedMotion ? undefined : { scaleX: [1, 0.82, 1], opacity: [0.9, 0.6, 0.9] }}
-            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <AnimatePresence initial={false} mode="popLayout">
+          <AnimatePresence initial={false} custom={{ dir, width: stageWidth }}>
             {!phoneReady ? (
               <motion.div
                 key="a-carregar"
@@ -247,25 +277,20 @@ const Showroom = () => {
               <motion.div
                 key={product.id}
                 className="absolute inset-0 flex items-center justify-center [transform-style:preserve-3d]"
-                // Like a turntable: the next phone comes in from the side and from further back, turned
-                // edge on, and swings round to face the visitor while the last one turns away into the
-                // distance. No filters here: they would flatten the phone's 3D body.
-                initial={{ opacity: 0, x: isPhone ? 150 : 340, z: -260, rotateY: 62, scale: 0.9 }}
-                animate={{ opacity: 1, x: 0, z: 0, rotateY: 0, scale: 1 }}
-                exit={{
-                  opacity: 0,
-                  x: isPhone ? -150 : -340,
-                  z: -260,
-                  rotateY: -62,
-                  scale: 0.9,
-                  transition: { duration: 0.8, ease: [0.45, 0, 0.7, 0.3] },
-                }}
-                transition={{
-                  // A beat after the last phone starts to leave, so the two never cross in the middle.
-                  default: { duration: 1.35, ease: easeOutExpo, delay: 0.18 },
-                  opacity: { duration: 0.55, ease: 'easeOut', delay: 0.18 },
-                }}
+                // No filters here: they would flatten the phone's 3D body.
+                custom={{ dir, width: stageWidth }}
+                variants={phoneSwap}
+                initial="enter"
+                animate="center"
+                exit="exit"
               >
+                {/* Its shadow on the floor, travelling with it */}
+                <motion.span
+                  aria-hidden="true"
+                  className="absolute bottom-[3%] left-1/2 h-8 w-[40%] -translate-x-1/2 rounded-[50%] bg-ink/30 blur-2xl lg:w-[30%]"
+                  animate={prefersReducedMotion ? undefined : { scaleX: [1, 0.82, 1], opacity: [0.9, 0.6, 0.9] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                />
                 <motion.div
                   className="[transform-style:preserve-3d]"
                   animate={prefersReducedMotion ? undefined : { y: [0, -14, 0] }}

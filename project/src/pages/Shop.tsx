@@ -95,9 +95,9 @@ const Shop = () => (
     {/* The shop on a phone, in 3D */}
     <PocketShop />
 
-    {/* Services */}
+    {/* Services: one panel in four parts, split by hairlines (two by two on phones) */}
     <section aria-label="Porquê comprar na Rhulany Tech" className="container-site mt-24 lg:mt-32">
-      <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+      <ul className="grid grid-cols-2 overflow-hidden rounded-[28px] bg-white ring-1 ring-ink/[0.06] lg:grid-cols-4">
         {SERVICES.map((service, index) => (
           <motion.li
             key={service.title}
@@ -106,11 +106,16 @@ const Shop = () => (
             initial="hidden"
             whileInView="visible"
             viewport={inViewOnce}
-            className="rounded-[22px] bg-white p-5 ring-1 ring-ink/[0.06] sm:p-6 lg:p-7"
+            className={`flex flex-col border-ink/[0.07] p-6 sm:p-8 lg:p-10 ${index % 2 === 1 ? 'border-l' : ''} ${
+              index >= 2 ? 'border-t lg:border-t-0' : ''
+            } ${index === 2 ? 'lg:border-l' : ''}`}
           >
-            <h3 className="text-[15px] font-medium leading-snug sm:text-base">{service.title}</h3>
+            <span className="text-xs tabular-nums text-ink/35">{String(index + 1).padStart(2, '0')}</span>
+            <h3 className="mt-8 font-display text-[17px] font-medium leading-snug tracking-tight sm:text-xl lg:mt-14">
+              {service.title}
+            </h3>
             {/* Phones: the four titles say enough */}
-            <p className="mt-1.5 text-sm leading-relaxed text-ink/60 max-sm:hidden">{service.body}</p>
+            <p className="mt-2 text-sm leading-relaxed text-ink/55 max-sm:hidden">{service.body}</p>
           </motion.li>
         ))}
       </ul>
