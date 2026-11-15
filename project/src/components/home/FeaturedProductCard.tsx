@@ -13,7 +13,7 @@ const spring = { stiffness: 200, damping: 24, mass: 0.6 };
 
 interface ProductCardProps {
   product: CatalogProduct;
-  /** Desktop only: leaves the image area empty so a 3D model rendered elsewhere can sit in it. */
+  /** Leaves the image area empty so a 3D model rendered elsewhere can sit in it. */
   mediaSlotRef?: RefObject<HTMLDivElement>;
   /** Larger type for editorial grids with fewer columns. */
   size?: 'regular' | 'large';
@@ -65,7 +65,7 @@ const FeaturedProductCard = ({ product, mediaSlotRef, size = 'regular' }: Produc
           <span
             className={`absolute inset-0 transition-[transform,opacity] duration-700 ease-out-expo group-hover:scale-[1.03] ${
               secondImage && !mediaSlotRef ? 'lg:group-hover:opacity-0' : ''
-            } ${mediaSlotRef ? 'lg:hidden' : ''}`}
+            } ${mediaSlotRef ? 'hidden' : ''}`}
           >
             <ProductImage src={product.primaryImage} loading="lazy" />
           </span>
@@ -77,7 +77,7 @@ const FeaturedProductCard = ({ product, mediaSlotRef, size = 'regular' }: Produc
           {mediaSlotRef && (
             <div
               ref={mediaSlotRef}
-              className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(ellipse_at_50%_85%,rgba(12,12,13,0.12),transparent_55%)] lg:block"
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_85%,rgba(12,12,13,0.12),transparent_55%)]"
             />
           )}
         </Link>

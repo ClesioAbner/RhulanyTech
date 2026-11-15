@@ -2,7 +2,6 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
 import ShowcasePhone from '../payments/ShowcasePhone';
 import type { ScreenKey } from '../payments/screens';
-import { useMediaQuery } from '../../lib/useMediaQuery';
 import {
   INTRO_END,
   activeMethodAt,
@@ -11,12 +10,6 @@ import {
   fallRotateY,
   fallRotateZ,
   fallTravel,
-  mobileEntryRotateX,
-  mobileEntryRotateY,
-  mobileEntryRotateZ,
-  mobileEntryScale,
-  mobileRotateX,
-  mobileRotateY,
   paymentRotateX,
   paymentRotateY,
 } from '../payments/phoneTimeline';
@@ -42,7 +35,7 @@ const offsetWithin = (el: HTMLElement, ancestor: HTMLElement) => {
 };
 
 /**
- * The shop and payments sections share one 3D phone (desktop only).
+ * The shop and payments sections share one 3D phone, on every screen size.
  *
  * 1. On display: it sits inside the iPhone product card and scrolls with the page like any product.
  * 2. Release: when the card reaches the middle of the viewport it is lifted out, makes one smooth
@@ -52,6 +45,9 @@ const offsetWithin = (el: HTMLElement, ancestor: HTMLElement) => {
  *
  * A sticky layer spanning both sections hosts the phone; positions are in that layer's coordinates,
  * which match the viewport whenever the layer is pinned.
+ *
+ * On phones the iPhone card sits in a carousel: the phone follows the card while it slides, and
+ * the carousel comes back to the iPhone as the phone is released, so it is seen leaving its card.
  */
 const ShopToPayments = () => {
   const shopRef = useRef<HTMLElement>(null);
@@ -61,7 +57,6 @@ const ShopToPayments = () => {
   const phoneTargetRef = useRef<HTMLDivElement>(null);
   const phoneRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
-  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const [activeIndex, setActiveIndex] = useState(-1);
   const [showcaseStage, setShowcaseStage] = useState<number | null>(0);
 
@@ -134,7 +129,7 @@ const ShopToPayments = () => {
   const still = (value: number) => (prefersReducedMotion ? 0 : value);
   const inPayments = (p: number) => p > 0.0001;
 
-  // Desktop phone: the fall's full turn ends at -360° (facing forward), so payments can pick up from 0°.
+  // The fall's full turn ends at -360° (facing forward), so payments can pick up from 0°.
   const rotateY = useTransform([fallSmooth, payments], ([f, p]: number[]) =>
     still(inPayments(p) ? paymentRotateY(p) : fallRotateY(f)),
   );
@@ -142,18 +137,6 @@ const ShopToPayments = () => {
     still(inPayments(p) ? paymentRotateX(p) : fallRotateX(f)),
   );
   const rotateZ = useTransform([fallSmooth, payments], ([f, p]: number[]) => still(inPayments(p) ? 0 : fallRotateZ(f)));
-
-  // Mobile phone: a full turn while the payments section scrolls in, then the sway while it is pinned.
-  const { scrollYProgress: entryRaw } = useScroll({ target: paymentsRef, offset: ['start end', 'start start'] });
-  const entry = useSpring(entryRaw, { stiffness: 140, damping: 30, mass: 0.5 });
-  const phoneRotateYMobile = useTransform([entry, payments], ([e, p]: number[]) =>
-    still(mobileEntryRotateY(e) + mobileRotateY(p)),
-  );
-  const phoneRotateXMobile = useTransform([entry, payments], ([e, p]: number[]) =>
-    still(mobileEntryRotateX(e) + mobileRotateX(p)),
-  );
-  const phoneRotateZMobile = useTransform(entry, (e) => still(mobileEntryRotateZ(e)));
-  const phoneScaleMobile = useTransform(entry, (e) => (prefersReducedMotion ? 1 : mobileEntryScale(e)));
 
   const screenKey: ScreenKey =
     activeIndex >= 0 ? (`method-${activeIndex}` as ScreenKey) : showcaseStage !== null ? 'lock' : 'checkout';
@@ -184,7 +167,10 @@ const ShopToPayments = () => {
       const slot = phoneSlotRef.current;
       if (slot && slot.offsetHeight) {
         const from = offsetWithin(slot, shop);
-        startX.set(from.x + slot.offsetWidth / 2);
+        // Phones: the card is in a carousel; the phone follows its slide until it is released.
+        const rail = slot.closest('ul');
+        const slid = rail && fall.get() <= 0 ? rail.scrollLeft : 0;
+        startX.set(from.x - slid + slot.offsetWidth / 2);
         startY.set(from.y + slot.offsetHeight / 2);
         startScale.set((slot.offsetHeight * PHONE_FILL) / phone.offsetHeight);
         hasSlot.set(1);
@@ -204,12 +190,32 @@ const ShopToPayments = () => {
     const mutations = new MutationObserver(measure);
     if (shopRef.current) mutations.observe(shopRef.current, { childList: true, subtree: true });
     window.addEventListener('resize', measure);
+    const rail = phoneSlotRef.current?.closest('ul');
+    rail?.addEventListener('scroll', measure, { passive: true });
     return () => {
       resizes.disconnect();
       mutations.disconnect();
       window.removeEventListener('resize', measure);
+      rail?.removeEventListener('scroll', measure);
     };
-  }, [shopTop, shopHeight, viewportHeight, startX, startY, startScale, hasSlot, endX, endY, layoutVersion]);
+  }, [shopTop, shopHeight, viewportHeight, startX, startY, startScale, hasSlot, endX, endY, layoutVersion, fall]);
+
+  // Phones: as the phone is released, the carousel slides back to the iPhone's card and the phone
+  // leaves from there; scrolling back up, it settles into the card wherever the carousel is.
+  const released = useRef(false);
+  useMotionValueEvent(fall, 'change', (f) => {
+    const now = f > 0;
+    if (now === released.current) return;
+    released.current = now;
+    const rail = phoneSlotRef.current?.closest('ul');
+    if (!rail || rail.scrollWidth <= rail.clientWidth) return;
+    if (now) {
+      startX.set(startX.get() + rail.scrollLeft);
+      rail.scrollTo({ left: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    } else {
+      startX.set(startX.get() - rail.scrollLeft);
+    }
+  });
 
   return (
     <div className="relative">
@@ -220,34 +226,27 @@ const ShopToPayments = () => {
         phoneTargetRef={phoneTargetRef}
         activeIndex={activeIndex}
         hintOpacity={hintOpacity}
-        headingOpacity={isDesktop ? headingOpacity : undefined}
+        headingOpacity={headingOpacity}
         listOpacity={listOpacity}
         listY={listY}
-        mobilePhone={
-          isDesktop
-            ? null
-            : { rotateX: phoneRotateXMobile, rotateY: phoneRotateYMobile, rotateZ: phoneRotateZMobile, scale: phoneScaleMobile }
-        }
       />
 
-      {/* Shared phone layer (desktop) */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-30 hidden lg:block">
-        <div className="sticky top-0 h-[100svh] w-full">
+      {/* Shared phone layer */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-30">
+        <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
           <motion.div className="absolute left-0 top-0 h-0 w-0" style={{ x, y, opacity }}>
             <div
               ref={phoneRef}
-              className="absolute left-0 top-0 h-[calc(var(--phone-w)*2.1)] w-[var(--phone-w)] -translate-x-1/2 -translate-y-1/2 [--phone-w:clamp(190px,26vh,250px)] [perspective:1600px]"
+              className="absolute left-0 top-0 h-[calc(var(--phone-w)*2.1)] w-[var(--phone-w)] -translate-x-1/2 -translate-y-1/2 [--phone-w:clamp(160px,25vh,250px)] [perspective:1600px] lg:[--phone-w:clamp(190px,26vh,250px)]"
             >
-              {isDesktop && (
-                <ShowcasePhone
-                  rotateX={rotateX}
-                  rotateY={rotateY}
-                  rotateZ={rotateZ}
-                  scale={scale}
-                  screen={screenKey}
-                  lockStage={showcaseStage ?? 3}
-                />
-              )}
+              <ShowcasePhone
+                rotateX={rotateX}
+                rotateY={rotateY}
+                rotateZ={rotateZ}
+                scale={scale}
+                screen={screenKey}
+                lockStage={showcaseStage ?? 3}
+              />
               <div className="absolute -bottom-12 left-1/2 h-6 w-[80%] -translate-x-1/2 rounded-[100%] bg-ink/20 blur-xl" />
             </div>
           </motion.div>

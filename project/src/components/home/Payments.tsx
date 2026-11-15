@@ -2,8 +2,6 @@ import type { RefObject } from 'react';
 import { AnimatePresence, motion, type MotionValue } from 'framer-motion';
 import { easeOutExpo } from '../../lib/motion';
 import { PAYMENT_METHODS } from '../payments/methods';
-import ShowcasePhone from '../payments/ShowcasePhone';
-import type { ScreenKey } from '../payments/screens';
 import SectionHeading from '../ui/SectionHeading';
 
 const ROW_HEIGHT = 64; // px — height of one entry in the method wheel
@@ -14,17 +12,10 @@ interface PaymentsProps {
   phoneTargetRef: RefObject<HTMLDivElement>;
   activeIndex: number;
   hintOpacity: MotionValue<number>;
-  /** Desktop: the heading waits for the falling phone to land, so they never cross. */
+  /** The heading waits for the falling phone to land, so they never cross. */
   headingOpacity?: MotionValue<number>;
   listOpacity: MotionValue<number>;
   listY: MotionValue<number>;
-  /** Only passed on small screens; on desktop the shared falling phone is used instead. */
-  mobilePhone: {
-    rotateX: MotionValue<number>;
-    rotateY: MotionValue<number>;
-    rotateZ: MotionValue<number>;
-    scale: MotionValue<number>;
-  } | null;
 }
 
 const Payments = ({
@@ -36,7 +27,6 @@ const Payments = ({
   headingOpacity,
   listOpacity,
   listY,
-  mobilePhone,
 }: PaymentsProps) => {
   const current = Math.max(activeIndex, 0);
   const method = PAYMENT_METHODS[current];
@@ -65,24 +55,12 @@ const Payments = ({
           aria-hidden="true"
           className="container-site grid min-h-0 flex-1 grid-rows-[1fr_auto] items-center gap-6 pb-8 lg:grid-cols-12 lg:grid-rows-1 lg:pb-0"
         >
-          {/* Stage. Desktop: an empty target where the falling phone lands. Mobile: its own phone. */}
+          {/* Stage: an empty target where the falling phone lands */}
           <div className="relative flex h-full items-center justify-center [perspective:1600px] lg:col-span-5">
             <div
               ref={phoneTargetRef}
-              className="hidden h-[calc(var(--phone-w)*2.1)] w-[var(--phone-w)] [--phone-w:clamp(190px,26vh,250px)] lg:block"
+              className="h-[calc(var(--phone-w)*2.1)] w-[var(--phone-w)] [--phone-w:clamp(160px,25vh,250px)] lg:[--phone-w:clamp(190px,26vh,250px)]"
             />
-            {mobilePhone && (
-              <div className="relative h-[calc(var(--phone-w)*2.1)] w-[var(--phone-w)] [--phone-w:clamp(160px,25vh,250px)] lg:hidden">
-                <ShowcasePhone
-                  rotateX={mobilePhone.rotateX}
-                  rotateY={mobilePhone.rotateY}
-                  rotateZ={mobilePhone.rotateZ}
-                  scale={mobilePhone.scale}
-                  screen={activeIndex >= 0 ? (`method-${activeIndex}` as ScreenKey) : 'checkout'}
-                  lockStage={0}
-                />
-              </div>
-            )}
             <motion.p
               className="absolute bottom-[4%] hidden text-center text-sm text-ink/50 lg:block"
               style={{ opacity: hintOpacity }}
