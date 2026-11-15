@@ -5,7 +5,9 @@ test.beforeEach(({ page }) => skipIntro(page));
 
 test('filtrar por marca mostra só essa marca e fica no endereço', async ({ page }) => {
   await page.goto('/loja/celulares');
-  await page.getByRole('complementary', { name: 'Filtros' }).getByText('Apple', { exact: true }).click();
+  // The filters open in a panel.
+  await page.getByRole('button', { name: 'Filtros', exact: true }).click();
+  await page.getByRole('dialog', { name: 'Filtros' }).getByText('Apple', { exact: true }).click();
 
   await expect(page).toHaveURL(/marca=Apple/);
   // Each card shows its brand on the line above the product name.

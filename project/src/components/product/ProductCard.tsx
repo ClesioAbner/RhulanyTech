@@ -12,8 +12,9 @@ const MAX_SWATCHES = 5;
 const IMAGE_WIDTH = 600;
 
 /*
- * Store card. The product stands whole on a studio stage, the colours under it switch the picture,
- * and the price sits next to a quick-add button that opens out on hover.
+ * Store card. The product stands whole on a studio stage with its colours at the foot of the
+ * picture (they switch it), so brand, name and price start at the same height on every card and
+ * the price sits at its foot. The quick-add next to the price opens out on hover.
  */
 const ProductCard = ({ product }: { product: CatalogProduct }) => {
   const addToCart = useAddToCart();
@@ -46,11 +47,12 @@ const ProductCard = ({ product }: { product: CatalogProduct }) => {
             </div>
           </motion.div>
         </AnimatePresence>
-      </div>
-
-      <div className="flex flex-1 flex-col px-3.5 pb-4 pt-3.5 sm:px-5 sm:pb-5 sm:pt-4">
+        {/* Colours, at the foot of the picture */}
         {product.finishes.length > 1 && (
-          <ul className="relative z-10 -ml-1 mb-2.5 flex items-center gap-0.5" aria-label={`${product.finishes.length} cores`}>
+          <ul
+            className="absolute bottom-2 left-2 z-10 flex items-center gap-0.5 sm:bottom-3 sm:left-3.5"
+            aria-label={`${product.finishes.length} cores`}
+          >
             {product.finishes.slice(0, MAX_SWATCHES).map((item, index) => (
               <li key={item.name}>
                 <button
@@ -77,9 +79,11 @@ const ProductCard = ({ product }: { product: CatalogProduct }) => {
             )}
           </ul>
         )}
+      </div>
 
+      <div className="flex flex-1 flex-col px-3.5 pb-4 pt-3.5 sm:px-5 sm:pb-5 sm:pt-4">
         <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-ink/45 sm:text-[11px]">{product.brand}</p>
-        <h3 className="mt-1 text-sm font-medium leading-snug sm:text-[15px]">
+        <h3 className="mt-1 line-clamp-2 text-sm font-medium leading-snug sm:text-[15px]">
           {/* Stretched link: the whole card opens the product; swatches and quick-add sit above it. */}
           <Link to={productPath(product, finish)} className="after:absolute after:inset-0 after:rounded-[inherit]">
             {product.title}
