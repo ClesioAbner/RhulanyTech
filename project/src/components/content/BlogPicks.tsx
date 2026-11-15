@@ -5,9 +5,12 @@ import { unsplash } from '../../lib/images';
 import { easeOutExpo, riseOnView } from '../../lib/motion';
 import ArticleCard from './ArticleCard';
 
-const PICKS = ARTICLES_BY_DATE.slice(0, 3);
+const PICKS = ARTICLES_BY_DATE.slice(0, 4);
 
-/** Editorial opening: one large story and two smaller ones beside it. */
+/**
+ * Editorial opening: one large story and, beside it, three smaller ones from the top of its photo
+ * down, split by hairlines, like a news front page.
+ */
 const BlogPicks = () => {
   const [lead, ...rest] = PICKS;
   return (
@@ -44,10 +47,11 @@ const BlogPicks = () => {
           </Link>
         </motion.div>
 
-        <ul className="flex flex-col justify-center gap-8 lg:col-span-5 lg:gap-10">
+        <ul className="flex flex-col divide-y divide-ink/[0.08] lg:col-span-5">
           {rest.map((article, index) => (
             <motion.li
               key={article.slug}
+              className="py-6 first:pt-0 last:pb-0 lg:py-7"
               {...riseOnView}
               transition={{ duration: 0.8, ease: easeOutExpo, delay: 0.1 + index * 0.08 }}
             >

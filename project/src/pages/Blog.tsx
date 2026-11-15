@@ -5,16 +5,16 @@ import { ARTICLES_BY_DATE, BLOG_TOPICS, FAQ, topicLabel, type BlogTopic } from '
 import { STORE } from '../data/store';
 import { unsplash } from '../lib/images';
 import { easeOutExpo, inViewOnce, riseOnView } from '../lib/motion';
+import { useMediaQuery } from '../lib/useMediaQuery';
 import ArticleCard from '../components/content/ArticleCard';
 import FaqList from '../components/content/FaqList';
 import Picks from '../components/content/BlogPicks';
 import BlogSearchHero from '../components/content/BlogSearchHero';
 import FaqPhone from '../components/content/chat/FaqPhone';
 import HelpPhone from '../components/content/chat/HelpPhone';
-import { WhatsAppIcon } from '../components/ui/Icons';
+import ArrowChip from '../components/ui/ArrowChip';
 import PhoneCopy from '../components/ui/PhoneCopy';
 import Rail from '../components/ui/Rail';
-import { SearchIcon } from '../components/ui/Icons';
 
 // Topic tiles use the newest guide's photo of that topic.
 const TOPICS = BLOG_TOPICS.map((topic) => {
@@ -30,7 +30,11 @@ const normalise = (text: string) => text.toLowerCase().normalize('NFD').replace(
 const Blog = () => {
   const [topic, setTopic] = useState<BlogTopic | 'todos'>('todos');
   const [query, setQuery] = useState('');
-  const [view, setView] = useState<'lista' | 'grelha'>('lista');
+  // The library opens as a photo grid where there is room, as a reading list on phones; the
+  // visitor can switch.
+  const isWide = useMediaQuery('(min-width: 640px)');
+  const [picked, setPicked] = useState<'lista' | 'grelha' | null>(null);
+  const view = picked ?? (isWide ? 'grelha' : 'lista');
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   useEffect(() => {
@@ -137,24 +141,19 @@ const Blog = () => {
       </section>
 
       <section id="todos-os-guias" className="container-site scroll-mt-20 pt-20 sm:pt-24 lg:pt-32" aria-labelledby="guias">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        {/* One search for the whole page, at the top; here the library says what it is showing */}
+        <div className="flex items-end justify-between gap-6">
           <div>
             <p className="eyebrow text-ink/45">Biblioteca</p>
             <h2 id="guias" className="type-title mt-3">
               Todos os guias
             </h2>
           </div>
-          <label className="relative block w-full lg:w-80">
-            <span className="sr-only">Pesquisar nos guias e nas dúvidas</span>
-            <SearchIcon className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-ink/40" />
-            <input
-              type="search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Pesquisar, por exemplo bateria"
-              className="h-12 w-full rounded-full bg-white pl-11 pr-5 text-sm outline-none ring-1 ring-ink/[0.08] transition-shadow placeholder:text-ink/40 focus:ring-2 focus:ring-ink"
-            />
-          </label>
+          <p className="shrink-0 pb-1 text-sm tabular-nums text-ink/45" aria-live="polite">
+            {search
+              ? `${articles.length} para “${query.trim()}”`
+              : `${articles.length} ${articles.length === 1 ? 'guia' : 'guias'}`}
+          </p>
         </div>
 
         <div className="mt-6 flex items-center justify-between gap-4">
@@ -196,7 +195,7 @@ const Blog = () => {
                 type="button"
                 role="radio"
                 aria-checked={view === item}
-                onClick={() => setView(item)}
+                onClick={() => setPicked(item)}
                 className={`relative isolate h-8 rounded-full px-4 text-sm capitalize transition-colors duration-300 ${view === item ? 'text-paper' : 'text-ink/55 hover:text-ink'}`}
               >
                 {view === item && (
@@ -336,14 +335,14 @@ const Blog = () => {
                 href={STORE.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-12 items-center gap-2 rounded-full bg-ink px-6 text-sm font-medium text-paper transition-colors hover:bg-ink-soft"
+                className="group inline-flex h-14 items-center gap-3 rounded-full bg-ink pl-7 pr-3 text-sm font-medium text-paper shadow-[0_18px_40px_-18px_rgba(12,12,13,0.55)] transition-transform duration-300 hover:-translate-y-0.5"
               >
-                <WhatsAppIcon className="h-[18px] w-[18px]" />
                 Falar no WhatsApp
+                <ArrowChip />
               </a>
               <Link
                 to="/contacto"
-                className="inline-flex h-12 items-center rounded-full border border-ink/15 px-6 text-sm font-medium transition-colors hover:border-ink"
+                className="inline-flex h-14 items-center rounded-full bg-white px-7 text-sm font-medium ring-1 ring-ink/10 transition-colors duration-300 hover:bg-mist"
               >
                 Outros contactos
               </Link>
