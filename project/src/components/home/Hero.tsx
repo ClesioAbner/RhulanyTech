@@ -6,16 +6,18 @@ import { easeOutExpo } from '../../lib/motion';
 import { useMediaQuery } from '../../lib/useMediaQuery';
 import PhoneCopy from '../ui/PhoneCopy';
 import ArrowChip from '../ui/ArrowChip';
+import ShopScreen from '../shop/ShopScreen';
 
 const HERO_VIDEO = '/videos/hero-circuit.mp4';
 const HERO_POSTER = '/videos/hero-circuit-poster.jpg';
 const PAPER = '#F5F5F7';
 
 /*
- * The opening, as a way in: the page is a wall with one window, an iPhone's screen, and the film
- * plays behind it. Scrolling walks into the screen: the phone grows and comes to the middle until
- * the film fills the view and the frame has gone past the edges; then the name of the shop comes
- * up over the film. The section is held in place (sticky) for the length of that walk.
+ * The opening, as a way in: the page is a wall with one window, an iPhone's screen, with the shop
+ * running on it (the new phones going by) and the film behind. Scrolling walks into the screen:
+ * the shop fades to show the film, and the phone grows and comes to the middle until the film fills
+ * the view and the frame has gone past the edges; then the name of the shop comes up over the
+ * film. The section is held in place (sticky) for the length of that walk.
  *
  * The wall is a single shape: the screen's rounded rectangle, ringed by the black bezel and, past
  * it, by an endless spread of the page colour (box-shadows), so scaling it is all it takes. On it
@@ -96,6 +98,8 @@ const Hero = () => {
   const float = useTransform([time, settle], ([t, s]: number[]) => Math.sin(t / 1100) * 9 * s);
   const y = useTransform([zoom, startY, float], ([z, from, drift]: number[]) => from * (1 - Math.min(1, z * 1.5)) + drift);
   const sheen = useTransform(zoom, [0, 0.25], [1, 0]);
+  // The shop on the screen gives way to the film as the walk goes into it.
+  const shopOnScreen = useTransform(zoom, [0.12, 0.42], [1, 0]);
   const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType !== 'mouse') return;
     pointerX.set(event.clientX / window.innerWidth - 0.5);
@@ -227,6 +231,13 @@ const Hero = () => {
                 }}
               />
             ))}
+            {/* The shop running on the screen */}
+            <motion.div
+              className="absolute inset-0 overflow-hidden [container-type:inline-size]"
+              style={{ borderRadius: radius, opacity: shopOnScreen }}
+            >
+              <ShopScreen />
+            </motion.div>
             {/* Light on the glass, gone once the walk starts */}
             <motion.span
               className="pointer-events-none absolute inset-0"
@@ -236,8 +247,6 @@ const Hero = () => {
                 background: 'linear-gradient(118deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.07) 30%, transparent 48%)',
               }}
             />
-            {/* Dynamic Island */}
-            <span className="absolute left-1/2 top-[2.4%] h-[3.6%] w-[31%] -translate-x-1/2 rounded-full bg-black" />
           </motion.div>
         )}
 
