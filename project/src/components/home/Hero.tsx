@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTime, useTransform } from 'framer-motion';
 import { INTRO_LIFT, introPending } from '../../lib/bootLoader';
 import { easeOutExpo } from '../../lib/motion';
 import { useMediaQuery } from '../../lib/useMediaQuery';
@@ -17,9 +17,12 @@ const PAPER = '#F5F5F7';
  * the film fills the view and the frame has gone past the edges; then the name of the shop comes
  * up over the film. The section is held in place (sticky) for the length of that walk.
  *
- * The wall is a single shape: the screen's rounded rectangle, ringed by the black bezel and the
- * metal edge and, past them, by an endless spread of the page colour (box-shadows), so scaling it
- * is all it takes. Visitors who prefer less motion get the film and the name straight away.
+ * The wall is a single shape: the screen's rounded rectangle, ringed by the black bezel and, past
+ * it, by an endless spread of the page colour (box-shadows), so scaling it is all it takes. On it
+ * sit the phone's titanium edge (a ring cut from a metal gradient), its side buttons and the light
+ * on the glass. Before the walk the phone floats, turned a little in 3D, and leans towards the
+ * pointer; it squares up to the visitor as the walk begins. Visitors who prefer less motion get
+ * the film and the name straight away.
  */
 const Hero = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -51,6 +54,17 @@ const Hero = () => {
   const screenWidth = screenHeight * 0.46;
   const radius = screenWidth * 0.17;
   const bezel = Math.max(7, screenWidth * 0.045);
+  const rim = Math.max(2, screenWidth * 0.014);
+  const key = Math.max(2, screenWidth * 0.012);
+  // The iPhone's buttons, as a share of the screen's height: Action and volume on the left, the
+  // side button and the Camera Control on the right.
+  const keys = [
+    { side: 'left' as const, from: 0.15, to: 0.19, camera: false },
+    { side: 'left' as const, from: 0.24, to: 0.31, camera: false },
+    { side: 'left' as const, from: 0.34, to: 0.41, camera: false },
+    { side: 'right' as const, from: 0.23, to: 0.34, camera: false },
+    { side: 'right' as const, from: 0.55, to: 0.61, camera: true },
+  ];
 
   // Kept in motion values so the scroll transforms always read the latest layout.
   const startX = useMotionValue(0);
@@ -69,7 +83,24 @@ const Hero = () => {
   const zoom = useTransform(progress, [0.06, 0.72], [0, 1]);
   const scale = useTransform([zoom, endScale], ([z, end]: number[]) => Math.pow(end, z));
   const x = useTransform([zoom, startX], ([z, from]: number[]) => from * (1 - Math.min(1, z * 1.5)));
-  const y = useTransform([zoom, startY], ([z, from]: number[]) => from * (1 - Math.min(1, z * 1.5)));
+
+  // Before the walk: a float, a turn in 3D and a lean towards the pointer, all fading out as it starts.
+  const settle = useTransform(zoom, [0, 0.3], [1, 0]);
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const leanY = useSpring(pointerX, { stiffness: 70, damping: 18 });
+  const leanX = useSpring(pointerY, { stiffness: 70, damping: 18 });
+  const time = useTime();
+  const rotateY = useTransform([settle, leanY], ([s, lean]: number[]) => s * (-16 + lean * 14));
+  const rotateX = useTransform([settle, leanX], ([s, lean]: number[]) => s * (5 - lean * 8));
+  const float = useTransform([time, settle], ([t, s]: number[]) => Math.sin(t / 1100) * 9 * s);
+  const y = useTransform([zoom, startY, float], ([z, from, drift]: number[]) => from * (1 - Math.min(1, z * 1.5)) + drift);
+  const sheen = useTransform(zoom, [0, 0.25], [1, 0]);
+  const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== 'mouse') return;
+    pointerX.set(event.clientX / window.innerWidth - 0.5);
+    pointerY.set(event.clientY / window.innerHeight - 0.5);
+  };
 
   const introOpacity = useTransform(progress, [0.03, 0.2], [1, 0]);
   const introY = useTransform(progress, [0, 0.2], [0, -48]);
@@ -82,7 +113,10 @@ const Hero = () => {
 
   return (
     <section ref={sectionRef} className={`relative bg-paper ${still ? 'h-[100svh]' : 'h-[260svh]'}`}>
-      <div className="sticky top-0 h-[100svh] min-h-[560px] overflow-hidden bg-ink">
+      <div
+        className="sticky top-0 h-[100svh] min-h-[560px] overflow-hidden bg-ink [perspective:1800px]"
+        onPointerMove={onPointerMove}
+      >
         {/* The film behind the wall */}
         <video
           ref={videoRef}
@@ -150,16 +184,58 @@ const Hero = () => {
               x,
               y,
               scale,
+              rotateY,
+              rotateX,
               borderRadius: radius,
               boxShadow: [
                 `0 0 0 ${bezel}px #0b0b0d`,
-                `0 0 0 ${bezel + 1.5}px #3a3a3f`,
-                `0 0 0 ${bezel + 3}px #9a9aa0`,
-                `0 40px 60px -36px rgba(12,12,13,0.4)`,
+                `0 80px 90px -50px rgba(12,12,13,0.5)`,
+                `30px 50px 120px -40px rgba(12,12,13,0.18)`,
                 `0 0 0 300vmax ${PAPER}`,
               ].join(', '),
             }}
           >
+            {/* Titanium edge round the bezel: a ring cut out of a metal gradient */}
+            <span
+              className="absolute"
+              style={{
+                inset: -(bezel + rim),
+                borderRadius: radius + bezel + rim,
+                padding: rim,
+                background:
+                  'linear-gradient(135deg, #f1f1f3 0%, #9a9ba1 18%, #3d3e43 42%, #c9cace 62%, #6c6d72 82%, #d9dadd 100%)',
+                WebkitMask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+                WebkitMaskComposite: 'xor',
+                mask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+                maskComposite: 'exclude',
+              }}
+            />
+            {/* Side buttons */}
+            {keys.map(({ side, from, to, camera }) => (
+              <span
+                key={`${side}-${from}`}
+                className="absolute"
+                style={{
+                  [side]: -(bezel + rim + key),
+                  top: screenHeight * from,
+                  height: screenHeight * (to - from),
+                  width: key + 1,
+                  borderRadius: key,
+                  background: camera
+                    ? 'linear-gradient(90deg, #16171b, #4a4c53, #16171b)'
+                    : 'linear-gradient(90deg, #6b6c71, #d2d3d7 50%, #7a7b80)',
+                }}
+              />
+            ))}
+            {/* Light on the glass, gone once the walk starts */}
+            <motion.span
+              className="pointer-events-none absolute inset-0"
+              style={{
+                borderRadius: radius,
+                opacity: sheen,
+                background: 'linear-gradient(118deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.07) 30%, transparent 48%)',
+              }}
+            />
             {/* Dynamic Island */}
             <span className="absolute left-1/2 top-[2.4%] h-[3.6%] w-[31%] -translate-x-1/2 rounded-full bg-black" />
           </motion.div>
@@ -178,7 +254,8 @@ const Hero = () => {
               transition={{ duration: 1.1, ease: easeOutExpo, delay: 0.3 }}
             >
               <p className="eyebrow text-ink/45">Rhulany Tech, Maputo</p>
-              <p className="type-display mt-4 lg:mt-5">Original, com garantia e perto de si</p>
+              <p className="type-display mt-4 lg:mt-5">A loja mais perto de si</p>
+              <p className="type-lead mt-4 text-ink/60 lg:mt-5">Original, com garantia e perto de si.</p>
               <div className="mt-8 hidden lg:block">
                 <Link
                   to="/loja"
