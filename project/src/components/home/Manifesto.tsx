@@ -2,17 +2,30 @@ import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion';
 import { easeOutExpo, inViewOnce } from '../../lib/motion';
+import { useMediaQuery } from '../../lib/useMediaQuery';
 import ArrowChip from '../ui/ArrowChip';
 
 const STATEMENT =
   'Tecnologia original, escolhida com cuidado e entregue em todo o país. Smartphones, computadores, consolas e acessórios com a garantia oficial de cada marca, e uma equipa que continua consigo depois da compra.';
-const WORDS = STATEMENT.split(' ');
+// Phones: one sentence, so the statement reads in a glance.
+const STATEMENT_PHONE =
+  'Tecnologia original, escolhida com cuidado e entregue em todo o país, com a garantia oficial de cada marca.';
 const PHOTO = '/images/home/pessoa-auscultadores';
 
 // Each word darkens in turn as its share of the scroll passes, from a pale grey to ink.
-const Word = ({ word, index, progress }: { word: string; index: number; progress: MotionValue<number> }) => {
-  const start = index / WORDS.length;
-  const opacity = useTransform(progress, [start, start + 1.5 / WORDS.length], [0.14, 1]);
+const Word = ({
+  word,
+  index,
+  total,
+  progress,
+}: {
+  word: string;
+  index: number;
+  total: number;
+  progress: MotionValue<number>;
+}) => {
+  const start = index / total;
+  const opacity = useTransform(progress, [start, start + 1.5 / total], [0.14, 1]);
   return (
     <motion.span style={{ opacity }} className="inline-block whitespace-pre">
       {word}{' '}
@@ -27,6 +40,8 @@ const Word = ({ word, index, progress }: { word: string; index: number; progress
  */
 const Manifesto = () => {
   const sectionRef = useRef<HTMLElement>(null);
+  const isWide = useMediaQuery('(min-width: 640px)');
+  const words = (isWide ? STATEMENT : STATEMENT_PHONE).split(' ');
   const textRef = useRef<HTMLParagraphElement>(null);
   const { scrollYProgress } = useScroll({ target: textRef, offset: ['start 85%', 'end 50%'] });
   const { scrollYProgress: passing } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
@@ -57,8 +72,8 @@ const Manifesto = () => {
             ref={textRef}
             className="mt-6 font-display text-[1.7rem] font-medium leading-[1.22] tracking-tight sm:text-[2.3rem] lg:text-[2.6rem] xl:text-[2.9rem]"
           >
-            {WORDS.map((word, index) => (
-              <Word key={index} word={word} index={index} progress={scrollYProgress} />
+            {words.map((word, index) => (
+              <Word key={`${isWide}-${index}`} word={word} index={index} total={words.length} progress={scrollYProgress} />
             ))}
           </p>
           <motion.div

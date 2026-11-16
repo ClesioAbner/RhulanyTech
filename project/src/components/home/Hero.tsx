@@ -116,7 +116,7 @@ const Hero = () => {
   const finalEvents = useTransform(finalOpacity, (value) => (value > 0.5 ? 'auto' : 'none'));
 
   return (
-    <section ref={sectionRef} className={`relative bg-paper ${still ? 'h-[100svh]' : 'h-[260svh]'}`}>
+    <section ref={sectionRef} className={`relative bg-paper ${still ? 'h-[100svh]' : 'h-[200svh] lg:h-[260svh]'}`}>
       <div
         className="sticky top-0 h-[100svh] min-h-[560px] overflow-hidden bg-ink [perspective:1800px]"
         onPointerMove={onPointerMove}
@@ -264,7 +264,7 @@ const Hero = () => {
             >
               <p className="eyebrow text-ink/45">Rhulany Tech, Maputo</p>
               <p className="type-display mt-4 lg:mt-5">A loja mais perto de si</p>
-              <p className="type-lead mt-4 text-ink/60 lg:mt-5">Original, com garantia e perto de si.</p>
+              <p className="type-lead mt-4 text-ink/60 lg:mt-5">Original, com garantia e entrega em todo o país.</p>
               <div className="mt-8 hidden lg:block">
                 <Link
                   to="/loja"

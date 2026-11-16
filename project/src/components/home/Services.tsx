@@ -21,7 +21,7 @@ interface TileProps {
 
 const Tile = ({ title, body, tone, className = '', art, index }: TileProps) => (
   <motion.li
-    className={`relative isolate flex min-h-[340px] flex-col overflow-hidden rounded-[28px] p-7 ring-1 ring-ink/[0.05] sm:min-h-[400px] sm:p-9 ${className}`}
+    className={`relative isolate flex flex-col overflow-hidden rounded-[28px] p-7 ring-1 ring-ink/[0.05] sm:min-h-[400px] sm:p-9 ${className}`}
     style={{ background: tone }}
     initial={{ opacity: 0, y: 28 }}
     whileInView={{ opacity: 1, y: 0 }}
