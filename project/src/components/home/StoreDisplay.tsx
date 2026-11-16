@@ -27,7 +27,8 @@ const StoreDisplay = () => (
     </div>
 
     <motion.div
-      className="absolute inset-x-0 bottom-[20%] flex h-[62%] items-end justify-center gap-[3%] [perspective:1200px]"
+      // Sized so the five phones always fit side by side, on a phone screen too.
+      className="absolute inset-x-0 bottom-[20%] flex h-[54%] items-end justify-center gap-[2.5%] [perspective:1200px]"
       initial="hidden"
       whileInView="visible"
       viewport={inViewOnce}

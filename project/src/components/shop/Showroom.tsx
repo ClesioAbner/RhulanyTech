@@ -1,24 +1,63 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, type Variants } from 'framer-motion';
-import { getProductById, priceFrom, productPath, resolveImage, type CatalogProduct } from '../../lib/catalog';
+import {
+  AnimatePresence,
+  animate,
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  useReducedMotion,
+  type Variants,
+} from 'framer-motion';
+import { getProductById, isNewArrival, priceFrom, productPath, resolveImage, type CatalogProduct } from '../../lib/catalog';
 import { formatPrice } from '../../lib/format';
-import { easeOutExpo, isPhone } from '../../lib/motion';
+import { easeOutExpo } from '../../lib/motion';
 import { useImageReady } from '../../lib/useImageReady';
+import ArrowChip from '../ui/ArrowChip';
 import BrandLoader from '../ui/BrandLoader';
+import FoldPhone3D from './FoldPhone3D';
 import Phone3D, { type PhoneShape } from './Phone3D';
+import { GALAXY_ULTRA, IPHONE_AIR, IPHONE_PRO, PIXEL_PRO } from '../product/phoneControls';
 
 // Phones on show, with their real proportions (body, corners, thickness, front camera).
-const FEATURED: { id: string; shape: PhoneShape }[] = [
-  { id: '39', shape: { aspect: 0.486, radius: 0.17, depth: 0.12, camera: 'island' } },
-  { id: '46', shape: { aspect: 0.499, radius: 0.09, depth: 0.105, camera: 'punch' } },
-  { id: '51', shape: { aspect: 0.479, radius: 0.165, depth: 0.118, camera: 'punch' } },
-  { id: '40', shape: { aspect: 0.488, radius: 0.17, depth: 0.075, camera: 'island' } },
-];
-const SLIDE_SECONDS = 9;
+// Official wallpapers, cropped from the makers' own photos, in the order of each product's colours.
+const W = '/images/produtos/ecras/';
 
-const SLIDES = FEATURED.map(({ id, shape }) => ({ product: getProductById(id), shape })).filter(
-  (slide): slide is { product: CatalogProduct; shape: PhoneShape } => Boolean(slide.product?.finishes[0]?.images?.length),
+interface Featured {
+  id: string;
+  shape: PhoneShape;
+  wallpapers?: string[];
+}
+
+const FEATURED: Featured[] = [
+  {
+    id: '91',
+    shape: { aspect: 0.479, radius: 0.17, depth: 0.115, camera: 'island', controls: IPHONE_PRO },
+    wallpapers: ['18pro-glaciar', '18pro-bordeaux', '18pro-prateado', '18pro-preto'].map((name) => `${W}${name}.webp`),
+  },
+  {
+    id: '93',
+    shape: { aspect: 0.48, radius: 0.12, depth: 0.1, camera: 'punch', controls: GALAXY_ULTRA },
+    wallpapers: ['s26-cobalt-violet', 's26-sky-blue', 's26-black', 's26-white'].map((name) => `${W}${name}.webp`),
+  },
+  // The Duo on show folded: wider, and as thick as two thin phones.
+  {
+    id: '92',
+    shape: { aspect: 0.705, radius: 0.13, depth: 0.134, camera: 'punch', fold: true },
+    wallpapers: [`${W}duo-dunas.webp`, `${W}duo-dunas.webp`],
+  },
+  { id: '51', shape: { aspect: 0.479, radius: 0.165, depth: 0.118, camera: 'punch', controls: PIXEL_PRO } },
+  { id: '40', shape: { aspect: 0.488, radius: 0.17, depth: 0.075, camera: 'island', controls: IPHONE_AIR } },
+];
+const SLIDE_SECONDS = 6;
+// A folding phone needs longer: it turns, opens, and stays open for a moment.
+const FOLD_SLIDE_SECONDS = 9;
+// Halfway through, the phone turns round to show its next colour on its own.
+const AUTO_TURN_AT = 0.5;
+
+const SLIDES = FEATURED.map(({ id, shape, wallpapers }) => ({ product: getProductById(id), shape, wallpapers })).filter(
+  (slide): slide is { product: CatalogProduct; shape: PhoneShape; wallpapers: string[] | undefined } =>
+    Boolean(slide.product?.finishes[0]?.images?.length),
 );
 
 const toRgb = (hex: string) => {
@@ -38,9 +77,41 @@ const fieldFor = (hex: string) => {
   return `radial-gradient(52% 62% at 70% 48%, rgba(${r},${g},${b},0.5) 0%, rgba(${r},${g},${b},0) 72%), radial-gradient(38% 46% at 8% 92%, rgba(${r},${g},${b},0.2) 0%, rgba(${r},${g},${b},0) 70%), linear-gradient(180deg, #f7f7f9 0%, #eceef2 100%)`;
 };
 
+// The swap, like a turntable seen from the front: the phone on show swings away to one side and
+// back, turned, while the next one is already swinging in from the other side to face the visitor.
+// Both move at once, so the stage is never empty. `custom` is the direction and the stage width.
+type Swap = { dir: number; width: number };
+const SWING = 0.42; // share of the stage width each phone travels sideways
+const phoneSwap: Variants = {
+  enter: ({ dir, width }: Swap) => ({ opacity: 0, x: dir * width * SWING, z: -320, rotateY: dir * 42, scale: 0.86 }),
+  center: {
+    opacity: 1,
+    x: 0,
+    z: 0,
+    rotateY: 0,
+    scale: 1,
+    transition: {
+      // A beat after the last one starts to leave, so they pass side by side, never stacked.
+      default: { duration: 1.2, ease: [0.33, 0, 0.15, 1], delay: 0.22 },
+      opacity: { duration: 0.6, ease: 'easeOut', delay: 0.22 },
+    },
+  },
+  exit: ({ dir, width }: Swap) => ({
+    opacity: 0,
+    x: -dir * width * SWING,
+    z: -320,
+    rotateY: -dir * 42,
+    scale: 0.86,
+    transition: {
+      default: { duration: 0.9, ease: [0.55, 0, 0.45, 1] },
+      opacity: { duration: 0.5, ease: 'easeIn', delay: 0.3 },
+    },
+  }),
+};
+
 const textVariants: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.07, delayChildren: 0.35 } },
+  show: { transition: { staggerChildren: 0.06, delayChildren: 0.2 } },
   exit: { transition: { staggerChildren: 0.025, staggerDirection: -1 } },
 };
 const line: Variants = {
@@ -57,20 +128,29 @@ const word: Variants = {
 /*
  * The shop's opening, full width. One phone at a time stands in a light of its own colour.
  * Choreography: the stage changes colour, the phone sweeps in screen first and turns to show its
- * back, the name rises word by word, then the details and colours follow. Colours turn the phone
- * all the way round; the tabs move between phones and show the time left on the current one.
+ * back, the name rises word by word, then the details and colours follow. Halfway through, the
+ * phone turns all the way round into its next colour; colours picked by hand do the same and keep
+ * it on show. The tabs move between phones and show the time left on the current one. Moving on,
+ * the phones swap like a turntable, in the direction of travel (see `phoneSwap`).
  */
 const Showroom = () => {
   const [slide, setSlide] = useState(0);
+  // Which way the phones travel: forwards from the right, backwards from the left.
+  const [dir, setDir] = useState(1);
   const [finishIndex, setFinishIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  // A colour picked by hand keeps the phone on show; the automatic turn does not.
+  const [handPicked, setHandPicked] = useState(false);
   const [phoneHeight, setPhoneHeight] = useState(520);
+  const [stageWidth, setStageWidth] = useState(800);
+  // A folding phone closes in the last moments of its turn, so it leaves folded.
+  const [closingFold, setClosingFold] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
   const progress = useMotionValue(0);
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
   const prefersReducedMotion = useReducedMotion();
-  const { product, shape } = SLIDES[slide];
+  const { product, shape, wallpapers } = SLIDES[slide];
   const finish = product.finishes[finishIndex] ?? product.finishes[0];
   const image = resolveImage(finish.images![0], 1200);
   // Each phone waits for its photo, so it never turns with an empty back; colour changes don't wait.
@@ -83,8 +163,10 @@ const Showroom = () => {
   useLayoutEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
-    const measure = () =>
+    const measure = () => {
       setPhoneHeight(Math.round(Math.min(stage.clientHeight * 0.84, (stage.clientWidth * 0.62) / shape.aspect)));
+      setStageWidth(stage.clientWidth);
+    };
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(stage);
@@ -92,15 +174,29 @@ const Showroom = () => {
   }, [shape.aspect]);
 
   const goTo = (index: number) => {
+    setDir(index < slide ? -1 : 1);
     setSlide((index + SLIDES.length) % SLIDES.length);
     setFinishIndex(0);
+    setHandPicked(false);
   };
+
+  useMotionValueEvent(progress, 'change', (value) => {
+    const closing = shape.fold === true && value > 0.88;
+    setClosingFold((current) => (current === closing ? current : closing));
+    // A folding phone stays open on show instead.
+    if (value >= AUTO_TURN_AT && finishIndex === 0 && !handPicked && !shape.fold && product.finishes.length > 1)
+      setFinishIndex(1);
+  });
 
   // The timer restarts with each phone; picking a colour or turning the phone pauses it.
   useEffect(() => {
     progress.set(0);
     if (prefersReducedMotion) return;
-    controls.current = animate(progress, 1, { duration: SLIDE_SECONDS, ease: 'linear', onComplete: () => goTo(slide + 1) });
+    controls.current = animate(progress, 1, {
+      duration: SLIDES[slide].shape.fold ? FOLD_SLIDE_SECONDS : SLIDE_SECONDS,
+      ease: 'linear',
+      onComplete: () => goTo(slide + 1),
+    });
     if (pausedRef.current) controls.current.pause();
     return () => controls.current?.stop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -111,15 +207,18 @@ const Showroom = () => {
     else controls.current?.play();
   }, [paused]);
 
-  // Warm the cache with every colour of the phone on show, so turning to a new one is instant.
+  // Warm the cache with every colour of the phone on show, so turning to a new one is instant, and
+  // with the next phone's first two colours, so it arrives without waiting for its photo.
   useEffect(() => {
-    product.finishes.forEach((item) => {
+    const next = SLIDES[(slide + 1) % SLIDES.length].product;
+    [...product.finishes, ...next.finishes.slice(0, 2)].forEach((item) => {
       if (item.images?.[0]) new Image().src = resolveImage(item.images[0], 1200);
     });
-  }, [product]);
+  }, [product, slide]);
 
   const pickFinish = (index: number) => {
     setFinishIndex(index);
+    setHandPicked(true);
     setPaused(true);
   };
 
@@ -129,7 +228,7 @@ const Showroom = () => {
     <section
       aria-label="Em destaque"
       className="relative isolate overflow-hidden bg-paper"
-      onPointerLeave={() => finishIndex === 0 && setPaused(false)}
+      onPointerLeave={() => !handPicked && setPaused(false)}
     >
       {/* Stage colour */}
       <AnimatePresence initial={false}>
@@ -166,13 +265,7 @@ const Showroom = () => {
             pointerY.set(0);
           }}
         >
-          <motion.div
-            aria-hidden="true"
-            className="absolute bottom-[3%] left-1/2 h-8 w-[40%] -translate-x-1/2 rounded-[50%] bg-ink/30 blur-2xl lg:w-[30%]"
-            animate={prefersReducedMotion ? undefined : { scaleX: [1, 0.82, 1], opacity: [0.9, 0.6, 0.9] }}
-            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <AnimatePresence initial={false} mode="popLayout">
+          <AnimatePresence initial={false} custom={{ dir, width: stageWidth }}>
             {!phoneReady ? (
               <motion.div
                 key="a-carregar"
@@ -186,33 +279,52 @@ const Showroom = () => {
               <motion.div
                 key={product.id}
                 className="absolute inset-0 flex items-center justify-center [transform-style:preserve-3d]"
-                initial={{ opacity: 0, x: isPhone ? 120 : 260, y: 30, scale: 0.82, rotateZ: isPhone ? 5 : 8 }}
-                animate={{ opacity: 1, x: 0, y: 0, scale: 1, rotateZ: 0 }}
-                exit={{
-                  opacity: 0,
-                  x: isPhone ? -140 : -300,
-                  y: 20,
-                  scale: 0.82,
-                  rotateZ: isPhone ? -5 : -8,
-                  transition: { duration: 0.7, ease: [0.55, 0, 0.75, 0.2] },
-                }}
-                transition={{ duration: 1.5, ease: easeOutExpo }}
+                // No filters here: they would flatten the phone's 3D body.
+                custom={{ dir, width: stageWidth }}
+                variants={phoneSwap}
+                initial="enter"
+                animate="center"
+                exit="exit"
               >
+                {/* Its shadow on the floor, travelling with it */}
+                <motion.span
+                  aria-hidden="true"
+                  className="absolute bottom-[3%] left-1/2 h-8 w-[40%] -translate-x-1/2 rounded-[50%] bg-ink/30 blur-2xl lg:w-[30%]"
+                  animate={prefersReducedMotion ? undefined : { scaleX: [1, 0.82, 1], opacity: [0.9, 0.6, 0.9] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                />
                 <motion.div
                   className="[transform-style:preserve-3d]"
                   animate={prefersReducedMotion ? undefined : { y: [0, -14, 0] }}
                   transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
                 >
-                  <Phone3D
-                    image={image}
-                    alt={`${product.title} em ${finish.name}`}
-                    hex={finish.hex}
-                    shape={shape}
-                    height={phoneHeight}
-                    pointerX={pointerX}
-                    pointerY={pointerY}
-                    onGrab={() => setPaused(true)}
-                  />
+                  {shape.fold ? (
+                    <FoldPhone3D
+                      image={image}
+                      alt={`${product.title} em ${finish.name}`}
+                      hex={finish.hex}
+                      shape={shape}
+                      height={phoneHeight}
+                      pointerX={pointerX}
+                      pointerY={pointerY}
+                      onGrab={() => setPaused(true)}
+                      wallpaper={wallpapers?.[finishIndex]}
+                      maxWidth={stageWidth}
+                      closing={closingFold}
+                    />
+                  ) : (
+                    <Phone3D
+                      image={image}
+                      alt={`${product.title} em ${finish.name}`}
+                      hex={finish.hex}
+                      shape={shape}
+                      height={phoneHeight}
+                      pointerX={pointerX}
+                      pointerY={pointerY}
+                      onGrab={() => setPaused(true)}
+                      wallpaper={wallpapers?.[finishIndex]}
+                    />
+                  )}
                 </motion.div>
               </motion.div>
             )}
@@ -223,8 +335,9 @@ const Showroom = () => {
         <div className="relative lg:order-1 lg:col-span-5">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div key={product.id} variants={textVariants} initial="hidden" animate="show" exit="exit">
-              <motion.p variants={line} className="eyebrow text-ink/50">
-                {product.brand}
+              {/* The name already carries the brand: above it, whether it is new */}
+              <motion.p variants={line} className={`eyebrow ${isNewArrival(product) ? 'text-accent-deep' : 'text-ink/50'}`}>
+                {isNewArrival(product) ? 'Novo' : 'Em destaque'}
               </motion.p>
               <h2 className="type-display mt-4" aria-label={product.title}>
                 {words.map((text, index) => (
@@ -293,13 +406,14 @@ const Showroom = () => {
               <motion.div variants={line} className="mt-9 flex flex-wrap gap-3">
                 <Link
                   to={productPath(product, finish)}
-                  className="inline-flex h-12 items-center rounded-full bg-ink px-8 text-sm font-medium text-paper transition-transform duration-300 hover:scale-[1.03]"
+                  className="group inline-flex h-14 items-center gap-3 rounded-full bg-ink pl-7 pr-3 text-sm font-medium text-paper shadow-[0_18px_40px_-18px_rgba(12,12,13,0.55)] transition-transform duration-300 hover:-translate-y-0.5"
                 >
                   Comprar
+                  <ArrowChip />
                 </Link>
                 <Link
                   to="/loja/celulares"
-                  className="inline-flex h-12 items-center rounded-full bg-white/70 px-6 text-sm font-medium ring-1 ring-inset ring-ink/10 backdrop-blur transition-colors duration-300 hover:bg-white"
+                  className="inline-flex h-14 items-center rounded-full bg-white/80 px-7 text-sm font-medium ring-1 ring-inset ring-ink/10 backdrop-blur transition-colors duration-300 hover:bg-white"
                 >
                   Ver todos os celulares
                 </Link>
@@ -314,7 +428,9 @@ const Showroom = () => {
         <div
           role="tablist"
           aria-label="Escolher telemóvel"
-          className="container-site grid grid-cols-4 gap-2 pb-6 sm:gap-6 lg:pb-8"
+          className="container-site grid gap-2 pb-6 sm:gap-6 lg:pb-8"
+          // One column per phone on show, however many there are.
+          style={{ gridTemplateColumns: `repeat(${SLIDES.length}, minmax(0, 1fr))` }}
         >
           {SLIDES.map(({ product: item }, index) => {
             const active = index === slide;

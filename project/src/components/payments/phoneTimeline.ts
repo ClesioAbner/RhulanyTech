@@ -13,19 +13,14 @@ export const activeMethodAt = (progress: number) =>
 
 const stops = [0, INTRO_END, ...PAYMENT_METHODS.map((_, i) => INTRO_END + STEP * (i + 0.5)), 1];
 
-// Desktop: the phone arrives facing forward from its fall, so payments only add a gentle sway per method
+// The phone arrives facing forward from its fall, so payments only add a gentle sway per method
 // (one value per stop: start, intro end, the middle of each method, end). For the card it turns towards
 // the card it hands out on its left, leaving the copy on the right clear.
 export const paymentRotateY = interpolate(stops, [0, 0, 12, -12, 10, 16, 8, 0]);
 export const paymentRotateX = interpolate(stops, [0, 0, -3, 4, -3, 3, -2, 0]);
 
-// Mobile has no fall: the phone turns from its back to the front as the section pins.
-export const mobileRotateY = interpolate(stops, [-180, 0, 12, -12, 10, 12, 8, 0]);
-export const mobileRotateX = interpolate(stops, [16, 0, -3, 4, -3, 3, -2, 0]);
-export const mobileRotateZ = interpolate([0, INTRO_END], [-8, 0]);
-
 /*
- * Fall timeline (desktop, 0 → 1 from release to landing), choreographed in three beats:
+ * Fall timeline (0 → 1 from release to landing), choreographed in three beats:
  * 1. Lift (0 → 0.2): picked up out of the card, tilting slightly towards the viewer.
  * 2. Turn (0.15 → 0.85): one smooth full turn that shows the back mid-fall.
  * 3. Settle (0.85 → 1): lands facing forward, level, exactly as payments pins.

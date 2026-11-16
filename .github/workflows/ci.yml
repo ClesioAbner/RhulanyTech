@@ -1,0 +1,137 @@
+# Rhulany Tech: checks every push and pull request, then publishes main.
+#
+# 1. Verificações: formatting, lint, types, unit tests and the production build.
+# 2. Testes no browser: the Playwright suite on the built site (desktop and phone).
+# 3. Publicar: deploys main to Netlify once both pass. It only runs when the repository has the
+#    NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID secrets; without them the job is skipped, not failed.
+#
+# The app lives in project/, so every step runs there.
+
+name: CI/CD
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# A newer push to the same branch cancels the run still going for the older one.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: project
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  checks:
+    name: Verificações
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: project/package-lock.json
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Formatação (Prettier)
+        run: npm run format:check
+
+      - name: Lint (ESLint)
+        run: npm run lint
+
+      - name: Tipos (TypeScript)
+        run: npm run typecheck
+
+      - name: Testes unitários (Vitest)
+        run: npm test
+
+      - name: Build de produção
+        run: npm run build
+        env:
+          # Optional: the chat's backend, set under Settings > Secrets and variables > Variables.
+          VITE_ASSISTANT_URL: ${{ vars.VITE_ASSISTANT_URL }}
+
+      - name: Guardar o build
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: project/dist
+          retention-days: 7
+
+  e2e:
+    name: Testes no browser
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: project/package-lock.json
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Instalar o Chromium do Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Testes no browser (Playwright)
+        run: npm run test:e2e
+
+      - name: Relatório dos testes
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: project/playwright-report
+          retention-days: 14
+
+  deploy:
+    name: Publicar
+    needs: [checks, e2e]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: production
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+    steps:
+      - name: Sem dados do Netlify, não publica
+        if: env.NETLIFY_AUTH_TOKEN == '' || env.NETLIFY_SITE_ID == ''
+        working-directory: .
+        run: echo "::notice::Defina NETLIFY_AUTH_TOKEN e NETLIFY_SITE_ID nos secrets do repositório para publicar automaticamente."
+
+      - uses: actions/download-artifact@v4
+        if: env.NETLIFY_AUTH_TOKEN != '' && env.NETLIFY_SITE_ID != ''
+        with:
+          name: site
+          path: project/dist
+
+      - uses: actions/setup-node@v4
+        if: env.NETLIFY_AUTH_TOKEN != '' && env.NETLIFY_SITE_ID != ''
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Publicar no Netlify
+        if: env.NETLIFY_AUTH_TOKEN != '' && env.NETLIFY_SITE_ID != ''
+        run: npx --yes netlify-cli@17 deploy --prod --dir=dist --message "${{ github.sha }}"

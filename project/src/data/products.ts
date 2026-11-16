@@ -30,8 +30,8 @@ const LEGACY_PRODUCTS: Product[] = [
   {
     id: '1',
     name: 'iPhone 16 Pro Max 256GB',
-    price: 180000,
-    originalPrice: 200000,
+    price: 155000,
+    originalPrice: 175000,
     images: [
       'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&angle=45',
@@ -59,8 +59,8 @@ const LEGACY_PRODUCTS: Product[] = [
   {
     id: '2',
     name: 'Samsung Galaxy S24 Ultra 512GB',
-    price: 165000,
-    originalPrice: 185000,
+    price: 140000,
+    originalPrice: 160000,
     images: [
       'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800&angle=45',
@@ -87,7 +87,7 @@ const LEGACY_PRODUCTS: Product[] = [
   {
     id: '3',
     name: 'Google Pixel 8 Pro 256GB',
-    price: 145000,
+    price: 120000,
     images: [
       'https://images.unsplash.com/photo-1697355360151-2866de32ad4d?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1706412703794-d944cd3625b3?auto=format&fit=crop&w=800&angle=45',
@@ -112,7 +112,7 @@ const LEGACY_PRODUCTS: Product[] = [
   {
     id: '4',
     name: 'OnePlus 12 256GB',
-    price: 125000,
+    price: 100000,
     images: [
       'https://images.unsplash.com/photo-1655384851782-89b0e119ab55?auto=format&fit=crop&w=800',
       'https://images.unsplash.com/photo-1655384851782-89b0e119ab55?auto=format&fit=crop&w=800&angle=45',
@@ -136,7 +136,7 @@ const LEGACY_PRODUCTS: Product[] = [
   {
     id: '5',
     name: 'Xiaomi 14 Ultra 512GB',
-    price: 115000,
+    price: 90000,
     images: ['https://images.unsplash.com/photo-1770274813875-346bfaf0ee11?auto=format&fit=crop&w=800'],
     description: 'Câmera profissional Leica em smartphone com zoom periscópico',
     category: 'celulares',

@@ -1,0 +1,2 @@
+# Netlify: every address is served by the app, so /loja or /produto/... open directly and survive a reload.
+/*    /index.html    200

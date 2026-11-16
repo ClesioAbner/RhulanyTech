@@ -1,17 +1,18 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ARTICLES_BY_DATE, readingMinutes, topicLabel } from '../../data/blog';
+import { BLOG_PICKS, readingMinutes, topicLabel } from '../../data/blog';
 import { unsplash } from '../../lib/images';
 import { easeOutExpo, riseOnView } from '../../lib/motion';
 import ArticleCard from './ArticleCard';
 
-const PICKS = ARTICLES_BY_DATE.slice(0, 3);
-
-/** Editorial opening: one large story and two smaller ones beside it. */
+/**
+ * Editorial opening: one large story and, beside it, three smaller ones from the top of its photo
+ * down, split by hairlines, like a news front page.
+ */
 const BlogPicks = () => {
-  const [lead, ...rest] = PICKS;
+  const [lead, ...rest] = BLOG_PICKS;
   return (
-    <section className="container-site pt-20 lg:pt-28" aria-labelledby="para-comecar">
+    <section className="container-site pt-16 sm:pt-20 lg:pt-28" aria-labelledby="para-comecar">
       <motion.div {...riseOnView} transition={{ duration: 0.8, ease: easeOutExpo }}>
         <p className="eyebrow text-ink/45">Para começar</p>
         <h2 id="para-comecar" className="type-title mt-3">
@@ -19,10 +20,10 @@ const BlogPicks = () => {
         </h2>
       </motion.div>
 
-      <div className="mt-10 grid gap-10 lg:mt-12 lg:grid-cols-12 lg:gap-12">
+      <div className="mt-8 grid gap-10 sm:mt-10 lg:mt-12 lg:grid-cols-12 lg:gap-12">
         <motion.div className="lg:col-span-7" {...riseOnView} transition={{ duration: 0.9, ease: easeOutExpo }}>
           <Link to={`/blog/${lead.slug}`} className="group block">
-            <div className="aspect-[16/10] overflow-hidden rounded-[28px] bg-mist">
+            <div className="aspect-[4/3] overflow-hidden rounded-[24px] bg-mist sm:aspect-[16/10] sm:rounded-[28px]">
               <img
                 src={unsplash(lead.cover.src, 1400)}
                 alt={lead.cover.alt}
@@ -40,14 +41,15 @@ const BlogPicks = () => {
                 {lead.title}
               </span>
             </h3>
-            <p className="type-lead mt-3 max-w-xl text-ink/60">{lead.excerpt}</p>
+            <p className="type-lead mt-3 line-clamp-2 max-w-xl text-ink/60 sm:line-clamp-none">{lead.excerpt}</p>
           </Link>
         </motion.div>
 
-        <ul className="flex flex-col justify-center gap-8 lg:col-span-5 lg:gap-10">
+        <ul className="flex flex-col divide-y divide-ink/[0.08] lg:col-span-5">
           {rest.map((article, index) => (
             <motion.li
               key={article.slug}
+              className="py-6 first:pt-0 last:pb-0 lg:py-7"
               {...riseOnView}
               transition={{ duration: 0.8, ease: easeOutExpo, delay: 0.1 + index * 0.08 }}
             >

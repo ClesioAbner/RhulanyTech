@@ -220,8 +220,15 @@ export const categoryPath = (categorySlug: string, subcategorySlug?: string) =>
 // ---------- Merchandising lists ----------
 
 /** Latest launches, newest first; drives the "Novo" label and the shop's new-arrivals shelf. */
-const NEW_ARRIVAL_IDS = ['38', '39', '40', '41', '46', '71', '54', '55', '56', '57', '51', '53'];
+const NEW_ARRIVAL_IDS = ['91', '92', '93', '71', '54', '55', '57'];
 export const isNewArrival = (product: Pick<CatalogProduct, 'id'>) => NEW_ARRIVAL_IDS.includes(product.id);
+// The top of the shop: the arrivals, newest first, with the iPhone 16 among them (shown, not marked new).
+const SHOP_FIRST_IDS = ['91', '92', '93', '71', '54', '55', '42', '57'];
+// Position at the top of the shop; everything else after.
+const arrivalRank = (product: Pick<CatalogProduct, 'id'>) => {
+  const index = SHOP_FIRST_IDS.indexOf(product.id);
+  return index < 0 ? SHOP_FIRST_IDS.length : index;
+};
 export const newArrivals = () => NEW_ARRIVAL_IDS.map((id) => getProductById(id)).filter((p): p is CatalogProduct => Boolean(p));
 
 // ---------- Sorting ----------
@@ -250,7 +257,14 @@ export const sortProducts = (list: CatalogProduct[], sort: SortId) => {
     case 'novidades':
       return copy.sort((a, b) => Number(isNewArrival(b)) - Number(isNewArrival(a)) || Number(b.id) - Number(a.id));
     default:
-      return copy.sort((a, b) => popularity(b) - popularity(a));
+      // Featured: what has just arrived first, newest first; then products with studio photos;
+      // then the most popular.
+      return copy.sort(
+        (a, b) =>
+          arrivalRank(a) - arrivalRank(b) ||
+          Number(isCutout(b.primaryImage)) - Number(isCutout(a.primaryImage)) ||
+          popularity(b) - popularity(a),
+      );
   }
 };
 

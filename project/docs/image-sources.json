@@ -1,0 +1,137 @@
+[
+  {
+    "name": "iPhone 18 Pro (preto)",
+    "category": "smartphones",
+    "source": "Apple Store",
+    "url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-18-pro-finish-select-202609-6-3inch-black",
+    "file": "public/images/produtos/iphone-18-pro-preto-{600,1200}.webp",
+    "licence": "Imagem oficial do fabricante (material de marketing do produto). Uso confirmado pelos fornecedores da Rhulany Tech em 2026-11-14.",
+    "date": "2026-11-14"
+  },
+  {
+    "name": "iPhone 18 Pro (prateado)",
+    "category": "smartphones",
+    "source": "Apple Store",
+    "url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-18-pro-finish-select-202609-6-3inch-silver",
+    "file": "public/images/produtos/iphone-18-pro-prateado-{600,1200}.webp",
+    "licence": "Imagem oficial do fabricante (material de marketing do produto). Uso confirmado pelos fornecedores da Rhulany Tech em 2026-11-14.",
+    "date": "2026-11-14"
+  },
+  {
+    "name": "iPhone 18 Pro (glaciar)",
+    "category": "smartphones",
+    "source": "Apple Store",
+    "url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-18-pro-finish-select-202609-6-3inch-glacier",
+    "file": "public/images/produtos/iphone-18-pro-glaciar-{600,1200}.webp",
+    "licence": "Imagem oficial do fabricante (material de marketing do produto). Uso confirmado pelos fornecedores da Rhulany Tech em 2026-11-14.",
+    "date": "2026-11-14"
+  },
+  {
+    "name": "iPhone 18 Pro (bordeaux)",
+    "category": "smartphones",
+    "source": "Apple Store",
+    "url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-18-pro-finish-select-202609-6-3inch-burgundy",
+    "file": "public/images/produtos/iphone-18-pro-bordeaux-{600,1200}.webp",
+    "licence": "Imagem oficial do fabricante (material de marketing do produto). Uso confirmado pelos fornecedores da Rhulany Tech em 2026-11-14.",
+    "date": "2026-11-14"
+  },
+  {
+    "name": "iPhone Duo (branco-estelar)",
+    "category": "smartphones",
+    "source": "Apple Store",
+    "url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-duo-witb-star-white-202609",
+    "file": "public/images/produtos/iphone-duo-branco-estelar-{600,1200}.webp",
+    "licence": "Imagem oficial do fabricante (material de marketing do produto). Uso confirmado pelos fornecedores da Rhulany Tech em 2026-11-14.",
+    "date": "2026-11-14"
+  },
+  {
+    "name": "iPhone Duo (ceu-nocturno)",
+    "category": "smartphones",
+    "source": "Apple Store",
+    "url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-duo-witb-night-sky-202609",
+    "file": "public/images/produtos/iphone-duo-ceu-nocturno-{600,1200}.webp",
+    "licence": "Imagem oficial do fabricante (material de marketing do produto). Uso confirmado pelos fornecedores da Rhulany Tech em 2026-11-14.",
+    "date": "2026-11-14"
+  },
+  {
+    "name": "Galaxy S26 Ultra (cobalt-violet)",
+    "category": "smartphones",
+    "source": "Samsung (EUA)",
+    "url": "https://images.samsung.com/is/image/samsung/p6pim/us/s2602/gallery/us-galaxy-s26-ultra-s948-sm-s948uzvaxaa-550993910",
+    "file": "public/images/produtos/galaxy-s26-ultra-cobalt-violet-{600,1200}.webp",
+    "licence": "Imagem oficial do fabricante (material de marketing do produto). Uso confirmado pelos fornecedores da Rhulany Tech em 2026-11-14.",
+    "date": "2026-11-14"
+  },
+  {
+    "name": "Galaxy S26 Ultra (black)",
+    "category": "smartphones",
+    "source": "Samsung (EUA)",
+    "url": "https://images.samsung.com/is/image/samsung/p6pim/us/s2602/gallery/us-galaxy-s26-ultra-s948-sm-s948uzkaxaa-550993335",
+    "file": "public/images/produtos/galaxy-s26-ultra-black-{600,1200}.webp",
+    "licence": "Imagem oficial do fabricante (material de marketing do produto). Uso confirmado pelos fornecedores da Rhulany Tech em 2026-11-14.",
+    "date": "2026-11-14"
+  },
+  {
+    "name": "Galaxy S26 Ultra (sky-blue)",
+    "category": "smartphones",
+    "source": "Samsung (EUA)",
+    "url": "https://images.samsung.com/is/image/samsung/p6pim/us/s2602/gallery/us-galaxy-s26-ultra-s948-sm-s948ulbaxaa-550992884",
+    "file": "public/images/produtos/galaxy-s26-ultra-sky-blue-{600,1200}.webp",
+    "licence": "Imagem oficial do fabricante (material de marketing do produto). Uso confirmado pelos fornecedores da Rhulany Tech em 2026-11-14.",
+    "date": "2026-11-14"
+  },
+  {
+    "name": "Galaxy S26 Ultra (white)",
+    "category": "smartphones",
+    "source": "Samsung (EUA)",
+    "url": "https://images.samsung.com/is/image/samsung/p6pim/us/s2602/gallery/us-galaxy-s26-ultra-s948-sm-s948uzwaxaa-550994244",
+    "file": "public/images/produtos/galaxy-s26-ultra-white-{600,1200}.webp",
+    "licence": "Imagem oficial do fabricante (material de marketing do produto). Uso confirmado pelos fornecedores da Rhulany Tech em 2026-11-14.",
+    "date": "2026-11-14"
+  },
+  {
+    "name": "Steam Deck OLED",
+    "category": "gaming",
+    "source": "Valve, press kit",
+    "url": "https://cdn.akamai.steamstatic.com/steamdeck/images/press/renderings/press_oled_front_english.png",
+    "file": "public/images/produtos/steam-deck-oled-{600,1200}.webp",
+    "licence": "Imagem oficial do fabricante (material de marketing do produto). Uso confirmado pelos fornecedores da Rhulany Tech em 2026-11-14.",
+    "date": "2026-11-14"
+  },
+  {
+    "name": "Xbox Series S 512GB",
+    "category": "gaming",
+    "source": "Xbox.com",
+    "url": "https://cms-assets.xboxservices.com/assets/bf/b0/bfb06f23-4c87-4c58-b4d9-ed25d3a739b9.png",
+    "file": "public/images/produtos/xbox-series-s-512gb-{600,1200}.webp",
+    "licence": "Imagem oficial do fabricante (material de marketing do produto). Uso confirmado pelos fornecedores da Rhulany Tech em 2026-11-14.",
+    "date": "2026-11-14"
+  },
+  {
+    "name": "Logitech MX Keys S",
+    "category": "accessories",
+    "source": "Logitech.com",
+    "url": "https://resource.logitech.com/content/dam/logitech/en/products/keyboards/mx-keys-s/migration-assets-for-delorean-2025/gallery/mx-keys-s-fob-view-black-us.png",
+    "file": "public/images/produtos/logitech-mx-keys-s-{600,1200}.webp",
+    "licence": "Imagem oficial do fabricante (material de marketing do produto). Uso confirmado pelos fornecedores da Rhulany Tech em 2026-11-14.",
+    "date": "2026-11-14"
+  },
+  {
+    "name": "Logitech Brio 4K",
+    "category": "accessories",
+    "source": "Logitech.com",
+    "url": "https://resource.logitech.com/content/dam/logitech/en/products/webcams/4k-pro-webcam/gallery/4k-pro-gallery-1.png",
+    "file": "public/images/produtos/logitech-brio-4k-{600,1200}.webp",
+    "licence": "Imagem oficial do fabricante (material de marketing do produto). Uso confirmado pelos fornecedores da Rhulany Tech em 2026-11-14.",
+    "date": "2026-11-14"
+  },
+  {
+    "name": "Apple Magic Mouse",
+    "category": "accessories",
+    "source": "Apple Store",
+    "url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MXK53",
+    "file": "public/images/produtos/apple-magic-mouse-{600,1200}.webp",
+    "licence": "Imagem oficial do fabricante (material de marketing do produto). Uso confirmado pelos fornecedores da Rhulany Tech em 2026-11-14.",
+    "date": "2026-11-14"
+  }
+]

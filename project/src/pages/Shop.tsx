@@ -2,11 +2,12 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CATALOG, CATEGORIES, categoryFace, categoryPath, productsIn } from '../lib/catalog';
 import { easeOutExpo, inViewOnce } from '../lib/motion';
-import { STORE } from '../data/store';
 import Showroom from '../components/shop/Showroom';
+import PocketShop from '../components/shop/PocketShop';
 import Catalogue from '../components/shop/catalogue/Catalogue';
 import ProductImage from '../components/product/ProductImage';
-import { PhoneIcon, WhatsAppIcon } from '../components/ui/Icons';
+import PhoneCopy from '../components/ui/PhoneCopy';
+import Rail from '../components/ui/Rail';
 
 const SERVICES = [
   { title: 'Garantia oficial', body: 'Produtos originais e selados, com a garantia do fabricante.' },
@@ -35,7 +36,15 @@ const Shop = () => (
           </h2>
         </div>
       </div>
-      <ul className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
+      {/* Phones and tablets: a row to swipe; desktop: all six side by side */}
+      <Rail
+        label="Categorias"
+        className="mt-8"
+        gridClassName="lg:grid lg:grid-cols-6 lg:gap-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={inViewOnce}
+      >
         {CATEGORIES.map((category, index) => {
           const face = categoryFace(category.slug);
           return (
@@ -43,9 +52,7 @@ const Shop = () => (
               key={category.slug}
               custom={index}
               variants={reveal}
-              initial="hidden"
-              whileInView="visible"
-              viewport={inViewOnce}
+              className="w-[40%] shrink-0 snap-start sm:w-[28%] lg:w-auto"
             >
               <Link
                 to={categoryPath(category.slug)}
@@ -66,7 +73,7 @@ const Shop = () => (
             </motion.li>
           );
         })}
-      </ul>
+      </Rail>
     </section>
 
     {/* Catalogue */}
@@ -77,15 +84,20 @@ const Shop = () => (
           Todos os produtos
         </h2>
         <p className="type-lead mt-3 max-w-xl text-ink/60">
-          Originais, com garantia e entrega em todo o país. Filtre por marca, preço ou disponibilidade.
+          <PhoneCopy phone="Originais, com garantia e entrega">
+            Originais, com garantia e entrega em todo o país. Filtre por marca, preço ou disponibilidade.
+          </PhoneCopy>
         </p>
       </div>
       <Catalogue products={CATALOG} />
     </section>
 
-    {/* Services */}
+    {/* The shop on a phone, in 3D */}
+    <PocketShop />
+
+    {/* Services: one panel in four parts, split by hairlines (two by two on phones) */}
     <section aria-label="Porquê comprar na Rhulany Tech" className="container-site mt-24 lg:mt-32">
-      <ul className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+      <ul className="grid grid-cols-2 overflow-hidden rounded-[28px] bg-white ring-1 ring-ink/[0.06] lg:grid-cols-4">
         {SERVICES.map((service, index) => (
           <motion.li
             key={service.title}
@@ -94,45 +106,19 @@ const Shop = () => (
             initial="hidden"
             whileInView="visible"
             viewport={inViewOnce}
-            className="rounded-[22px] bg-white p-6 ring-1 ring-ink/[0.06] lg:p-7"
+            className={`flex flex-col border-ink/[0.07] p-6 sm:p-8 lg:p-10 ${index % 2 === 1 ? 'border-l' : ''} ${
+              index >= 2 ? 'border-t lg:border-t-0' : ''
+            } ${index === 2 ? 'lg:border-l' : ''}`}
           >
-            <h3 className="font-medium">{service.title}</h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-ink/60">{service.body}</p>
+            <span className="text-xs tabular-nums text-ink/35">{String(index + 1).padStart(2, '0')}</span>
+            <h3 className="mt-8 font-display text-[17px] font-medium leading-snug tracking-tight sm:text-xl lg:mt-14">
+              {service.title}
+            </h3>
+            {/* Phones: the four titles say enough */}
+            <p className="mt-2 text-sm leading-relaxed text-ink/55 max-sm:hidden">{service.body}</p>
           </motion.li>
         ))}
       </ul>
-    </section>
-
-    {/* Help */}
-    <section aria-labelledby="ajuda-compra" className="container-site mt-6">
-      <div className="flex flex-col gap-8 rounded-[26px] bg-ink px-6 py-10 text-paper sm:px-10 lg:flex-row lg:items-center lg:justify-between lg:px-14 lg:py-12">
-        <div className="max-w-xl">
-          <h2 id="ajuda-compra" className="type-title text-paper">
-            Não sabe qual escolher?
-          </h2>
-          <p className="mt-3 text-[15px] leading-relaxed text-paper/60">
-            Diga-nos para que precisa e quanto quer gastar. Respondemos com duas ou três opções que fazem sentido para si.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-3">
-          <a
-            href={STORE.whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-12 items-center gap-2.5 rounded-full bg-paper px-6 text-sm font-medium text-ink transition-transform duration-300 hover:scale-[1.03]"
-          >
-            <WhatsAppIcon className="h-[18px] w-[18px]" />
-            Falar no WhatsApp
-          </a>
-          <a
-            href={STORE.phoneHref}
-            className="inline-flex h-12 items-center gap-2.5 rounded-full px-6 text-sm font-medium text-paper ring-1 ring-inset ring-white/20 transition-colors hover:bg-white/10"
-          >
-            <PhoneIcon className="h-[18px] w-[18px]" />
-            {STORE.phone}
-          </a>
-        </div>
-      </div>
     </section>
   </div>
 );

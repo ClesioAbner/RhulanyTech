@@ -111,10 +111,17 @@ const ProductView = ({ product }: { product: CatalogProduct }) => {
             >
               Ler a visão geral
             </button>
+            {/* A product that has just arrived has no reviews yet */}
             <p className="mt-4 text-sm text-ink/55">
-              <span className="font-medium text-ink">{ratingFormatter.format(product.rating)} de 5</span>
-              <span className="mx-2">·</span>
-              {countFormatter.format(product.reviews)} avaliações
+              {product.reviews > 0 ? (
+                <>
+                  <span className="font-medium text-ink">{ratingFormatter.format(product.rating)} de 5</span>
+                  <span className="mx-2">·</span>
+                  {countFormatter.format(product.reviews)} avaliações
+                </>
+              ) : (
+                <span className="font-medium text-ink">Acabado de chegar</span>
+              )}
             </p>
 
             <div className="mt-8 flex items-baseline gap-3">

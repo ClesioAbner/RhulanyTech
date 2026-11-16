@@ -50,3 +50,22 @@ export const HAND: ScreenPhoto = {
     srcSet: '/images/blog/telemovel-mao-dedos-800.webp 800w, /images/blog/telemovel-mao-dedos-1400.webp 1400w',
   },
 };
+
+/*
+ * Free photo (CC0, StockSnap, "Design by Matt"): a hand holding a phone with its screen off.
+ * Corners are the display area, measured on the 960 × 1440 photo: the glass edges were traced and
+ * the bezel taken off, so the content never spills onto the frame.
+ */
+
+// Held straight on; the fingers stay on the frame, so nothing covers the display.
+export const FRONT: ScreenPhoto = {
+  width: 960,
+  height: 1440,
+  corners: [
+    [338.8, 250.3],
+    [613.7, 249.9],
+    [338.8, 886.7],
+    [613.7, 886.6],
+  ],
+  radius: 0.11,
+};

@@ -1,30 +1,50 @@
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { unsplash, unsplashSrcSet } from '../lib/images';
 import { easeOutExpo } from '../lib/motion';
+import { useMediaQuery } from '../lib/useMediaQuery';
 import { useUserStore } from '../stores/userStore';
 import AuthForm, { type AuthMode } from '../components/account/AuthForm';
+import PhotoScreen from '../components/content/PhotoScreen';
+import { FRONT } from '../components/content/chat/photos';
+import AccountScreen from '../components/content/screens/AccountScreen';
+import PaymentStoryScreen from '../components/content/screens/PaymentStoryScreen';
 
-// One photo per mode; switching tabs crossfades between them.
-const PHOTOS: Record<AuthMode, { id: string; alt: string; caption: string }> = {
+// One hand and phone for both tabs; only the screen changes: paying in the checkout, or the account.
+const SCREENS: Record<AuthMode, { caption: string; alt: string; screen: () => JSX.Element }> = {
   entrar: {
-    id: '1616440347437-b1c73416efc2',
-    alt: 'Secretária de trabalho com monitor, colunas e plantas',
-    caption: 'As suas encomendas, recibos e dados de entrega num só lugar',
+    caption: 'Pague com M-Pesa, e-Mola, mKesh, cartão ou PayPal, e a encomenda segue logo',
+    alt: 'Mão a segurar um telemóvel com o pagamento da Rhulany Tech no ecrã',
+    screen: PaymentStoryScreen,
   },
   criar: {
-    id: '1603025832572-c5ba1fb6be8b',
-    alt: 'Secretária clara com portátil, monitor e plantas',
-    caption: 'Compre mais depressa, com a morada e o contacto já preenchidos',
+    caption: 'As suas encomendas, recibos e dados de entrega num só lugar',
+    alt: 'Mão a segurar um telemóvel com a conta da Rhulany Tech no ecrã',
+    screen: AccountScreen,
   },
+};
+
+/** Width over height of an element, kept up to date, so a photo can be framed to fill it. */
+const useAspect = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [aspect, setAspect] = useState(0);
+  useLayoutEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    const measure = () => setAspect(element.clientHeight ? element.clientWidth / element.clientHeight : 0);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+  return [ref, aspect] as const;
 };
 
 // Only follow redirects inside the site.
 const safeReturn = (value: string | null) => (value && value.startsWith('/') && !value.startsWith('//') ? value : '/conta');
 
-/** /entrar: sign in or create an account, with a photo beside the form. */
+/** /entrar: sign in or create an account, with a photo beside the form (above it on phones and tablets). */
 const SignIn = () => {
   const [params, setParams] = useSearchParams();
   const navigate = useNavigate();
@@ -32,7 +52,9 @@ const SignIn = () => {
   const mode: AuthMode = params.get('modo') === 'criar' ? 'criar' : 'entrar';
   const back = safeReturn(params.get('voltar'));
   const leave = params.get('voltar') && back !== '/conta' ? back : '/';
-  const photo = PHOTOS[mode];
+  const { caption, alt, screen: Screen } = SCREENS[mode];
+  const [panelRef, aspect] = useAspect();
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   useEffect(() => {
     document.title = `${mode === 'entrar' ? 'Entrar' : 'Criar conta'} | Rhulany Tech`;
@@ -52,31 +74,63 @@ const SignIn = () => {
 
   return (
     <div className="grid min-h-[100svh] lg:grid-cols-2">
-      <div className="relative hidden overflow-hidden bg-ink lg:block">
+      {/* Desktop: the photo stays in view while a longer form scrolls beside it. Phones: a banner over the form. */}
+      <div
+        ref={panelRef}
+        className="relative h-[46svh] min-h-[360px] overflow-hidden bg-[#ece9e4] sm:h-[52svh] lg:sticky lg:top-0 lg:h-[100svh] lg:min-h-0 lg:self-start"
+      >
         <Link
           to="/"
-          className="absolute left-12 top-10 z-10 font-display text-xl font-semibold tracking-tight text-paper xl:left-16"
+          className="absolute left-5 top-7 z-10 font-display text-lg font-semibold tracking-tight sm:left-10 lg:left-12 lg:top-10 lg:text-xl xl:left-16"
           aria-label="Rhulany Tech, página inicial"
         >
-          Rhulany<span className="text-paper/55">Tech</span>
+          Rhulany<span className="text-ink/40">Tech</span>
         </Link>
-        {/* Both photos load up front and crossfade, so switching tabs never shows an empty frame */}
-        {(Object.keys(PHOTOS) as AuthMode[]).map((key) => (
-          <motion.img
-            key={key}
-            src={unsplash(PHOTOS[key].id, 1600)}
-            srcSet={unsplashSrcSet(PHOTOS[key].id)}
-            sizes="50vw"
-            alt={key === mode ? PHOTOS[key].alt : ''}
-            aria-hidden={key !== mode}
-            className="absolute inset-0 h-full w-full object-cover"
-            initial={false}
-            animate={{ opacity: key === mode ? 1 : 0, scale: key === mode ? 1 : 1.06 }}
-            transition={{ duration: 1.1, ease: easeOutExpo }}
-          />
-        ))}
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/10 to-ink/20" />
-        <div className="absolute inset-x-0 bottom-0 p-12 text-paper xl:p-16">
+        <Link
+          to={leave}
+          className="absolute right-5 top-5 z-10 inline-flex h-10 items-center rounded-full bg-white/90 px-5 text-sm font-medium backdrop-blur sm:right-10 lg:hidden"
+        >
+          Voltar
+        </Link>
+        {aspect > 0 && (
+          <div className="absolute inset-0">
+            <PhotoScreen
+              src="/images/telemovel/mao-frente-960.jpg"
+              srcSet="/images/telemovel/mao-frente-600.jpg 600w, /images/telemovel/mao-frente-960.jpg 960w"
+              sizes="50vw"
+              alt={alt}
+              photo={FRONT}
+              aspect={aspect}
+              // A little more contrast and warmth than the stock photo, and light on the glass.
+              imageClassName="[filter:contrast(1.06)_saturate(1.1)_sepia(0.06)]"
+              glare
+              // Never narrower than the panel, whatever its shape; closer in on the shorter phone banner.
+              zoom={Math.max(isDesktop ? 1 : 1.15, FRONT.width / FRONT.height / aspect)}
+              focus={{ x: 0.5, y: 0.395 }}
+              target={{ x: 0.5, y: isDesktop ? 0.42 : 0.62 }}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={mode}
+                  className="h-full"
+                  aria-hidden="true"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.35 }}
+                >
+                  <Screen />
+                </motion.div>
+              </AnimatePresence>
+            </PhotoScreen>
+          </div>
+        )}
+        {/* Soft vignette that draws the eye to the phone */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(75%_65%_at_50%_42%,transparent_50%,rgba(70,52,36,0.14)_100%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-[42%] bg-gradient-to-t from-[#ece9e4] via-[#ece9e4]/80 to-transparent max-lg:hidden" />
+        {/* Phones: the photo melts into the page above the form */}
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-paper to-transparent lg:hidden" />
+        <div className="absolute inset-x-0 bottom-0 hidden p-12 lg:block xl:p-16">
           <AnimatePresence mode="wait" initial={false}>
             <motion.p
               key={mode}
@@ -86,14 +140,14 @@ const SignIn = () => {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.6, ease: easeOutExpo }}
             >
-              {photo.caption}
+              {caption}
             </motion.p>
           </AnimatePresence>
         </div>
       </div>
 
-      <div className="relative flex flex-col justify-center px-5 pb-16 pt-24 sm:px-10 lg:px-14 lg:pt-28 xl:px-20">
-        <div className="absolute inset-x-5 top-7 flex items-center justify-between sm:inset-x-10 lg:inset-x-14 lg:top-9 xl:inset-x-20">
+      <div className="relative flex flex-col px-5 pb-14 pt-9 sm:px-10 sm:pt-12 lg:justify-center lg:px-14 lg:pb-16 lg:pt-28 xl:px-20">
+        <div className="absolute inset-x-14 top-9 hidden items-center justify-between lg:flex xl:inset-x-20">
           <Link
             to="/"
             className="font-display text-lg font-semibold tracking-tight lg:invisible"
@@ -122,7 +176,7 @@ const SignIn = () => {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.4, ease: easeOutExpo }}
             >
-              <h1 className="type-display">{mode === 'entrar' ? 'Bem-vindo de volta' : 'Crie a sua conta'}</h1>
+              <h1 className="type-banner">{mode === 'entrar' ? 'Bem-vindo de volta' : 'Crie a sua conta'}</h1>
               <p className="type-lead mt-3 text-ink/55">
                 {mode === 'entrar' ? 'Entre para acompanhar as suas encomendas' : 'Leva menos de um minuto'}
               </p>

@@ -756,3 +756,5 @@ export const formatArticleDate = (iso: string) => dateFormatter.format(new Date(
 
 /** Every guide, newest first. */
 export const ARTICLES_BY_DATE = [...ARTICLES].sort((a, b) => b.date.localeCompare(a.date));
+/** The essential guides at the top of the blog: the newest four. */
+export const BLOG_PICKS = ARTICLES_BY_DATE.slice(0, 4);

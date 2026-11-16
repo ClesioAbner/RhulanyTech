@@ -8,6 +8,7 @@ import { useCartStore } from '../../stores/cartStore';
 import { useCartUi } from '../../stores/cartUi';
 import CartLineItem from './CartLineItem';
 import RollingPrice from './RollingPrice';
+import { clearWithUndo } from './removeWithUndo';
 
 const DISMISS_DISTANCE = 120;
 const DISMISS_VELOCITY = 500;
@@ -192,7 +193,7 @@ const CartDrawer = () => {
                 >
                   Finalizar compra
                 </button>
-                <div className="mt-4 flex items-center justify-center gap-6 text-sm">
+                <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
                   <Link to="/cart" onClick={close} className="link-underline text-ink/65 hover:text-ink">
                     Ver carrinho
                   </Link>
@@ -204,6 +205,9 @@ const CartDrawer = () => {
                   >
                     Pedir no WhatsApp
                   </a>
+                  <button type="button" onClick={clearWithUndo} className="link-underline text-ink/65 hover:text-ink">
+                    Limpar carrinho
+                  </button>
                 </div>
               </div>
             )}

@@ -13,7 +13,7 @@ const spring = { stiffness: 200, damping: 24, mass: 0.6 };
 
 interface ProductCardProps {
   product: CatalogProduct;
-  /** Desktop only: leaves the image area empty so a 3D model rendered elsewhere can sit in it. */
+  /** Leaves the image area empty so a 3D model rendered elsewhere can sit in it. */
   mediaSlotRef?: RefObject<HTMLDivElement>;
   /** Larger type for editorial grids with fewer columns. */
   size?: 'regular' | 'large';
@@ -53,7 +53,7 @@ const FeaturedProductCard = ({ product, mediaSlotRef, size = 'regular' }: Produc
   const handleQuickAdd = () => addToCart(product, product.finishes[0], product.option?.choices[0]);
 
   return (
-    <article className="tap-feedback group [perspective:1000px]">
+    <article className="tap-feedback group flex h-full flex-col [perspective:1000px]">
       <motion.div
         ref={cardRef}
         onPointerMove={handlePointerMove}
@@ -65,7 +65,7 @@ const FeaturedProductCard = ({ product, mediaSlotRef, size = 'regular' }: Produc
           <span
             className={`absolute inset-0 transition-[transform,opacity] duration-700 ease-out-expo group-hover:scale-[1.03] ${
               secondImage && !mediaSlotRef ? 'lg:group-hover:opacity-0' : ''
-            } ${mediaSlotRef ? 'lg:hidden' : ''}`}
+            } ${mediaSlotRef ? 'hidden' : ''}`}
           >
             <ProductImage src={product.primaryImage} loading="lazy" />
           </span>
@@ -77,7 +77,7 @@ const FeaturedProductCard = ({ product, mediaSlotRef, size = 'regular' }: Produc
           {mediaSlotRef && (
             <div
               ref={mediaSlotRef}
-              className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(ellipse_at_50%_85%,rgba(12,12,13,0.12),transparent_55%)] lg:block"
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_85%,rgba(12,12,13,0.12),transparent_55%)]"
             />
           )}
         </Link>
@@ -96,7 +96,7 @@ const FeaturedProductCard = ({ product, mediaSlotRef, size = 'regular' }: Produc
         </button>
       </motion.div>
 
-      <div className="mt-5">
+      <div className="mt-5 flex flex-1 flex-col">
         <p className="text-xs uppercase tracking-[0.14em] text-ink/45">{product.brand}</p>
         <h3
           className={`mt-1.5 font-medium leading-snug ${size === 'large' ? 'font-display text-xl tracking-tight' : 'text-[15px]'}`}
@@ -135,6 +135,17 @@ const FeaturedProductCard = ({ product, mediaSlotRef, size = 'regular' }: Produc
             </ul>
           )}
         </div>
+
+        {/* Phones and tablets: one plain button to buy, level across the cards */}
+        <span className="h-4 shrink-0 lg:hidden" aria-hidden="true" />
+        <button
+          type="button"
+          onClick={handleQuickAdd}
+          disabled={!product.inStock}
+          className="mt-auto h-11 w-full shrink-0 rounded-full bg-ink text-sm font-medium text-paper transition-transform duration-200 active:scale-[0.98] disabled:bg-ink/10 disabled:text-ink/40 lg:hidden"
+        >
+          {product.inStock ? 'Comprar' : 'Esgotado'}
+        </button>
       </div>
     </article>
   );

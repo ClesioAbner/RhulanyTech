@@ -10,20 +10,28 @@ export interface Line {
   ticks: Ticks;
   /** Emoji reaction shown under the bubble. */
   reaction?: string;
+  /** In a group: who sent it, shown above the text. */
+  name?: string;
+  /** A sticker instead of a text bubble: its image; `text` describes it. */
+  sticker?: string;
 }
 
 export interface ChatState {
   lines: Line[];
   composing: string;
   typing: boolean;
+  /** In a group: who is typing. */
+  typingName?: string;
 }
 
 export type Step =
   | { type: 'compose'; text: string; duration?: number }
   | { type: 'send' }
   | { type: 'ticks'; value: Ticks; after: number }
-  | { type: 'typing'; duration: number }
-  | { type: 'reply'; text: string }
+  | { type: 'typing'; duration: number; name?: string }
+  | { type: 'reply'; text: string; name?: string }
+  /** Sent by the phone's owner, or with `name` by someone else in the group. */
+  | { type: 'sticker'; src: string; alt: string; name?: string }
   | { type: 'react'; emoji: string; after: number }
   | { type: 'wait'; duration: number };
 
@@ -68,9 +76,9 @@ export const useChatScript = (steps: Step[], active: boolean, loop: boolean) => 
               lines: s.lines.map((line) => (line.from === 'cliente' ? { ...line, ticks: step.value } : line)),
             }));
           } else if (step.type === 'typing') {
-            setState((s) => ({ ...s, typing: true }));
+            setState((s) => ({ ...s, typing: true, typingName: step.name }));
             await sleep(step.duration);
-            setState((s) => ({ ...s, typing: false }));
+            setState((s) => ({ ...s, typing: false, typingName: undefined }));
           } else if (step.type === 'react') {
             await sleep(step.after);
             // The store reacts to the customer's latest message.
@@ -83,8 +91,30 @@ export const useChatScript = (steps: Step[], active: boolean, loop: boolean) => 
           } else if (step.type === 'reply') {
             idRef.current += 1;
             const id = idRef.current;
-            setState((s) => ({ ...s, lines: [...s.lines, { id, from: 'loja', text: step.text, time: clock(), ticks: 0 }] }));
+            setState((s) => ({
+              ...s,
+              lines: [...s.lines, { id, from: 'loja', text: step.text, name: step.name, time: clock(), ticks: 0 }],
+            }));
             await sleep(500);
+          } else if (step.type === 'sticker') {
+            idRef.current += 1;
+            const id = idRef.current;
+            setState((s) => ({
+              ...s,
+              lines: [
+                ...s.lines,
+                {
+                  id,
+                  from: step.name ? 'loja' : 'cliente',
+                  name: step.name,
+                  text: step.alt,
+                  sticker: step.src,
+                  time: clock(),
+                  ticks: step.name ? 0 : 3,
+                },
+              ],
+            }));
+            await sleep(600);
           } else {
             await sleep(step.duration);
           }

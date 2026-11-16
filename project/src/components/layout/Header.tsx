@@ -5,6 +5,7 @@ import { useCartStore } from '../../stores/cartStore';
 import { useUserStore } from '../../stores/userStore';
 import { useCartUi } from '../../stores/cartUi';
 import { easeOutExpo } from '../../lib/motion';
+import { useMediaQuery } from '../../lib/useMediaQuery';
 import { CartIcon } from '../ui/Icons';
 
 const NAV_ITEMS = [
@@ -18,6 +19,27 @@ const NAV_ITEMS = [
 // "Início" is only active on the homepage; product pages belong to the shop.
 const isNavItemActive = (to: string, pathname: string) =>
   to === '/' ? pathname === '/' : pathname.startsWith(to) || (to === '/loja' && pathname.startsWith('/produto/'));
+
+// Three lines that fold into a cross: the outer two meet in the middle and turn, the middle one fades.
+const LINES = [
+  { y: -6, open: { y: 0, rotate: 45 } },
+  { y: 0, open: { y: 0, scaleX: 0, opacity: 0 } },
+  { y: 6, open: { y: 0, rotate: -45 } },
+];
+
+const MenuLines = ({ open }: { open: boolean }) => (
+  <span aria-hidden="true" className="relative block h-5 w-5">
+    {LINES.map((line) => (
+      <motion.span
+        key={line.y}
+        className="absolute left-[1px] right-[1px] top-1/2 -mt-[0.75px] block h-[1.5px] rounded-full bg-current"
+        initial={false}
+        animate={open ? line.open : { y: line.y, rotate: 0, scaleX: 1, opacity: 1 }}
+        transition={{ duration: 0.45, ease: easeOutExpo }}
+      />
+    ))}
+  </span>
+);
 
 const COMPACT_AFTER = 48; // px scrolled before the bar contracts
 // Minimal contraction on scroll: the bar stays full-featured, it just tightens and lifts.
@@ -46,6 +68,7 @@ const Header = () => {
   }, [isMenuOpen]);
 
   const compact = isCompact && !isMenuOpen;
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
@@ -55,19 +78,33 @@ const Header = () => {
         animate={{
           maxWidth: compact ? 1200 : 1360,
           height: compact ? 58 : 64,
-          paddingLeft: compact ? 24 : 28,
+          // Below desktop the menu button sits at the left edge, matching the cart's margin on the right.
+          paddingLeft: isDesktop ? (compact ? 24 : 28) : compact ? 8 : 10,
           paddingRight: compact ? 8 : 10,
           boxShadow: compact ? '0 18px 40px -24px rgba(12,12,13,0.35)' : '0 0px 0px 0px rgba(12,12,13,0)',
         }}
         transition={barTransition}
       >
-        <Link
-          to="/"
-          className="shrink-0 font-display text-[17px] font-semibold tracking-tight"
-          aria-label="Rhulany Tech, página inicial"
-        >
-          Rhulany<span className="text-ink/40">Tech</span>
-        </Link>
+        {/* Below desktop: the menu at the left edge, with the logo right after it */}
+        <div className="flex shrink-0 items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen((open) => !open)}
+            className="grid h-10 w-10 place-items-center rounded-full transition-colors hover:bg-ink/[0.05] lg:hidden"
+            aria-label={isMenuOpen ? 'Fechar o menu' : 'Abrir o menu'}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
+          >
+            <MenuLines open={isMenuOpen} />
+          </button>
+          <Link
+            to="/"
+            className="shrink-0 font-display text-[17px] font-semibold tracking-tight"
+            aria-label="Rhulany Tech, página inicial"
+          >
+            Rhulany<span className="text-ink/40">Tech</span>
+          </Link>
+        </div>
 
         <nav aria-label="Principal" className="hidden lg:block">
           <ul className="flex items-center gap-9">
@@ -132,16 +169,6 @@ const Header = () => {
                 </motion.span>
               </AnimatePresence>
             </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setIsMenuOpen((open) => !open)}
-            className="inline-flex h-10 items-center rounded-full px-4 transition-colors hover:bg-ink/[0.05] lg:hidden"
-            aria-expanded={isMenuOpen}
-            aria-controls="mobile-menu"
-          >
-            {isMenuOpen ? 'Fechar' : 'Menu'}
           </button>
         </div>
       </motion.div>

@@ -50,6 +50,21 @@ const TickMarks = ({ value }: { value: Ticks }) => {
   );
 };
 
+/** iPhone status bar: time and icons either side of the Dynamic Island. Shared by every phone screen. */
+export const StatusBar = () => (
+  <div className="relative grid h-[13.6cqw] shrink-0 grid-cols-[1fr_32cqw_1fr] items-center pt-[0.6cqw] text-[4.2cqw] font-semibold tabular-nums tracking-tight">
+    <span className="justify-self-center pl-[2cqw]">{clock()}</span>
+    <span aria-hidden="true" className="h-[9.4cqw] rounded-full bg-black shadow-[inset_0_0_0_0.3cqw_rgba(255,255,255,0.04)]">
+      <span className="ml-auto mr-[3.2cqw] mt-[3.2cqw] block h-[3cqw] w-[3cqw] rounded-full bg-[radial-gradient(circle_at_35%_35%,#2a3550_0%,#0b0d14_60%)]" />
+    </span>
+    <span className="flex items-center gap-[1.2cqw] justify-self-center pr-[2cqw]">
+      <Signal />
+      <span className="text-[3.1cqw] font-semibold">4G</span>
+      <Battery />
+    </span>
+  </div>
+);
+
 // Chat wallpaper: tech line drawings (phone, headphones, gamepad, laptop, camera, watch, chip, bolt).
 const WALLPAPER_TILE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="rgba(30,41,59,0.11)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
 <rect x="10" y="8" width="16" height="28" rx="4"/><path d="M15 11h6"/>
@@ -84,20 +99,24 @@ const BusinessCard = () => (
   </div>
 );
 
-const ChatScreen = ({ state }: { state: ChatState }) => (
+/** A group chat instead of the store's: its name, and each member's name colour. */
+export interface ChatGroup {
+  name: string;
+  /** The group's profile photo. */
+  photo?: string;
+  members: Record<string, string>;
+}
+
+/** A sticker as WhatsApp shows them: no bubble, just the picture in its white die-cut frame. */
+const Sticker = ({ src, alt }: { src: string; alt: string }) => (
+  <span className="block w-[36cqw] overflow-hidden rounded-[2cqw] border-[0.8cqw] border-white shadow-[0_1cqw_2.4cqw_-0.6cqw_rgba(12,12,13,0.35)]">
+    <img src={src} alt={alt} className="block aspect-square w-full object-cover" />
+  </span>
+);
+
+const ChatScreen = ({ state, group }: { state: ChatState; group?: ChatGroup }) => (
   <div className="flex h-full flex-col bg-white font-sans text-ink">
-    {/* Status bar: time and icons either side of the Dynamic Island */}
-    <div className="relative grid h-[13.6cqw] shrink-0 grid-cols-[1fr_32cqw_1fr] items-center pt-[0.6cqw] text-[4.2cqw] font-semibold tabular-nums tracking-tight">
-      <span className="justify-self-center pl-[2cqw]">{clock()}</span>
-      <span aria-hidden="true" className="h-[9.4cqw] rounded-full bg-black shadow-[inset_0_0_0_0.3cqw_rgba(255,255,255,0.04)]">
-        <span className="ml-auto mr-[3.2cqw] mt-[3.2cqw] block h-[3cqw] w-[3cqw] rounded-full bg-[radial-gradient(circle_at_35%_35%,#2a3550_0%,#0b0d14_60%)]" />
-      </span>
-      <span className="flex items-center gap-[1.2cqw] justify-self-center pr-[2cqw]">
-        <Signal />
-        <span className="text-[3.1cqw] font-semibold">4G</span>
-        <Battery />
-      </span>
-    </div>
+    <StatusBar />
 
     {/* Conversation header */}
     <div className="flex shrink-0 items-center gap-[2.4cqw] border-b border-ink/[0.08] px-[3.5cqw] pb-[2.4cqw] pt-[1cqw]">
@@ -112,20 +131,24 @@ const ChatScreen = ({ state }: { state: ChatState }) => (
         />
       </svg>
       <span className="grid h-[9cqw] w-[9cqw] shrink-0 place-items-center rounded-full bg-ink text-[3.2cqw] font-semibold text-paper">
-        RT
+        {group?.photo ? <img src={group.photo} alt="" className="h-full w-full rounded-full object-cover" /> : 'RT'}
       </span>
       <span className="min-w-0 flex-1 leading-tight">
-        <span className="block truncate text-[4.1cqw] font-semibold">Rhulany Tech</span>
+        <span className="block truncate text-[4.1cqw] font-semibold">{group ? group.name : 'Rhulany Tech'}</span>
         <AnimatePresence mode="wait" initial={false}>
           <motion.span
-            key={state.typing ? 'escreve' : 'online'}
-            className={`block text-[3cqw] ${state.typing ? 'text-[#25a244]' : 'text-ink/45'}`}
+            key={state.typing ? `escreve-${state.typingName ?? ''}` : 'online'}
+            className={`block truncate text-[3cqw] ${state.typing ? 'text-[#25a244]' : 'text-ink/45'}`}
             initial={{ opacity: 0, y: 3 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -3 }}
             transition={{ duration: 0.2 }}
           >
-            {state.typing ? 'a escrever…' : 'online'}
+            {state.typing
+              ? `${group && state.typingName ? `${state.typingName.split(' ')[0]} está ` : ''}a escrever…`
+              : group
+                ? `${Object.keys(group.members).join(', ')}, Tu`
+                : 'online'}
           </motion.span>
         </AnimatePresence>
       </span>
@@ -149,14 +172,29 @@ const ChatScreen = ({ state }: { state: ChatState }) => (
       className="relative flex min-h-0 flex-1 flex-col justify-end overflow-hidden bg-[#eceff3] px-[3cqw] pb-[2.4cqw]"
       style={{ backgroundImage: WALLPAPER, backgroundSize: '36cqw 36cqw' }}
     >
-      <BusinessCard />
+      {group ? <span className="mb-auto" /> : <BusinessCard />}
       <span className="mx-auto mb-[2cqw] mt-[2.4cqw] rounded-[1.6cqw] bg-white/90 px-[2.4cqw] py-[0.8cqw] text-[2.7cqw] font-medium text-ink/55 shadow-sm">
         Hoje
       </span>
       <AnimatePresence initial={false}>
         {state.lines.map((line, index) => {
-          const first = state.lines[index - 1]?.from !== line.from;
+          const previous = state.lines[index - 1];
+          const first = previous?.from !== line.from || previous?.name !== line.name;
           const own = line.from === 'cliente';
+          if (line.sticker)
+            return (
+              <motion.div
+                key={line.id}
+                layout
+                className={`mt-[2.2cqw] flex ${line.from === 'cliente' ? 'justify-end pr-[2cqw]' : 'justify-start pl-[2cqw]'}`}
+                initial={{ opacity: 0, scale: 0.4 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 380, damping: 18 }}
+              >
+                <Sticker src={line.sticker} alt={line.text} />
+              </motion.div>
+            );
           return (
             <motion.div
               key={line.id}
@@ -172,7 +210,17 @@ const ChatScreen = ({ state }: { state: ChatState }) => (
                   own ? `bg-[#d9fdd3] ${first ? 'rounded-tr-[0.6cqw]' : ''}` : `bg-white ${first ? 'rounded-tl-[0.6cqw]' : ''}`
                 }`}
               >
-                {line.text}
+                {group && line.name && first && (
+                  <span className="mb-[0.4cqw] block text-[3.1cqw] font-semibold" style={{ color: group.members[line.name] }}>
+                    {line.name}
+                  </span>
+                )}
+                {/* A web address reads as a link, as in WhatsApp */}
+                {/^[\w.-]+\.[a-z]{2,}(\/\S*)?$/i.test(line.text) ? (
+                  <span className="text-[#0a84ff] underline">{line.text}</span>
+                ) : (
+                  line.text
+                )}
                 <span className="float-right ml-[2cqw] mt-[1.2cqw] inline-flex items-center gap-[0.8cqw] text-[2.6cqw] tabular-nums text-ink/45">
                   {line.time}
                   {own && <TickMarks value={line.ticks} />}

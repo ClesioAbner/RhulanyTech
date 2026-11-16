@@ -1,16 +1,14 @@
 import Hero from '../components/home/Hero';
-import CategoryGrid from '../components/home/CategoryGrid';
 import ShopToPayments from '../components/home/ShopToPayments';
-import GamingFeature from '../components/home/GamingFeature';
 import Services from '../components/home/Services';
 import StoreVisit from '../components/home/StoreVisit';
+import Manifesto from '../components/home/Manifesto';
 
 const Home = () => (
   <>
     <Hero />
-    <CategoryGrid />
+    <Manifesto />
     <ShopToPayments />
-    <GamingFeature />
     <Services />
     <StoreVisit />
   </>

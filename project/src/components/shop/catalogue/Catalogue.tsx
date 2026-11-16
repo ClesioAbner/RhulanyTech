@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -15,12 +15,17 @@ import {
   type Subcategory,
 } from '../../../lib/catalog';
 import { easeOutExpo } from '../../../lib/motion';
+import { useMediaQuery } from '../../../lib/useMediaQuery';
 import { STORE } from '../../../data/store';
 import ProductCard from '../../product/ProductCard';
 import SortMenu from '../SortMenu';
+import ChipLoader from '../../ui/ChipLoader';
 import { SearchIcon } from '../../ui/Icons';
 import { Group, NavItem, Option } from './FilterControls';
 import { PAGE, PRICES, VISIBLE_BRANDS, countLabel, fold, isSort } from './filters';
+
+// How long the chip works before a search or the next page of products shows.
+const LOADER_MS = 1500;
 
 interface CatalogueProps {
   /** Products in scope: the whole shop, a category or one of its ranges. */
@@ -30,8 +35,9 @@ interface CatalogueProps {
 }
 
 /*
- * The shop's organised view: the sections of the shop and the filters on the left, results with
- * search and order on the right. Filters live in the URL, so a filtered list can be shared.
+ * The shop's organised view: the products across the full width under one slim bar (search,
+ * filters, count and order) that stays in view. The filters open in a panel, from the right on
+ * desktop and from the bottom on phones. Filters live in the URL, so a filtered list can be shared.
  */
 const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
   const [params, setParams] = useSearchParams();
@@ -39,6 +45,19 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [allBrands, setAllBrands] = useState(false);
   const { pathname } = useLocation();
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+  // The chip loader, while a search runs or more products are on their way.
+  const [busy, setBusy] = useState<'search' | 'more' | null>(null);
+  const busyTimer = useRef<number>();
+  const work = (kind: 'search' | 'more', then?: () => void) => {
+    window.clearTimeout(busyTimer.current);
+    setBusy(kind);
+    busyTimer.current = window.setTimeout(() => {
+      then?.();
+      setBusy(null);
+    }, LOADER_MS);
+  };
+  useEffect(() => () => window.clearTimeout(busyTimer.current), []);
   useEffect(() => setSheetOpen(false), [pathname]);
 
   const sort: SortId = isSort(params.get('ordem')) ? (params.get('ordem') as SortId) : 'destaque';
@@ -57,7 +76,10 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
   // Search applies as the visitor types, after a short pause.
   useEffect(() => {
     if (draft === query) return;
-    const timer = window.setTimeout(() => update({ q: draft.trim() || null }), 250);
+    const timer = window.setTimeout(() => {
+      update({ q: draft.trim() || null });
+      work('search');
+    }, 250);
     return () => window.clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draft]);
@@ -97,7 +119,7 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
   // Selected brands stay in view even when the list is folded.
   const brandList = [...visibleBrands, ...brands.filter((b) => !visibleBrands.includes(b) && brandOptions.includes(b))];
 
-  const renderFilters = (where: 'side' | 'sheet') => (
+  const renderFilters = (where: 'sheet') => (
     <>
       <Group title={category ? 'Gamas' : 'Categorias'}>
         {category ? (
@@ -215,53 +237,39 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
   }, [sheetOpen]);
 
   return (
-    <div className="lg:grid lg:grid-cols-[232px_1fr] lg:gap-12 xl:grid-cols-[256px_1fr] xl:gap-16">
-      <aside aria-label="Filtros" className="hidden lg:block">
-        <div className="sticky top-28 max-h-[calc(100svh-8rem)] overflow-y-auto rounded-[24px] bg-white ring-1 ring-ink/[0.06] [scrollbar-width:thin]">
-          <div className="flex items-center justify-between px-5 pb-1 pt-5">
-            <p className="text-xs font-medium uppercase tracking-[0.14em] text-ink/45">Filtrar</p>
-            {activeCount > 0 && (
-              <button type="button" onClick={clearAll} className="link-underline text-xs font-medium text-ink/70 hover:text-ink">
-                Limpar ({activeCount})
-              </button>
-            )}
-          </div>
-          {renderFilters('side')}
-        </div>
-      </aside>
-
+    <div>
       <div className="min-w-0">
-        {/* Sections of the shop, always at hand on small screens (the sidebar holds them on desktop) */}
-        <nav
-          aria-label={category ? 'Gamas' : 'Categorias'}
-          className="-mx-5 mb-4 flex gap-2 overflow-x-auto px-5 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:hidden [&::-webkit-scrollbar]:hidden"
-        >
-          {(category
-            ? [
-                { to: keepSort(categoryPath(category.slug)), label: 'Tudo', active: !subcategory },
-                ...category.subcategories.map((sub) => ({
-                  to: keepSort(categoryPath(category.slug, sub.slug)),
-                  label: sub.name,
-                  active: subcategory?.slug === sub.slug,
-                })),
-              ]
-            : CATEGORIES.map((item) => ({ to: categoryPath(item.slug), label: item.name, active: false }))
-          ).map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              aria-current={item.active ? 'page' : undefined}
-              className={`inline-flex h-10 shrink-0 items-center rounded-full px-4 text-sm transition-colors ${
-                item.active ? 'bg-ink text-paper' : 'bg-white ring-1 ring-ink/10'
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        {/* A category's ranges, at hand above the results. The whole shop needs none: its categories
+            are shown just above the catalogue. */}
+        {category && (
+          <nav
+            aria-label="Gamas"
+            className="-mx-5 mb-4 flex gap-2 overflow-x-auto px-5 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:mx-0 lg:mb-5 lg:flex-wrap lg:px-0 [&::-webkit-scrollbar]:hidden"
+          >
+            {[
+              { to: keepSort(categoryPath(category.slug)), label: 'Tudo', active: !subcategory },
+              ...category.subcategories.map((sub) => ({
+                to: keepSort(categoryPath(category.slug, sub.slug)),
+                label: sub.name,
+                active: subcategory?.slug === sub.slug,
+              })),
+            ].map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                aria-current={item.active ? 'page' : undefined}
+                className={`inline-flex h-10 shrink-0 items-center rounded-full px-4 text-sm transition-colors ${
+                  item.active ? 'bg-ink text-paper' : 'bg-white ring-1 ring-ink/10'
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        )}
 
-        {/* Toolbar */}
-        <div className="flex flex-wrap items-center gap-3">
+        {/* Toolbar. Desktop: it stays under the header while the results scroll. */}
+        <div className="flex flex-wrap items-center gap-3 lg:sticky lg:top-[88px] lg:z-20 lg:-mx-3 lg:rounded-full lg:bg-paper/85 lg:px-3 lg:py-3 lg:backdrop-blur-xl">
           <label className="relative flex h-11 w-full min-w-0 items-center rounded-full bg-white ring-1 ring-ink/10 transition-shadow focus-within:ring-ink/40 sm:w-auto sm:max-w-sm sm:flex-1">
             <SearchIcon className="pointer-events-none absolute left-4 h-[18px] w-[18px] text-ink/40" />
             <span className="sr-only">Pesquisar produtos</span>
@@ -276,7 +284,7 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
           <button
             type="button"
             onClick={() => setSheetOpen(true)}
-            className="inline-flex h-11 items-center gap-2 rounded-full bg-white px-5 text-sm font-medium ring-1 ring-ink/10 lg:hidden"
+            className="inline-flex h-11 items-center gap-2 rounded-full bg-white px-5 text-sm font-medium ring-1 ring-ink/10 transition-shadow hover:ring-ink/30"
           >
             Filtros
             {activeCount > 0 && (
@@ -327,9 +335,13 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
         </AnimatePresence>
 
         {/* Results */}
-        {results.length > 0 ? (
+        {busy === 'search' ? (
+          <div className="mt-6 grid min-h-[45vh] place-items-center">
+            <ChipLoader label="A procurar" />
+          </div>
+        ) : results.length > 0 ? (
           <>
-            <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 lg:gap-5">
+            <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:mt-4 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
               <AnimatePresence mode="popLayout" initial={false}>
                 {results.slice(0, shown).map((product, index) => (
                   <motion.li
@@ -350,13 +362,17 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
                 <p className="text-xs tabular-nums text-ink/45">
                   A ver {shown} de {results.length}
                 </p>
-                <button
-                  type="button"
-                  onClick={() => setShown((n) => n + PAGE)}
-                  className="inline-flex h-12 items-center rounded-full bg-ink px-8 text-sm font-medium text-paper transition-colors hover:bg-ink-soft"
-                >
-                  Mostrar mais produtos
-                </button>
+                {busy === 'more' ? (
+                  <ChipLoader label="A carregar mais produtos" className="py-1" />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => work('more', () => setShown((n) => n + PAGE))}
+                    className="inline-flex h-12 items-center rounded-full bg-ink px-8 text-sm font-medium text-paper transition-colors hover:bg-ink-soft"
+                  >
+                    Mostrar mais produtos
+                  </button>
+                )}
               </div>
             )}
           </>
@@ -396,13 +412,13 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
         )}
       </div>
 
-      {/* Mobile filter sheet */}
+      {/* Filter panel: a sheet from the bottom on phones, a panel from the right on desktop */}
       <AnimatePresence>
         {sheetOpen && (
           <>
             <motion.div
               key="backdrop"
-              className="fixed inset-0 z-[60] bg-ink/40 lg:hidden"
+              className="fixed inset-0 z-[60] bg-ink/40"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -413,13 +429,13 @@ const Catalogue = ({ products, category, subcategory }: CatalogueProps) => {
               role="dialog"
               aria-modal="true"
               aria-label="Filtros"
-              className="fixed inset-x-0 bottom-0 z-[61] flex max-h-[88svh] flex-col rounded-t-[28px] bg-paper lg:hidden"
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
+              className="fixed inset-x-0 bottom-0 z-[61] flex max-h-[88svh] flex-col rounded-t-[28px] bg-paper lg:inset-y-3 lg:left-auto lg:right-3 lg:max-h-none lg:w-[420px] lg:rounded-[28px] lg:shadow-[0_40px_80px_-30px_rgba(12,12,13,0.45)]"
+              initial={isDesktop ? { x: '110%' } : { y: '100%' }}
+              animate={isDesktop ? { x: 0 } : { y: 0 }}
+              exit={isDesktop ? { x: '110%' } : { y: '100%' }}
               transition={{ duration: 0.5, ease: easeOutExpo }}
             >
-              <div className="flex items-center justify-between px-5 pb-3 pt-5">
+              <div className="flex items-center justify-between px-5 pb-3 pt-5 lg:px-6 lg:pt-6">
                 <p className="type-heading">Filtros</p>
                 <button
                   type="button"

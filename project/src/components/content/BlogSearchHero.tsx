@@ -5,6 +5,7 @@ import { readingMinutes, topicLabel, type Article } from '../../data/blog';
 import { unsplash } from '../../lib/images';
 import { easeOutExpo } from '../../lib/motion';
 import { SearchIcon } from '../ui/Icons';
+import PhoneCopy from '../ui/PhoneCopy';
 
 /*
  * Blog banner: a photo of someone at a desk with a search bar floating over the keyboard.
@@ -118,10 +119,12 @@ const BlogSearchHero = ({ query, onQueryChange, results, onShowAll }: BlogSearch
         transition={{ duration: 0.9, ease: easeOutExpo, delay: 0.2 }}
       >
         <p className="eyebrow text-paper/65">Blog</p>
-        <h1 id="blog-titulo" className="type-display mt-3">
+        <h1 id="blog-titulo" className="type-banner mt-3">
           Cuide da sua tecnologia
         </h1>
-        <p className="type-lead mt-2 text-paper/70">Guias práticos e respostas às dúvidas que mais recebemos</p>
+        <p className="type-banner-lead mt-2 text-paper/70">
+          <PhoneCopy phone="Guias simples e práticos">Guias práticos e respostas às dúvidas que mais recebemos</PhoneCopy>
+        </p>
       </motion.div>
 
       <motion.form
@@ -221,7 +224,7 @@ const BlogSearchHero = ({ query, onQueryChange, results, onShowAll }: BlogSearch
                 transition={{ delay: 0.8, duration: 0.6 }}
               >
                 <span>Experimente</span>
-                {SUGGESTIONS.map((word) => (
+                {SUGGESTIONS.map((word, index) => (
                   <button
                     key={word}
                     type="button"
@@ -229,7 +232,8 @@ const BlogSearchHero = ({ query, onQueryChange, results, onShowAll }: BlogSearch
                       onQueryChange(word);
                       document.getElementById('pesquisa-blog')?.focus();
                     }}
-                    className="h-8 rounded-full border border-paper/25 bg-paper/10 px-3 text-paper backdrop-blur transition-colors hover:bg-paper hover:text-ink"
+                    // Phones: three suggestions, so they stay on one line
+                    className={`h-8 rounded-full border border-paper/25 bg-paper/10 px-3 text-paper backdrop-blur transition-colors hover:bg-paper hover:text-ink ${index > 2 ? 'max-sm:hidden' : ''}`}
                   >
                     {word}
                   </button>
